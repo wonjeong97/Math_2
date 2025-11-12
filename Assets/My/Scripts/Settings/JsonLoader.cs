@@ -139,37 +139,6 @@ public class SoundSetting
 }
 
 [Serializable]
-public class KeyboardSetting
-{
-    public string name;
-    public Vector2 position;
-    public Vector2 size;
-}
-
-[Serializable]
-public class PageSetting
-{
-    public string name;
-    public ImageSetting pageBackground;
-    public Vector2 position;
-    public Vector2 size = new Vector2(1920, 1080);
-    public TextSetting[] texts;
-    public ImageSetting[] images;
-    public ButtonSetting[] buttons;
-    public VideoSetting[] videos;
-    public KeyboardSetting[] keyboards;
-}
-
-[Serializable]
-public class PrintSetting
-{
-    public string printerName;
-    public string printFont;
-    public int printFontSize;
-    public string[] printKeys;
-}
-
-[Serializable]
 public class ButtonSetting
 {
     public string name;
@@ -183,38 +152,12 @@ public class ButtonSetting
 }
 
 [Serializable]
-public class PopupSetting
-{
-    public string name;
-    public ImageSetting popupBackgroundImage;
-    public TextSetting[] popupTexts;
-    public ImageSetting[] popupImages;
-    public ButtonSetting popupCloseButton;
-}
-
-[Serializable]
-public class EffectSetting
-{
-    public string name;
-    public Vector2 position;
-    public Vector2 size;
-}
-
-[Serializable]
-public class GameObjectSetting
-{
-    public string name;
-    public Vector3 position;
-    public Vector3 size;
-    public Vector3 rotation;
-}
-
-[Serializable]
 public class Settings
 {
     public float inactivityTime; // 입력이 없을 시 타이틀로 되돌아가는 시간
     public float fadeTime;
     public CloseSetting closeSetting;
+    public FontMaps fontMap;
 }
 
 #endregion

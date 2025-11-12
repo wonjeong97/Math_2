@@ -1,0 +1,22 @@
+﻿{
+  "levelBackgroundImage": {
+	"position": { "x": 960, "y": 540 },
+	"size": { "x": 1920, "y": 1080 },
+	"sourceImage": "Image/LevelSelect/LevelSelectSample.png"
+  },
+  "levelOneButton": {
+	"position": { "x": 310, "y": 820 },
+	"size": { "x": 350, "y": 300 },
+	"buttonBackgroundImage": { "sourceImage": "Image/LevelSelect/LevelOne.png" }
+  },
+  "levelTwoButton": {
+	"position": { "x": 685, "y": 820 },
+	"size": { "x": 350, "y": 300 },
+	"buttonBackgroundImage": { "sourceImage": "Image/LevelSelect/LevelTwo.png" }
+  },
+  "levelThreeButton": {
+	"position": { "x": 685, "y": 502.5 },
+	"size": { "x": 350, "y": 300 },
+	"buttonBackgroundImage": { "sourceImage": "Image/LevelSelect/LevelThree.png" }
+  }
+}

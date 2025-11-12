@@ -1,0 +1,12 @@
+﻿{
+  "titleBackgroundImage": {
+	"position": { "x": 960, "y": 540 },
+	"size": { "x": 1920, "y": 1080 },
+	"sourceImage": "Image/Title/TitleSample.png"
+  },
+  "titleStartButton": {
+	"position": { "x": 475, "y": 760 },
+	"size": { "x": 400, "y": 200 },
+	"buttonBackgroundImage": { "sourceImage": "Image/Title/Start.png" }
+  }
+}
