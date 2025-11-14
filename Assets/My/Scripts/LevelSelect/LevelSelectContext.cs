@@ -1,5 +1,6 @@
 public enum GameType
-{
+{   
+    None,
     GuessNumber,     // 수 맞추기
     CalculateNumber, // 수 계산하기
     NumberSystem     // 수의 체계

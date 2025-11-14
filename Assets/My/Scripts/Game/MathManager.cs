@@ -20,6 +20,9 @@ public class MathManager : MonoBehaviour
     [SerializeField] private RectTransform[] answerAreaRects;    // 4개 정답 영역 패널
 
     [SerializeField] private float buttonMargin = 20f;           // 버튼과 슬롯 테두리 사이 여유
+    
+    [Header("Debug")] 
+    [SerializeField] private TMP_Text debugText;
 
     private Button[] _answerButtons;
     private Image[] _answerButtonImages;
@@ -74,7 +77,7 @@ public class MathManager : MonoBehaviour
         int level = LevelSelectContext.SelectedLevel;
         GameType gameType = LevelSelectContext.SelectedGameType;
         
-        Debug.Log($"[GameManager] Start-> Level: {level}, Type: {gameType}");
+        debugText.SetText($"Level: {level}\n Type: {gameType}");
     }
 
     /// <summary> 문제 인덱스 순서를 랜덤하게 셔플 </summary>
@@ -120,21 +123,24 @@ public class MathManager : MonoBehaviour
             InitializeQuestionOrder();
         }
 
-        int questionIdx = _questionOrder[_questionOrderIndex];
-        MathSetting current = _mathData.maths[questionIdx];
+        if (_questionOrder != null)
+        {
+            int questionIdx = _questionOrder[_questionOrderIndex];
+            MathSetting current = _mathData.maths[questionIdx];
 
-        // 문제 텍스트 좌/우 랜덤 표시
-        bool showOnLeft = Random.Range(0, 2) == 0;
-        SetQuestionText(current.question, showOnLeft);
+            // 문제 텍스트 좌/우 랜덤 표시
+            bool showOnLeft = Random.Range(0, 2) == 0;
+            SetQuestionText(current.question, showOnLeft);
 
-        // 버튼 레이아웃/이미지 세팅
-        ApplyButtonLayout(current.answerButton);
-        FillAnswerButtons(current);
+            // 버튼 레이아웃/이미지 세팅
+            ApplyButtonLayout(current.answerButton);
+            FillAnswerButtons(current);
 
-        // 버튼 위치 랜덤 배치
-        RandomizeButtonPositionsAcrossAreas();
+            // 버튼 위치 랜덤 배치
+            RandomizeButtonPositionsAcrossAreas();
 
-        _currentQuestionIndex = questionIdx;
+            _currentQuestionIndex = questionIdx;
+        }
     }
 
     /// <summary> 문제 텍스트를 좌/우 중 한쪽에만 표시 </summary>
@@ -219,9 +225,7 @@ public class MathManager : MonoBehaviour
             string customPath = null;
 
             // 정답 슬롯이면 JSON에 정의된 이미지 경로 우선 사용
-            if (i == correctSlot &&
-                current.answerButton != null &&
-                current.answerButton.buttonBackgroundImage != null)
+            if (i == correctSlot && current.answerButton != null && current.answerButton.buttonBackgroundImage != null)
             {
                 customPath = current.answerButton.buttonBackgroundImage.sourceImage;
             }
