@@ -1,22 +1,66 @@
 ﻿{
-  "levelBackgroundImage": {
+  "pageLevelBackground": {
 	"position": { "x": 960, "y": 540 },
 	"size": { "x": 1920, "y": 1080 },
 	"sourceImage": "Image/LevelSelect/LevelSelectSample.png"
   },
-  "levelOneButton": {
-	"position": { "x": 310, "y": 820 },
-	"size": { "x": 350, "y": 300 },
-	"buttonBackgroundImage": { "sourceImage": "Image/LevelSelect/LevelOne.png" }
+  "levelButtons": [
+	{
+	  "position": { "x": 310, "y": 820 },
+	  "size": { "x": 350, "y": 300 },
+	  "buttonBackgroundImage": { "sourceImage": "Image/LevelSelect/LevelOne.png" }
+	},
+	{
+	  "position": { "x": 685, "y": 820 },
+	  "size": { "x": 350, "y": 300 },
+	  "buttonBackgroundImage": { "sourceImage": "Image/LevelSelect/LevelTwo.png" }
+	},
+	{
+	  "position": { "x": 685, "y": 502.5 },
+	  "size": { "x": 350, "y": 300 },
+	  "buttonBackgroundImage": { "sourceImage": "Image/LevelSelect/LevelThree.png" }
+	}
+  ],
+  "pageTypeBackground": {
+	"position": { "x": 960, "y": 540 },
+	"size": { "x": 1920, "y": 1080 },
+	"sourceImage": "Image/LevelSelect/GameTypeSample.png"
   },
-  "levelTwoButton": {
-	"position": { "x": 685, "y": 820 },
+  "gameLevelImages": [
+	{
+	  "position": { "x": 567, "y": 215 },
+	  "size": { "x": 480, "y": 125 },
+	  "sourceImage": "Image/LevelSelect/GameLevel1.png"
+	},
+	{
+	  "position": { "x": 567, "y": 215 },
+	  "size": { "x": 480, "y": 125 },
+	  "sourceImage": "Image/LevelSelect/GameLevel2.png"
+	},
+	{
+	  "position": { "x": 567, "y": 215 },
+	  "size": { "x": 480, "y": 125 },
+	  "sourceImage": "Image/LevelSelect/GameLevel3.png"
+	}
+  ],
+  "buttonTypeGuessNumber": {
+	"position": { "x": 565, "y": 595 },
 	"size": { "x": 350, "y": 300 },
-	"buttonBackgroundImage": { "sourceImage": "Image/LevelSelect/LevelTwo.png" }
+	"buttonBackgroundImage": { "sourceImage": "Image/LevelSelect/GuessNumber.png" }
   },
-  "levelThreeButton": {
-	"position": { "x": 685, "y": 502.5 },
+  "buttonTypeCalculateNumber": {
+	"position": { "x": 1252.5, "y": 595 },
 	"size": { "x": 350, "y": 300 },
-	"buttonBackgroundImage": { "sourceImage": "Image/LevelSelect/LevelThree.png" }
+	"buttonBackgroundImage": { "sourceImage": "Image/LevelSelect/CalculateNumber.png" }
+  },
+  "buttonTypeNumberSystem": {
+	"position": { "x": 1655, "y": 595 },
+	"size": { "x": 350, "y": 300 },
+	"buttonBackgroundImage": { "sourceImage": "Image/LevelSelect/NumberSystem.png" }
+  },
+  "buttonBack": {
+	"position": { "x": 1830, "y": 980 },
+	"size": { "x": 150, "y": 150 },
+	"buttonBackgroundImage": { "sourceImage": "Image/LevelSelect/Back.png" }
   }
 }

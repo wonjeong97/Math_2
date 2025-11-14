@@ -37,6 +37,7 @@ public class FadeManager : MonoBehaviour
             Debug.LogError("[FadeManager] FadeOut-> image is null");
             return;
         }
+        if (!image.gameObject.activeInHierarchy) image.gameObject.SetActive(true);
 
         if (duration <= 0f)
         {
@@ -81,6 +82,8 @@ public class FadeManager : MonoBehaviour
             return;
         }
 
+        if (!image.gameObject.activeInHierarchy) image.gameObject.SetActive(true);
+        
         if (duration <= 0f)
         {
             SetAlpha(image, 0f);
