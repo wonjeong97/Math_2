@@ -19,6 +19,16 @@
 	  "position": { "x": 685, "y": 502.5 },
 	  "size": { "x": 350, "y": 300 },
 	  "buttonBackgroundImage": { "sourceImage": "Image/LevelSelect/LevelThree.png" }
+	},
+	{
+	  "position": { "x": 1260, "y": 502.5 },
+	  "size": { "x": 350, "y": 300 },
+	  "buttonBackgroundImage": { "sourceImage": "Image/LevelSelect/LevelFour.png" }
+	},
+	{
+	  "position": { "x": 1620, "y": 502.5 },
+	  "size": { "x": 350, "y": 300 },
+	  "buttonBackgroundImage": { "sourceImage": "Image/LevelSelect/LevelFive.png" }
 	}
   ],
   "pageTypeBackground": {
@@ -41,6 +51,16 @@
 	  "position": { "x": 567, "y": 215 },
 	  "size": { "x": 480, "y": 125 },
 	  "sourceImage": "Image/LevelSelect/GameLevel3.png"
+	},
+	{
+	  "position": { "x": 567, "y": 215 },
+	  "size": { "x": 480, "y": 125 },
+	  "sourceImage": "Image/LevelSelect/GameLevel4.png"
+	},
+	{
+	  "position": { "x": 567, "y": 215 },
+	  "size": { "x": 480, "y": 125 },
+	  "sourceImage": "Image/LevelSelect/GameLevel5.png"
 	}
   ],
   "buttonTypeGuessNumber": {

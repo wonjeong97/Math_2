@@ -1,0 +1,144 @@
+﻿{
+  "questions": [
+	{
+	  "level": 1,
+	  "type": 0,
+	  "questionText": "4, 5, 6, 7... 다음에 오는 수는?",
+	  "correctAnswers": [ "8" ],
+	  "wrongAnswers": [ "9", "10", "6" ]
+	},
+	{
+	  "level": 1,
+	  "type": 0,
+	  "questionText": "다음 중 가장 큰 수는?",
+	  "correctAnswers": [ "5" ],
+	  "wrongAnswers": [ "2", "3", "1" ]
+	},
+	{
+	  "level": 1,
+	  "type": 0,
+	  "questionText": "네모 안에 들어갈 수는? (1, 2, □, 4)",
+	  "correctAnswers": [ "3" ],
+	  "wrongAnswers": [ "5", "1", "0" ]
+	},
+	{
+	  "level": 1,
+	  "type": 0,
+	  "questionText": "5보다 큰 수는?",
+	  "correctAnswers": [ "7" ],
+	  "wrongAnswers": [ "1", "3", "4" ]
+	},
+	{
+	  "level": 2,
+	  "type": 1,
+	  "questionText": "1~10 사이의 짝수를 모두 고르세요.",
+	  "correctAnswers": [ "2", "4", "6", "8", "10" ],
+	  "wrongAnswers": [ "1", "3", "5", "7", "9" ]
+	},
+	{
+	  "level": 2,
+	  "type": 1,
+	  "questionText": "1~10 사이의 홀수를 모두 고르세요.",
+	  "correctAnswers": [ "1", "3", "5", "7", "9" ],
+	  "wrongAnswers": [ "2", "4", "6", "8", "10" ]
+	},
+	{
+	  "level": 2,
+	  "type": 0,
+	  "questionText": "차례대로 세어볼 때 빈칸에 들어갈 수는? (11, 12, 13, ..., 17)",
+	  "correctAnswers": [ "14" ],
+	  "wrongAnswers": [ "10", "18", "20" ]
+	},
+	{
+	  "level": 2,
+	  "type": 0,
+	  "questionText": "다음에 오는 수는? (1, 1, 2, 2, 3, ?)",
+	  "correctAnswers": [ "3" ],
+	  "wrongAnswers": [ "1", "2", "4" ]
+	},
+	{
+	  "level": 3,
+	  "type": 0,
+	  "questionText": "가장 큰 수는?",
+	  "correctAnswers": [ "4.2" ],
+	  "wrongAnswers": [ "4", "12/5", "3x1" ]
+	},
+	{
+	  "level": 3,
+	  "type": 0,
+	  "questionText": "가장 작은 수는?",
+	  "correctAnswers": [ "0.2" ],
+	  "wrongAnswers": [ "2", "1/3", "1/2" ]
+	},
+	{
+	  "level": 3,
+	  "type": 0,
+	  "questionText": "100보다 크고 110보다 작은 수는?",
+	  "correctAnswers": [ "105" ],
+	  "wrongAnswers": [ "99", "100", "110", "115" ]
+	},
+	{
+	  "level": 3,
+	  "type": 0,
+	  "questionText": "1106 에서 백의 자리 숫자는?",
+	  "correctAnswers": [ "1" ],
+	  "wrongAnswers": [ "0", "6", "11" ]
+	},
+	{
+	  "level": 4,
+	  "type": 0,
+	  "questionText": "소수점 한자리 올림하여 4가 되는 수는?",
+	  "correctAnswers": [ "3.1" ],
+	  "wrongAnswers": [ "4.6", "2.3", "1.6" ]
+	},
+	{
+	  "level": 4,
+	  "type": 0,
+	  "questionText": "소수점 한자리 버림하여 3이 되는 수는?",
+	  "correctAnswers": [ "3.8" ],
+	  "wrongAnswers": [ "1.2", "2.7", "5.2" ]
+	},
+	{
+	  "level": 4,
+	  "type": 1,
+	  "questionText": "3의 배수를 모두 골라보세요.",
+	  "correctAnswers": [ "3", "6", "9", "12" ],
+	  "wrongAnswers": [ "1", "4", "10", "13" ]
+	},
+	{
+	  "level": 4,
+	  "type": 1,
+	  "questionText": "12의 약수를 모두 골라보세요.",
+	  "correctAnswers": [ "1", "2", "3", "4", "6", "12" ],
+	  "wrongAnswers": [ "5", "8", "10" ]
+	},
+	{
+	  "level": 5,
+	  "type": 2,
+	  "questionText": "작은 수 대로 나열하세요.",
+	  "correctAnswers": [ "-2", "0", "4/5", "6/3" ],
+	  "wrongAnswers": []
+	},
+	{
+	  "level": 5,
+	  "type": 2,
+	  "questionText": "큰 수 대로 나열하세요.",
+	  "correctAnswers": [ "5/6", "4/5", "3/4", "2/3" ],
+	  "wrongAnswers": []
+	},
+	{
+	  "level": 5,
+	  "type": 1,
+	  "questionText": "서로소인 쌍을 모두 찾으세요.",
+	  "correctAnswers": [ "15와 28" ],
+	  "wrongAnswers": [ "2와 4", "12와 27", "4와 24" ]
+	},
+	{
+	  "level": 5,
+	  "type": 0,
+	  "questionText": "18과 24의 최대공약수는?",
+	  "correctAnswers": [ "6" ],
+	  "wrongAnswers": [ "2", "3", "12" ]
+	}
+  ]
+}

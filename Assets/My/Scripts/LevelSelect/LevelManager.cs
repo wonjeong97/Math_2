@@ -287,7 +287,7 @@ public sealed class LevelManager : BaseManager<LevelSetting>
     {
         if (_selectedLevel <= 0)
         {
-            Debug.LogError("[LevelManager] OnClickGameType-> 레벨이 선택되지 않았습니다.");
+            Debug.LogError("[LevelManager] OnClickGameType-> Level is not selected.");
             return;
         }
 
@@ -295,23 +295,44 @@ public sealed class LevelManager : BaseManager<LevelSetting>
         HandleLoadGameSceneAsync().Forget();
     }
 
-    /// <summary> 페이드 아웃을 수행한 뒤 지정된 게임 씬으로 전환, 씬 로드 도중 취소 토큰 확인. </summary>
+    /// <summary> 페이드 아웃을 수행한 뒤 지정된 게임 씬으로 전환. </summary>
     private async UniTask HandleLoadGameSceneAsync()
     {
         try
         {
+            // 1. 페이드 아웃
             if (fader != null && fadeImage != null)
             {
                 await fader.FadeOut(fadeImage, fadeTime, DestroyToken);
             }
 
-            if (string.IsNullOrEmpty(gameSceneName))
+            // 2. 선택된 게임 타입에 따라 씬 이름 결정
+            string targetSceneName = "";
+
+            switch (LevelSelectContext.SelectedGameType)
             {
-                Debug.LogError("[LevelManager] HandleLoadGameSceneAsync-> gameSceneName is null or empty");
+                case GameType.GuessNumber:
+                    targetSceneName = "GuessNumber";
+                    break;
+                case GameType.CalculateNumber:
+                    targetSceneName = "CalculateNumber";
+                    break;
+                case GameType.NumberSystem:
+                    targetSceneName = "NumberSystem";
+                    break;
+                default:
+                    Debug.LogError($"[LevelManager] Unknown GameType: {LevelSelectContext.SelectedGameType}");
+                    return; // 혹은 기본값 설정
+            }
+
+            // 3. 씬 로드
+            if (string.IsNullOrEmpty(targetSceneName))
+            {
+                Debug.LogError("[LevelManager] HandleLoadGameSceneAsync-> targetSceneName is null or empty");
                 return;
             }
 
-            AsyncOperation op = SceneManager.LoadSceneAsync(gameSceneName, LoadSceneMode.Single);
+            AsyncOperation op = SceneManager.LoadSceneAsync(targetSceneName, LoadSceneMode.Single);
             if (op == null)
             {
                 Debug.LogError("[LevelManager] HandleLoadGameSceneAsync-> LoadSceneAsync returned null");
@@ -325,7 +346,9 @@ public sealed class LevelManager : BaseManager<LevelSetting>
             }
         }
         catch (OperationCanceledException)
-        { }
+        { 
+            // 씬 전환 중 취소됨 (정상)
+        }
         catch (Exception e)
         {
             Debug.LogError($"[LevelManager] HandleLoadGameSceneAsync-> Exception: {e}");
