@@ -41,7 +41,8 @@ public class UIManager : MonoBehaviour
         {
             string text = string.IsNullOrEmpty(overrideText) ? textSetting.text : overrideText;
 
-            await ApplyFontAsync(tmp, textSetting.fontName, text, textSetting.fontSize, textSetting.fontColor, textSetting.alignment, token);
+            // 폰트 및 그라데이션 설정 적용
+            await ApplyFontAsync(tmp, textSetting, text, token);
             ApplyRect(rt, size: null, anchoredPos: new Vector2(textSetting.position.x, -textSetting.position.y), rotation: textSetting.rotation);
         }
     }
@@ -151,23 +152,62 @@ public class UIManager : MonoBehaviour
         return key;
     }
 
-    private async UniTask ApplyFontAsync(TextMeshProUGUI uiText, string fontKey, string textValue, float fontSize, Color fontColor, TextAlignmentOptions alignment, CancellationToken token)
+    private async UniTask ApplyFontAsync(TextMeshProUGUI uiText, TextSetting setting, string textValue, CancellationToken token)
     {
-        if (!uiText || string.IsNullOrEmpty(fontKey)) return;
+        if (!uiText || setting == null) return;
 
-        string mapped = ResolveFontKey(fontKey);
+        string mapped = ResolveFontKey(setting.fontName);
         TMP_FontAsset font = await LoadAssetWithCacheAsync<TMP_FontAsset>(mapped, token);
         if (font == null) return;
-
         token.ThrowIfCancellationRequested();
 
         uiText.font = font;
-        uiText.fontSize = fontSize;
-        uiText.color = fontColor;
-        uiText.alignment = alignment;
+        uiText.fontSize = setting.fontSize;
+        uiText.alignment = setting.alignment;
         uiText.text = textValue;
-    }
 
+        if (setting.useGlobalGradient)
+        {
+            // 1. 전체 그라데이션 컴포넌트(TextGlobalGradient) 추가 및 설정
+            var gradientEffect = GetOrAdd<TextGlobalGradient>(uiText.gameObject);
+            gradientEffect.SetGradient(
+                setting.gradientTopLeft, 
+                setting.gradientTopRight, 
+                setting.gradientBottomLeft, 
+                setting.gradientBottomRight
+            );
+            gradientEffect.enabled = true; // 컴포넌트 활성화 -> OnEnable에서 그라데이션 적용됨
+
+            // 기본 TMP 그라데이션은 끄고, 베이스 색상은 흰색으로 (Tint 방지)
+            uiText.enableVertexGradient = false;
+            uiText.color = Color.white;
+        }
+        else
+        {
+            // 전체 그라데이션을 안 쓴다면 컴포넌트 비활성화
+            if (uiText.TryGetComponent<TextGlobalGradient>(out var effect))
+            {
+                effect.enabled = false;
+            }
+
+            // 일반 그라데이션 로직 (기존과 동일)
+            if (setting.useGradient)
+            {
+                uiText.enableVertexGradient = true;
+                uiText.colorGradient = new VertexGradient(
+                    setting.gradientTopLeft, setting.gradientTopRight, 
+                    setting.gradientBottomLeft, setting.gradientBottomRight
+                );
+                uiText.color = Color.white;
+            }
+            else
+            {
+                uiText.enableVertexGradient = false;
+                uiText.color = setting.fontColor;
+            }
+        }
+    }
+    
     #endregion
 
     #region UIUtility

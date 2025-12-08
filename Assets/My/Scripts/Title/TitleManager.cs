@@ -9,6 +9,8 @@ public class TitleSetting
 {
     public ImageSetting titleBackgroundImage;
     public ButtonSetting titleStartButton;
+    public TextSetting titleText1;
+    public TextSetting titleText2;
 }
 
 public sealed class TitleManager : BaseManager<TitleSetting>
@@ -16,6 +18,8 @@ public sealed class TitleManager : BaseManager<TitleSetting>
     [Header("UI")]
     [SerializeField] private GameObject titleBackgroundImage;
     [SerializeField] private GameObject titleStartButton;
+    [SerializeField] private GameObject titleText1;
+    [SerializeField] private GameObject titleText2;
     
     protected override string JsonPath => "JSON/TitleSetting.json";
    
@@ -24,6 +28,8 @@ public sealed class TitleManager : BaseManager<TitleSetting>
         try
         {
             ui.SetImageObj(titleBackgroundImage, managerSetting.titleBackgroundImage);
+            ui.SetTextObj(titleText1, managerSetting.titleText1).Forget();
+            ui.SetTextObj(titleText2, managerSetting.titleText2).Forget();
             await ui.SetButtonObj(titleStartButton, managerSetting.titleStartButton, DestroyToken);
             
             Button startBtn = titleStartButton != null ? titleStartButton.GetComponent<Button>() : null;

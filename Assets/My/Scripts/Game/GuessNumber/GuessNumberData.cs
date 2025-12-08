@@ -17,9 +17,3 @@ public class GuessNumberQuestion
     public string[] correctAnswers; // 정답 목록 (순서 나열인 경우 순서대로 입력)
     public string[] wrongAnswers;   // 오답 후보군
 }
-
-[Serializable]
-public class GuessNumberData
-{
-    public GuessNumberQuestion[] questions;
-}

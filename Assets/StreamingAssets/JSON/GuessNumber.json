@@ -3,142 +3,324 @@
 	{
 	  "level": 1,
 	  "type": 0,
-	  "questionText": "4, 5, 6, 7... 다음에 오는 수는?",
+	  "questionText": "4, 5, 6, 7... 다음에 오는 수는\n무엇일까요?",
 	  "correctAnswers": [ "8" ],
-	  "wrongAnswers": [ "9", "10", "6" ]
+	  "wrongAnswers": [ "6", "7", "5" ]
 	},
 	{
 	  "level": 1,
 	  "type": 0,
-	  "questionText": "다음 중 가장 큰 수는?",
+	  "questionText": "다음 중 가장 큰 수는\n무엇일까요?",
 	  "correctAnswers": [ "5" ],
 	  "wrongAnswers": [ "2", "3", "1" ]
 	},
 	{
 	  "level": 1,
 	  "type": 0,
-	  "questionText": "네모 안에 들어갈 수는? (1, 2, □, 4)",
+	  "questionText": "네모 안에 들어갈 수를\n터치하세요!\n\n1, 2, ㅁ, 4",
 	  "correctAnswers": [ "3" ],
 	  "wrongAnswers": [ "5", "1", "0" ]
 	},
 	{
 	  "level": 1,
 	  "type": 0,
-	  "questionText": "5보다 큰 수는?",
-	  "correctAnswers": [ "7" ],
-	  "wrongAnswers": [ "1", "3", "4" ]
+	  "questionText": "5보다 큰 수는\n무엇일까요?",
+	  "correctAnswers": [ "6" ],
+	  "wrongAnswers": [ "2", "5", "4" ]
 	},
 	{
 	  "level": 2,
 	  "type": 1,
-	  "questionText": "1~10 사이의 짝수를 모두 고르세요.",
+	  "questionText": "짝수를 모두 골라보세요.",
 	  "correctAnswers": [ "2", "4", "6", "8", "10" ],
 	  "wrongAnswers": [ "1", "3", "5", "7", "9" ]
 	},
 	{
 	  "level": 2,
 	  "type": 1,
-	  "questionText": "1~10 사이의 홀수를 모두 고르세요.",
+	  "questionText": "홀수를 모두 골라보세요.",
 	  "correctAnswers": [ "1", "3", "5", "7", "9" ],
 	  "wrongAnswers": [ "2", "4", "6", "8", "10" ]
 	},
 	{
 	  "level": 2,
-	  "type": 0,
-	  "questionText": "차례대로 세어볼 때 빈칸에 들어갈 수는? (11, 12, 13, ..., 17)",
-	  "correctAnswers": [ "14" ],
+	  "type": 2,
+	  "questionText": "11, 12, 13 .. 17 사이에 올 수를\n순서대로 터치하세요.",
+	  "correctAnswers": [ "14", "15", "16" ],
 	  "wrongAnswers": [ "10", "18", "20" ]
 	},
 	{
 	  "level": 2,
 	  "type": 0,
-	  "questionText": "다음에 오는 수는? (1, 1, 2, 2, 3, ?)",
+	  "questionText": "1, 1, 2, 2, 3 다음에 올 수는\n무엇일까요?",
 	  "correctAnswers": [ "3" ],
 	  "wrongAnswers": [ "1", "2", "4" ]
 	},
 	{
 	  "level": 3,
 	  "type": 0,
-	  "questionText": "가장 큰 수는?",
+	  "questionText": "가장 큰 수를 골라보세요.",
 	  "correctAnswers": [ "4.2" ],
 	  "wrongAnswers": [ "4", "12/5", "3x1" ]
 	},
 	{
 	  "level": 3,
 	  "type": 0,
-	  "questionText": "가장 작은 수는?",
+	  "questionText": "가장 작은 수를 골라보세요?",
 	  "correctAnswers": [ "0.2" ],
 	  "wrongAnswers": [ "2", "1/3", "1/2" ]
 	},
 	{
 	  "level": 3,
 	  "type": 0,
-	  "questionText": "100보다 크고 110보다 작은 수는?",
-	  "correctAnswers": [ "105" ],
-	  "wrongAnswers": [ "99", "100", "110", "115" ]
+	  "questionText": "100보다 크고,\n 110보다 작은 수는 무엇일까요?",
+	  "correctAnswers": [ "108" ],
+	  "wrongAnswers": [ "10", "112", "120", "115" ]
 	},
 	{
 	  "level": 3,
 	  "type": 0,
-	  "questionText": "1106 에서 백의 자리 숫자는?",
-	  "correctAnswers": [ "1" ],
-	  "wrongAnswers": [ "0", "6", "11" ]
+	  "questionText": "1306 에서 백의 자리 숫자는\n무엇일까요?",
+	  "correctAnswers": [ "3" ],
+	  "wrongAnswers": [ "1", "0", "6" ]
 	},
 	{
 	  "level": 4,
 	  "type": 0,
-	  "questionText": "소수점 한자리 올림하여 4가 되는 수는?",
-	  "correctAnswers": [ "3.1" ],
+	  "questionText": "소수점을 한자리 올림하면\n4가 되는 수는 무엇일까요?",
+	  "correctAnswers": [ "3.6" ],
 	  "wrongAnswers": [ "4.6", "2.3", "1.6" ]
 	},
 	{
 	  "level": 4,
 	  "type": 0,
-	  "questionText": "소수점 한자리 버림하여 3이 되는 수는?",
+	  "questionText": "소수점을 한자리 버림하면\n 3이 되는 수는 무엇일까요?",
 	  "correctAnswers": [ "3.8" ],
 	  "wrongAnswers": [ "1.2", "2.7", "5.2" ]
 	},
 	{
 	  "level": 4,
 	  "type": 1,
-	  "questionText": "3의 배수를 모두 골라보세요.",
-	  "correctAnswers": [ "3", "6", "9", "12" ],
-	  "wrongAnswers": [ "1", "4", "10", "13" ]
+	  "questionText": "3의 배수가 아닌 것을 골라보세요.",
+	  "correctAnswers": [ "142" ],
+	  "wrongAnswers": [ "93", "63", "117" ]
 	},
 	{
 	  "level": 4,
-	  "type": 1,
-	  "questionText": "12의 약수를 모두 골라보세요.",
-	  "correctAnswers": [ "1", "2", "3", "4", "6", "12" ],
-	  "wrongAnswers": [ "5", "8", "10" ]
+	  "type": 0,
+	  "questionText": "12의 약수가 아닌 것을\n골라보세요.",
+	  "correctAnswers": [ "8" ],
+	  "wrongAnswers": [ "2", "6", "12" ]
 	},
 	{
 	  "level": 5,
 	  "type": 2,
-	  "questionText": "작은 수 대로 나열하세요.",
+	  "questionText": "작은 수 대로 터치하세요.",
 	  "correctAnswers": [ "-2", "0", "4/5", "6/3" ],
-	  "wrongAnswers": []
+	  "wrongAnswers": [ ]
 	},
 	{
 	  "level": 5,
 	  "type": 2,
-	  "questionText": "큰 수 대로 나열하세요.",
+	  "questionText": "큰 수 대로 터치하세요.",
 	  "correctAnswers": [ "5/6", "4/5", "3/4", "2/3" ],
-	  "wrongAnswers": []
+	  "wrongAnswers": [ ]
 	},
 	{
 	  "level": 5,
-	  "type": 1,
-	  "questionText": "서로소인 쌍을 모두 찾으세요.",
+	  "type": 0,
+	  "questionText": "서로소인 수를 찾으세요.",
 	  "correctAnswers": [ "15와 28" ],
 	  "wrongAnswers": [ "2와 4", "12와 27", "4와 24" ]
 	},
 	{
 	  "level": 5,
 	  "type": 0,
-	  "questionText": "18과 24의 최대공약수는?",
+	  "questionText": "18과 24의 최대공약수를\n찾아보세요.",
 	  "correctAnswers": [ "6" ],
-	  "wrongAnswers": [ "2", "3", "12" ]
+	  "wrongAnswers": [ "2", "3", "9" ]
 	}
-  ]
+  ],
+  "levelImages": [
+	{
+	  "position": { "x": 200, "y": 100 },
+	  "size": { "x": 200, "y": 90 },
+	  "sourceImage": "Image/LevelSelect/좌측 상단 레벨1.png"
+	},
+	{
+	  "position": { "x": 200, "y": 100 },
+	  "size": { "x": 200, "y": 90 },
+	  "sourceImage": "Image/LevelSelect/좌측 상단 레벨2.png"
+	},
+	{
+	  "position": { "x": 200, "y": 100 },
+	  "size": { "x": 200, "y": 90 },
+	  "sourceImage": "Image/LevelSelect/좌측 상단 레벨3.png"
+	},
+	{
+	  "position": { "x": 200, "y": 100 },
+	  "size": { "x": 200, "y": 90 },
+	  "sourceImage": "Image/LevelSelect/좌측 상단 레벨4.png"
+	},
+	{
+	  "position": { "x": 200, "y": 100 },
+	  "size": { "x": 200, "y": 90 },
+	  "sourceImage": "Image/LevelSelect/좌측 상단 레벨5.png"
+	}
+  ],
+  "gameTypeImages": [
+	{
+	  "position": { "x": 440, "y": 100 },
+	  "size": { "x": 268, "y": 90 },
+	  "sourceImage": "Image/GuessNumber/좌측 상단 종목(레벨1-수 맞추기).png"
+	},
+	{
+	  "position": { "x": 440, "y": 100 },
+	  "size": { "x": 268, "y": 90 },
+	  "sourceImage": "Image/GuessNumber/좌측 상단 종목(레벨2-수 맞추기).png"
+	},
+	{
+	  "position": { "x": 440, "y": 100 },
+	  "size": { "x": 268, "y": 90 },
+	  "sourceImage": "Image/GuessNumber/좌측 상단 종목(레벨3-수 맞추기).png"
+	},
+	{
+	  "position": { "x": 440, "y": 100 },
+	  "size": { "x": 268, "y": 90 },
+	  "sourceImage": "Image/GuessNumber/좌측 상단 종목(레벨4-수 맞추기).png"
+	},
+	{
+	  "position": { "x": 440, "y": 100 },
+	  "size": { "x": 268, "y": 90 },
+	  "sourceImage": "Image/GuessNumber/좌측 상단 종목(레벨5-수 맞추기).png"
+	}
+  ],
+  "levelProgresses": [
+	{
+	  "steps": [
+		{
+		  "sourceImage": "Image/Progress/우측 상단 개수(레벨1-1).png", 
+		  "position": { "x": 650, "y": 100 },
+		  "size": { "x": 203, "y": 90 }
+		},
+		{
+		  "sourceImage": "Image/Progress/우측 상단 개수(레벨1-2).png", 
+		  "position": { "x": 650, "y": 100 },
+		  "size": { "x": 203, "y": 90 }
+		},
+		{
+		  "sourceImage": "Image/Progress/우측 상단 개수(레벨1-3).png", 
+		  "position": { "x": 650, "y": 100 },
+		  "size": { "x": 203, "y": 90 }
+		},
+		{
+		  "sourceImage": "Image/Progress/우측 상단 개수(레벨1-4).png", 
+		  "position": { "x": 650, "y": 100 },
+		  "size": { "x": 203, "y": 90 }
+		}
+	  ]
+	},
+	{
+	  "steps": [
+		{
+		  "sourceImage": "Image/Progress/우측 상단 개수(레벨2-1).png", 
+		  "position": { "x": 650, "y": 100 },
+		  "size": { "x": 203, "y": 90 }
+		},
+		{
+		  "sourceImage": "Image/Progress/우측 상단 개수(레벨2-2).png", 
+		  "position": { "x": 650, "y": 100 },
+		  "size": { "x": 203, "y": 90 }
+		},
+		{
+		  "sourceImage": "Image/Progress/우측 상단 개수(레벨2-3).png", 
+		  "position": { "x": 650, "y": 100 },
+		  "size": { "x": 203, "y": 90 }
+		},
+		{
+		  "sourceImage": "Image/Progress/우측 상단 개수(레벨2-4).png", 
+		  "position": { "x": 650, "y": 100 },
+		  "size": { "x": 203, "y": 90 }
+		}
+	  ]
+	},
+	{
+	  "steps": [
+		{
+		  "sourceImage": "Image/Progress/우측 상단 개수(레벨3-1).png",
+		  "position": { "x": 650, "y": 100 },
+		  "size": { "x": 203, "y": 90 }
+		},
+		{
+		  "sourceImage": "Image/Progress/우측 상단 개수(레벨3-2).png",
+		  "position": { "x": 650, "y": 100 },
+		  "size": { "x": 203, "y": 90 }
+		},
+		{
+		  "sourceImage": "Image/Progress/우측 상단 개수(레벨3-3).png",
+		  "position": { "x": 650, "y": 100 },
+		  "size": { "x": 203, "y": 90 }
+		},
+		{
+		  "sourceImage": "Image/Progress/우측 상단 개수(레벨3-4).png",
+		  "position": { "x": 650, "y": 100 },
+		  "size": { "x": 203, "y": 90 }
+		}
+	  ]
+	},
+	{
+	  "steps": [
+		{
+		  "sourceImage": "Image/Progress/우측 상단 개수(레벨4-1).png",
+		  "position": { "x": 650, "y": 100 },
+		  "size": { "x": 203, "y": 90 }
+		},
+		{
+		  "sourceImage": "Image/Progress/우측 상단 개수(레벨4-2).png",
+		  "position": { "x": 650, "y": 100 },
+		  "size": { "x": 203, "y": 90 }
+		},
+		{
+		  "sourceImage": "Image/Progress/우측 상단 개수(레벨4-3).png", 
+		  "position": { "x": 650, "y": 100 },
+		  "size": { "x": 203, "y": 90 }
+		},
+		{
+		  "sourceImage": "Image/Progress/우측 상단 개수(레벨4-4).png", 
+		  "position": { "x": 650, "y": 100 },
+		  "size": { "x": 203, "y": 90 }
+		}
+	  ]
+	},
+	{
+	  "steps": [
+		{
+		  "sourceImage": "Image/Progress/우측 상단 개수(레벨5-1).png", 
+		  "position": { "x": 650, "y": 100 },
+		  "size": { "x": 203, "y": 90 }
+		},
+		{
+		  "sourceImage": "Image/Progress/우측 상단 개수(레벨5-2).png", 
+		  "position": { "x": 650, "y": 100 },
+		  "size": { "x": 203, "y": 90 }
+		},
+		{
+		  "sourceImage": "Image/Progress/우측 상단 개수(레벨5-3).png", 
+		  "position": { "x": 650, "y": 100 },
+		  "size": { "x": 203, "y": 90 }
+		},
+		{
+		  "sourceImage": "Image/Progress/우측 상단 개수(레벨5-4).png", 
+		  "position": { "x": 650, "y": 100 },
+		  "size": { "x": 203, "y": 90 }
+		}
+	  ]
+	}
+  ],
+  "backButton": {
+	"buttonBackgroundImage": { "sourceImage": "Image/Common/Btn_Back.png" },
+	"position": { "x": -900, "y": 450 },
+	"size": { "x": 100, "y": 100 }
+  },
+  "buttonMargin": 30.0
 }

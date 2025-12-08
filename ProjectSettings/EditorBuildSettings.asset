@@ -9,7 +9,7 @@ EditorBuildSettings:
     path: Assets/Scenes/GameScene.unity
     guid: 99c9720ab356a0642a771bea13969a05
   - enabled: 1
-    path: Assets/Scenes/1_LevelSelect.unity
+    path: Assets/Scenes/LevelSelect.unity
     guid: d2f9944ab177019459230a3227f55d0e
   - enabled: 1
     path: Assets/Scenes/GuessNumber.unity
@@ -21,9 +21,11 @@ EditorBuildSettings:
     path: Assets/Scenes/NumberSystem.unity
     guid: e079195626ea44e4790e1d82064bec11
   - enabled: 1
-    path: Assets/Scenes/1_LevelSelect.unity
+    path: Assets/Scenes/LevelSelect.unity
     guid: d2f9944ab177019459230a3227f55d0e
   - enabled: 1
     path: Assets/Scenes/LevelSelect.unity
     guid: d2f9944ab177019459230a3227f55d0e
-  m_configObjects: {}
+  m_configObjects:
+    com.unity.addressableassets: {fileID: 11400000, guid: 046c1dbfa77d4ce468ac760d54ef1379,
+      type: 2}

@@ -108,6 +108,22 @@ public class TextSetting
     public float fontSize;
     public Color fontColor = Color.white;
     public TextAlignmentOptions alignment = TextAlignmentOptions.Center;
+    
+    public bool useGradient; // 그라데이션 사용 여부
+    public bool useGlobalGradient;
+    public Color gradientTopLeft = Color.white;
+    public Color gradientTopRight = Color.white;
+    public Color gradientBottomLeft = Color.white;
+    public Color gradientBottomRight = Color.white;
+}
+
+[Serializable]
+public class GradientData
+{
+    public Color topLeft;
+    public Color topRight;
+    public Color bottomLeft;
+    public Color bottomRight;
 }
 
 [Serializable]

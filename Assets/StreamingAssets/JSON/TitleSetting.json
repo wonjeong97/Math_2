@@ -2,11 +2,26 @@
   "titleBackgroundImage": {
 	"position": { "x": 960, "y": 540 },
 	"size": { "x": 1920, "y": 1080 },
-	"sourceImage": "Image/Title/TitleSample.png"
+	"sourceImage": "Image/Title/TitleSample.png",
+	"color": {"r": 0, "g": 0, "b": 0, "a": 1}
   },
   "titleStartButton": {
 	"position": { "x": 475, "y": 760 },
-	"size": { "x": 400, "y": 200 },
-	"buttonBackgroundImage": { "sourceImage": "Image/Title/Start.png" }
+	"size": { "x": 488, "y": 205 },
+	"buttonBackgroundImage": { "sourceImage": "Image/Title/시작하기.png" }
+  },
+  "titleText1":  {
+	"position": {"x": 535, "y": 125},
+	"text": "리듬 트레이닝:",
+	"fontName": "font1",
+	"fontSize": 90,
+	"fontColor": {"r": 0.827451, "g": 0.9882353, "b": 0.1686275, "a": 1}
+  },
+  "titleText2": {
+	"position": {"x": 1385, "y": 125},
+	"text": "매치 매쓰 댄스",
+	"fontName": "font1",
+	"fontSize": 90,
+	"fontColor": {"r": 0, "g": 0.8196079, "b": 0.9960784, "a": 1}
   }
 }

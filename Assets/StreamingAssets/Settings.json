@@ -1,3 +1,6 @@
 ﻿{
-  "fadeTime": 0.5
+  "fadeTime": 0.5,
+  "fontMap": {
+	"font1": "Fonts/TMPro/VITRO CORE OTF SDF.asset"
+  }
 }
