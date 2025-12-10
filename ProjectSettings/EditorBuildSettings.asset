@@ -17,6 +17,9 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/GameEnd.unity
     guid: 6db0ea4c924638d4d9f8fb206fb4590e
+  - enabled: 1
+    path: Assets/Scenes/CalculateNumber.unity
+    guid: d18bd12223bfadf429aa532b26e5ecd6
   m_configObjects:
     com.unity.addressableassets: {fileID: 11400000, guid: 046c1dbfa77d4ce468ac760d54ef1379,
       type: 2}
