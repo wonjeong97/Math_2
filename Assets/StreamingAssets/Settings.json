@@ -2,5 +2,11 @@
   "fadeTime": 0.5,
   "fontMap": {
 	"font1": "Fonts/TMPro/VITRO CORE OTF SDF.asset"
+  },
+  "questionButton": {
+	"size": { "x": 344, "y": 344 },
+	"scale": { "x": 0.7, "y": 0.7, "z": 0.7 },
+	"buttonBackgroundImage": { "sourceImage": "Image/Button/버튼 뒷배경.png" },
+	"buttonText": { "fontSize": 180 }
   }
 }

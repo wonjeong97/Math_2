@@ -174,6 +174,7 @@ public class Settings
     public float fadeTime;
     public CloseSetting closeSetting;
     public FontMaps fontMap;
+    public ButtonSetting questionButton;
 }
 
 #endregion

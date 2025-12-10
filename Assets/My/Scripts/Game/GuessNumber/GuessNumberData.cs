@@ -14,6 +14,7 @@ public class GuessNumberQuestion
     public int level;
     public QuestionType type;       // 문제 유형
     public string questionText;     // 문제 텍스트
+    public ImageSetting questionImage;
     public string[] correctAnswers; // 정답 목록 (순서 나열인 경우 순서대로 입력)
     public string[] wrongAnswers;   // 오답 후보군
 }
