@@ -586,14 +586,16 @@ MonoBehaviour:
   questionImageObj: {fileID: 985391457}
   questionRawImageObj: {fileID: 1142760606}
   questionVideoPlayer: {fileID: 1680484052}
-  starPuzzleObject: {fileID: 0}
   answerButtons:
   - {fileID: 1451652542}
   - {fileID: 1585466970}
   - {fileID: 72196401}
   - {fileID: 376199352}
-  pageCorrect: {fileID: 1041916066}
+  backButton: {fileID: 0}
+  pageCorrect: {fileID: 1636269619}
+  imageCorrect: {fileID: 1041916068}
   pageWrong: {fileID: 1105611925}
+  imageWrong: {fileID: 1098082387}
   buttonRetry: {fileID: 727618443}
   buttonGameEnd: {fileID: 700110654}
 --- !u!1 &330585543
@@ -2322,7 +2324,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Texture: {fileID: 0}
+  m_Texture: {fileID: 8400000, guid: 040d631e6a7a8dd4a93bc5f495d9c648, type: 2}
   m_UVRect:
     serializedVersion: 2
     x: 0
@@ -3085,7 +3087,7 @@ VideoPlayer:
   m_TargetCameraAlpha: 1
   m_TargetCamera3DLayout: 0
   m_TargetCamera: {fileID: 0}
-  m_TargetTexture: {fileID: 0}
+  m_TargetTexture: {fileID: 8400000, guid: 040d631e6a7a8dd4a93bc5f495d9c648, type: 2}
   m_TimeReference: 0
   m_TargetMaterialRenderer: {fileID: 0}
   m_TargetMaterialProperty: <noninit>

@@ -16,13 +16,28 @@ using Random = UnityEngine.Random;
 public class CalculateNumberQuestion
 {
     public int level;
-    public int type;
+    public QuestionType type; 
+    
     public string questionText;
-    public string[] correctAnswers;
+    public string[] correctAnswers; 
     public string[] wrongAnswers;
     
     public ImageSetting questionImage; 
     public VideoSetting questionVideo; 
+    
+    public ButtonOverrideSetting buttonStyleOverride;
+}
+
+[Serializable]
+public class ButtonOverrideSetting
+{
+    public bool useOverride;
+    
+    [Header("Images (StreamingAssets Path)")]
+    public string normalImageName;   // ButtonOff (누르기 전) 파일명
+    public string pressedImageName;  // ButtonOn (누르고 있을 때) 파일명
+    
+    public Color buttonColor = Color.white; // 버튼 색상
 }
 
 [Serializable]
@@ -30,9 +45,9 @@ public class CalculateNumberSetting
 {
     public CalculateNumberQuestion[] questions;
     
-    public ImageSetting[] levelImages;       // 레벨별 상단 타이틀
-    public ImageSetting[] gameTypeImages;    // 레벨별 게임 타입 아이콘
-    
+    public ImageSetting[] levelImages;       
+    public ImageSetting[] gameTypeImages;    
+    public LevelProgressSetting[] levelProgresses; 
     public ButtonSetting backButton;
     public float buttonMargin = 20f; 
     
@@ -49,7 +64,7 @@ public class CalculateNumberManager : MonoBehaviour
     [Header("Top UI")]
     [SerializeField] private Image levelImage;
     [SerializeField] private Image gameTypeImage;
-    [SerializeField] private Image progressImage; // (필요 시 구현)
+    [SerializeField] private Image progressImage; 
 
     [Header("Layout Areas")]
     [SerializeField] private RectTransform leftAreaRect;
@@ -61,27 +76,36 @@ public class CalculateNumberManager : MonoBehaviour
     [SerializeField] private TextMeshProUGUI questionTextObj;
     [SerializeField] private Image questionImageObj;
     
-    [Header("Special Question Objects")]
+    [Header("Video Question Objects")]
     [SerializeField] private RawImage questionRawImageObj; 
-    [SerializeField] private VideoPlayer questionVideoPlayer; 
-    [SerializeField] private GameObject starPuzzleObject; 
+    [SerializeField] private VideoPlayer questionVideoPlayer;
 
     [Header("Buttons")]
     [SerializeField] private GameObject[] answerButtons;
+    [SerializeField] private Button backButton;
 
     [Header("Result UI")]
     [SerializeField] private GameObject pageCorrect;
+    [SerializeField] private Image imageCorrect;
+    
     [SerializeField] private GameObject pageWrong;
+    [SerializeField] private Image imageWrong;
     [SerializeField] private Button buttonRetry;
     [SerializeField] private Button buttonGameEnd;
 
-    private CalculateNumberSetting _setting;
+    private CalculateNumberSetting setting;
     private List<CalculateNumberQuestion> _currentLevelQuestions;
     private int _currentQuestionIndex = 0;
     private int _totalQuestions = 4;
     private CalculateNumberQuestion _currentQuestion;
     
     private bool _isProcessing = false;
+
+    private int _currentSequenceIndex = 0;      // Sequence용: 현재 맞춰야 할 인덱스
+    private int _foundAnswerCount = 0;          // MultipleChoice용: 찾은 정답 개수
+
+    private Sprite _defaultButtonSprite; 
+    private SpriteState _defaultSpriteState;
 
     private void Start()
     {
@@ -94,7 +118,6 @@ public class CalculateNumberManager : MonoBehaviour
         if (pageCorrect != null) pageCorrect.SetActive(false);
         if (pageWrong != null) pageWrong.SetActive(false);
         
-        if (starPuzzleObject != null) starPuzzleObject.SetActive(false);
         if (questionRawImageObj != null) questionRawImageObj.gameObject.SetActive(false);
 
         // 2. 버튼 리스너 연결
@@ -108,24 +131,46 @@ public class CalculateNumberManager : MonoBehaviour
             buttonGameEnd.onClick.RemoveAllListeners();
             buttonGameEnd.onClick.AddListener(OnGameEndClicked);
         }
-        
+        if (backButton != null)
+        {
+            backButton.onClick.RemoveAllListeners();
+            backButton.onClick.AddListener(() => SceneManager.LoadScene("LevelSelect"));
+        }
+
         // 3. 데이터 로드
         LoadGameData();
+        
+        if (setting == null)
+        {
+            Debug.LogError("[CalculateNumberManager] Data Load Failed.");
+            return;
+        }
+
         ApplyUISettings(); 
 
         int selectedLevel = LevelSelectContext.SelectedLevel;
         if (selectedLevel <= 0) selectedLevel = 1;
 
-        // 4. 레벨 이미지 및 게임 타입 이미지 적용
-        ApplyLevelHeader(selectedLevel);
+        // 4. 상단 이미지 및 스타일 적용
+        ApplyLevelImages(selectedLevel);
         ApplyButtonStyles();
         
-        // [추가됨] 레벨별 그라데이션 색상 적용
+        // 5. 레벨별 그라데이션 색상 적용
         ApplyButtonGradients(selectedLevel);
 
-        if (_setting != null && _setting.questions != null)
+        // 기본 버튼 상태 저장
+        if (answerButtons != null && answerButtons.Length > 0)
         {
-            var levelQuestions = _setting.questions
+            Button firstBtn = answerButtons[0].GetComponent<Button>();
+            Image firstImg = answerButtons[0].GetComponent<Image>();
+            if (firstImg != null) _defaultButtonSprite = firstImg.sprite;
+            if (firstBtn != null) _defaultSpriteState = firstBtn.spriteState;
+        }
+
+        // 6. 문제 로드 및 시작
+        if (setting.questions != null)
+        {
+            var levelQuestions = setting.questions
                 .Where(q => q.level == selectedLevel)
                 .ToList();
 
@@ -149,7 +194,7 @@ public class CalculateNumberManager : MonoBehaviour
     {
         if (JsonLoader.Instance != null)
         {
-            _setting = JsonLoader.Instance.LoadJsonData<CalculateNumberSetting>("JSON/CalculateNumber.json");
+            setting = JsonLoader.Instance.LoadJsonData<CalculateNumberSetting>("JSON/CalculateNumber.json");
         }
     }
 
@@ -158,21 +203,24 @@ public class CalculateNumberManager : MonoBehaviour
         if (index >= _currentLevelQuestions.Count) return;
 
         _isProcessing = false;
+        
+        UpdateProgressImage(LevelSelectContext.SelectedLevel, index);
+        
         _currentQuestion = _currentLevelQuestions[index];
-
-        // UI 요소 초기화
+        _currentSequenceIndex = 0;
+        _foundAnswerCount = 0;
+        
+        // --- UI 요소 초기화 ---
         if (questionImageObj != null) questionImageObj.gameObject.SetActive(false);
         if (questionRawImageObj != null) questionRawImageObj.gameObject.SetActive(false);
         if (questionVideoPlayer != null) questionVideoPlayer.Stop();
-        if (starPuzzleObject != null) starPuzzleObject.SetActive(false);
 
-        // 텍스트 설정
+        // --- 텍스트 설정 ---
         if (questionTextObj != null)
         {
             questionTextObj.text = _currentQuestion.questionText;
             questionTextObj.gameObject.SetActive(true);
             
-            // [추가] 텍스트 변경 후 그라데이션 재적용 (Mesh 갱신)
             TextGlobalGradient gradient = questionTextObj.GetComponent<TextGlobalGradient>();
             if (gradient != null && gradient.enabled)
             {
@@ -180,12 +228,8 @@ public class CalculateNumberManager : MonoBehaviour
             }
         }
 
-        // 콘텐츠 타입별 활성화
-        if (starPuzzleObject != null && _currentQuestion.questionText.Contains("별"))
-        {
-            starPuzzleObject.SetActive(true);
-        }
-        else if (_currentQuestion.questionVideo != null && !string.IsNullOrEmpty(_currentQuestion.questionVideo.fileName))
+        // --- 콘텐츠 타입별 활성화 ---
+        if (_currentQuestion.questionVideo != null && !string.IsNullOrEmpty(_currentQuestion.questionVideo.fileName))
         {
             PlayVideo(_currentQuestion.questionVideo);
         }
@@ -198,6 +242,7 @@ public class CalculateNumberManager : MonoBehaviour
             }
         }
 
+        // --- 정답 버튼 배치 ---
         SetupButtons(_currentQuestion);
     }
 
@@ -227,23 +272,34 @@ public class CalculateNumberManager : MonoBehaviour
     private void SetupButtons(CalculateNumberQuestion q)
     {
         List<string> options = new List<string>();
-        if (q.correctAnswers != null && q.correctAnswers.Length > 0)
-            options.Add(q.correctAnswers[0]);
-        
+        if (q.correctAnswers != null && q.correctAnswers.Length > 0) options.AddRange(q.correctAnswers);
         if (q.wrongAnswers != null)
-            options.AddRange(q.wrongAnswers.Take(3));
+        {
+            int slotsRemaining = 4 - options.Count;
+            if (slotsRemaining > 0) options.AddRange(q.wrongAnswers.Take(slotsRemaining));
+        }
 
         options = options.OrderBy(x => Random.value).ToList();
-        
         List<GameObject> shuffledButtons = answerButtons.OrderBy(x => Random.value).ToList();
 
         PlaceButtonsInArea(shuffledButtons.Take(2).ToList(), leftAreaRect);
         PlaceButtonsInArea(shuffledButtons.Skip(2).Take(2).ToList(), rightAreaRect);
 
+        bool isOverride = q.buttonStyleOverride != null && q.buttonStyleOverride.useOverride;
+        
+        // 오버라이드 시 Pressed 이미지를 미리 로드하여 클릭 이벤트에 전달 준비
+        Sprite overridePressedSprite = null;
+        if (isOverride)
+        {
+            overridePressedSprite = LoadSpriteFromStreamingAssets(q.buttonStyleOverride.pressedImageName);
+        }
+
         for (int i = 0; i < 4; i++)
         {
             GameObject btnObj = shuffledButtons[i];
-            
+            Button btn = btnObj.GetComponent<Button>();
+            btn.interactable = true;
+
             if (i < options.Count)
             {
                 string text = options[i];
@@ -251,17 +307,19 @@ public class CalculateNumberManager : MonoBehaviour
                 if (tmp != null) 
                 {
                     tmp.text = text;
-                    // [추가] 버튼 텍스트 변경 후 그라데이션 재적용
                     TextGlobalGradient gradient = tmp.GetComponent<TextGlobalGradient>();
-                    if (gradient != null && gradient.enabled)
-                    {
-                        gradient.ApplyGradient();
-                    }
+                    if (gradient != null && gradient.enabled) gradient.ApplyGradient();
                 }
 
-                Button btn = btnObj.GetComponent<Button>();
+                Image btnImage = btnObj.GetComponent<Image>();
+
+                if (isOverride) ApplyButtonOverride(btn, btnImage, q.buttonStyleOverride);
+                else RestoreButtonDefault(btn, btnImage);
+
                 btn.onClick.RemoveAllListeners();
-                btn.onClick.AddListener(() => OnAnswerClicked(text, btnObj));
+                
+                // [수정] 클릭 시 overridePressedSprite도 함께 전달
+                btn.onClick.AddListener(() => OnAnswerClicked(text, btnObj, overridePressedSprite));
                 
                 btnObj.SetActive(true);
             }
@@ -272,27 +330,158 @@ public class CalculateNumberManager : MonoBehaviour
         }
     }
 
-    private void OnAnswerClicked(string clickedText, GameObject btnObj)
+    private void ApplyButtonOverride(Button btn, Image btnImage, ButtonOverrideSetting setting)
+    {
+        Sprite normalSprite = LoadSpriteFromStreamingAssets(setting.normalImageName);
+        Sprite pressedSprite = LoadSpriteFromStreamingAssets(setting.pressedImageName);
+
+        if (normalSprite != null && btnImage != null)
+        {
+            btnImage.sprite = normalSprite;
+            btnImage.color = setting.buttonColor;
+        }
+
+        if (pressedSprite != null && btn != null)
+        {
+            btn.transition = Selectable.Transition.SpriteSwap;
+            SpriteState newState = new SpriteState();
+            newState.pressedSprite = pressedSprite;
+            newState.highlightedSprite = normalSprite; 
+            newState.selectedSprite = normalSprite;
+            newState.disabledSprite = pressedSprite; 
+            btn.spriteState = newState;
+        }
+
+        ImageGlobalGradient gradient = btn.GetComponent<ImageGlobalGradient>();
+        if (gradient != null) gradient.enabled = false;
+    }
+
+    private void RestoreButtonDefault(Button btn, Image btnImage)
+    {
+        if (_defaultButtonSprite != null && btnImage != null)
+        {
+            btnImage.sprite = _defaultButtonSprite;
+            btnImage.color = Color.white;
+        }
+
+        if (btn != null)
+        {
+            btn.spriteState = _defaultSpriteState;
+        }
+
+        ImageGlobalGradient gradient = btn.GetComponent<ImageGlobalGradient>();
+        if (gradient != null) gradient.enabled = true;
+    }
+
+    private Sprite LoadSpriteFromStreamingAssets(string fileName)
+    {
+        if (string.IsNullOrEmpty(fileName)) return null;
+
+        string path = Path.Combine(Application.streamingAssetsPath, fileName).Replace("\\", "/");
+        
+        if (File.Exists(path))
+        {
+            byte[] fileData = File.ReadAllBytes(path);
+            Texture2D texture = new Texture2D(2, 2);
+            if (texture.LoadImage(fileData)) 
+            {
+                return Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), new Vector2(0.5f, 0.5f));
+            }
+        }
+        else
+        {
+            Debug.LogWarning($"[CalculateNumberManager] Image not found: {path}");
+        }
+        return null;
+    }
+
+    // [핵심 수정] 정답 클릭 처리 로직 (Type별 분기)
+    private void OnAnswerClicked(string clickedText, GameObject btnObj, Sprite pressedSpriteOverride)
     {
         if (_isProcessing) return;
 
         bool isCorrect = false;
-        if (_currentQuestion.correctAnswers.Contains(clickedText))
+        bool isLevelComplete = false;
+
+        switch (_currentQuestion.type)
         {
-            isCorrect = true;
+            case QuestionType.SingleChoice:
+                if (_currentQuestion.correctAnswers.Contains(clickedText))
+                {
+                    isCorrect = true;
+                    isLevelComplete = true; 
+                }
+                break;
+
+            case QuestionType.MultipleChoice:
+                // [수정] HashSet 검사 제거: 텍스트가 같아도 버튼이 다르면 정답 인정
+                // 대신 버튼을 비활성화(Interactable=false) 하므로 중복 클릭은 물리적으로 방지됨
+                if (_currentQuestion.correctAnswers.Contains(clickedText))
+                {
+                    isCorrect = true;
+                    _foundAnswerCount++;
+                    
+                    // 마지막 정답인지 체크
+                    if (_foundAnswerCount >= _currentQuestion.correctAnswers.Length)
+                    {
+                        isLevelComplete = true;
+                    }
+                }
+                break;
+
+            case QuestionType.Sequence:
+                if (_currentSequenceIndex < _currentQuestion.correctAnswers.Length)
+                {
+                    string targetAnswer = _currentQuestion.correctAnswers[_currentSequenceIndex];
+                    if (clickedText == targetAnswer)
+                    {
+                        isCorrect = true;
+                        _currentSequenceIndex++;
+                        if (_currentSequenceIndex >= _currentQuestion.correctAnswers.Length)
+                        {
+                            isLevelComplete = true;
+                        }
+                    }
+                }
+                break;
         }
 
         if (isCorrect)
         {
-            Debug.Log("Correct!");
-            HandleCorrectAnswer().Forget();
+            // [중요] 정답 시 시각적 처리 및 비활성화
+            Button btn = btnObj.GetComponent<Button>();
+            Image btnImage = btnObj.GetComponent<Image>();
+            
+            // 1. 오버라이드된 Pressed 이미지가 있다면, Image 컴포넌트에 강제 적용 (불 끄기 효과)
+            if (pressedSpriteOverride != null && btnImage != null)
+            {
+                btnImage.sprite = pressedSpriteOverride;
+            }
+
+            // 2. 버튼 비활성화 (더 이상 클릭 불가)
+            if (btn != null) btn.interactable = false;
+
+            if (isLevelComplete)
+            {
+                Debug.Log("Question Clear!");
+                HandleCorrectAnswer().Forget();
+            }
+            else
+            {
+                Debug.Log("Keep Going...");
+            }
         }
         else
         {
             Debug.Log("Wrong!");
-            _isProcessing = true;
-            if (pageWrong != null) pageWrong.SetActive(true);
+            HandleWrongAnswer();
         }
+    }
+
+    private void HandleWrongAnswer()
+    {
+        _isProcessing = true;
+        if (pageWrong != null) pageWrong.SetActive(true);
     }
 
     private async UniTaskVoid HandleCorrectAnswer()
@@ -331,12 +520,10 @@ public class CalculateNumberManager : MonoBehaviour
 
     // --- Helper Functions ---
 
-    // [추가] 레벨별 그라데이션 적용 로직
     private void ApplyButtonGradients(int level)
     {
         if (JsonLoader.Instance == null) return;
 
-        // LevelSetting.json 로드
         LevelSetting levelSetting = JsonLoader.Instance.LoadJsonData<LevelSetting>("JSON/LevelSetting.json");
         
         if (levelSetting == null || levelSetting.levelGradients == null) return;
@@ -345,35 +532,28 @@ public class CalculateNumberManager : MonoBehaviour
         if (index < 0 || index >= levelSetting.levelGradients.Length)
         {
             Debug.LogWarning($"[CalculateNumberManager] No gradient data for Level {level}");
-            // 범위를 벗어난 경우 기본값(첫 번째나 마지막)을 쓸 수도 있지만 여기서는 리턴
-            if (levelSetting.levelGradients.Length > 0) index = 0;
-            else return;
+            return;
         }
 
         GradientData data = levelSetting.levelGradients[index];
 
-        // 1. 문제 텍스트에 그라데이션 적용
         ApplyGradientToTarget(questionTextObj, data);
 
-        // 2. 정답 버튼들에 그라데이션 적용
         if (answerButtons != null)
         {
             foreach (var btnObj in answerButtons)
             {
                 if (btnObj == null) continue;
 
-                // A. 텍스트 그라데이션
                 TextMeshProUGUI tmp = btnObj.GetComponentInChildren<TextMeshProUGUI>();
                 ApplyGradientToTarget(tmp, data);
 
-                // B. 버튼 배경 이미지 그라데이션 (랜덤 회전)
                 Image btnImage = btnObj.GetComponent<Image>();
                 ApplyGradientToImage(btnImage, data);
             }
         }
     }
     
-    // [추가] 이미지 그라데이션 적용 (랜덤 회전 포함)
     private void ApplyGradientToImage(Image targetImage, GradientData data)
     {
         if (targetImage == null || data == null) return;
@@ -396,7 +576,6 @@ public class CalculateNumberManager : MonoBehaviour
         }
     }
     
-    // [추가] 텍스트 그라데이션 적용
     private void ApplyGradientToTarget(TextMeshProUGUI tmp, GradientData data)
     {
         if (tmp == null || data == null) return;
@@ -410,6 +589,27 @@ public class CalculateNumberManager : MonoBehaviour
             gradient.SetGradient(data.topLeft, data.topRight, data.bottomLeft, data.bottomRight);
             gradient.enabled = true; 
             gradient.ApplyGradient(); 
+        }
+    }
+    
+    private void UpdateProgressImage(int level, int questionIndex)
+    {
+        if (progressImage == null || setting == null || setting.levelProgresses == null) return;
+
+        int levelIdx = level - 1;
+        if (levelIdx < 0 || levelIdx >= setting.levelProgresses.Length) return;
+
+        var stepSettings = setting.levelProgresses[levelIdx].steps;
+        if (stepSettings == null) return;
+
+        if (questionIndex >= 0 && questionIndex < stepSettings.Length)
+        {
+            var stepData = stepSettings[questionIndex];
+            if (stepData != null)
+            {
+                UIManager.Instance.SetImageObj(progressImage.gameObject, stepData);
+                progressImage.gameObject.SetActive(true);
+            }
         }
     }
 
@@ -470,42 +670,40 @@ public class CalculateNumberManager : MonoBehaviour
 
     private void ApplyUISettings()
     {
-        if (_setting == null || UIManager.Instance == null) return;
+        if (setting == null || UIManager.Instance == null) return;
         
-        this.buttonMargin = _setting.buttonMargin;
+        this.buttonMargin = setting.buttonMargin;
 
-        if (pageCorrect != null && _setting.correctImage != null)
+        if (backButton && setting.backButton != null)
         {
-            var img = pageCorrect.GetComponentInChildren<Image>();
-            if(img) UIManager.Instance.SetImageObj(img.gameObject, _setting.correctImage);
-        }
-        if (pageWrong != null && _setting.wrongImage != null)
-        {
-            var img = pageWrong.GetComponentInChildren<Image>();
-            if(img) UIManager.Instance.SetImageObj(img.gameObject, _setting.wrongImage);
+            UIManager.Instance.SetButtonObj(backButton.gameObject, setting.backButton).Forget();
         }
 
-        if (buttonRetry != null && _setting.retryButton != null)
-            UIManager.Instance.SetButtonObj(buttonRetry.gameObject, _setting.retryButton).Forget();
-        if (buttonGameEnd != null && _setting.gameEndButton != null)
-            UIManager.Instance.SetButtonObj(buttonGameEnd.gameObject, _setting.gameEndButton).Forget();
+        if (imageCorrect != null && setting.correctImage != null)
+            UIManager.Instance.SetImageObj(imageCorrect.gameObject, setting.correctImage);
+        if (imageWrong != null && setting.wrongImage != null)
+            UIManager.Instance.SetImageObj(imageWrong.gameObject, setting.wrongImage);
+        if (buttonRetry != null && setting.retryButton != null)
+            UIManager.Instance.SetButtonObj(buttonRetry.gameObject, setting.retryButton).Forget();
+        if (buttonGameEnd != null && setting.gameEndButton != null)
+            UIManager.Instance.SetButtonObj(buttonGameEnd.gameObject, setting.gameEndButton).Forget();
     }
 
-    private void ApplyLevelHeader(int level)
+    private void ApplyLevelImages(int level)
     {
-        if (_setting == null || UIManager.Instance == null) return;
+        if (setting == null || UIManager.Instance == null) return;
         
         int index = level - 1;
 
-        if (levelImage != null && _setting.levelImages != null && index < _setting.levelImages.Length)
+        if (levelImage != null && setting.levelImages != null && index < setting.levelImages.Length)
         {
-            UIManager.Instance.SetImageObj(levelImage.gameObject, _setting.levelImages[index]);
+            UIManager.Instance.SetImageObj(levelImage.gameObject, setting.levelImages[index]);
             levelImage.gameObject.SetActive(true);
         }
 
-        if (gameTypeImage != null && _setting.gameTypeImages != null && index < _setting.gameTypeImages.Length)
+        if (gameTypeImage != null && setting.gameTypeImages != null && index < setting.gameTypeImages.Length)
         {
-            UIManager.Instance.SetImageObj(gameTypeImage.gameObject, _setting.gameTypeImages[index]);
+            UIManager.Instance.SetImageObj(gameTypeImage.gameObject, setting.gameTypeImages[index]);
             gameTypeImage.gameObject.SetActive(true);
         }
     }

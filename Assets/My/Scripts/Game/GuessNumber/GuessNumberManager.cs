@@ -78,7 +78,7 @@ public class GuessNumberManager : MonoBehaviour
     private List<string> _remainingCorrectAnswers;
     private int _sequenceIndex;
     
-    // [추가] 중복 클릭 방지 플래그
+    // 중복 클릭 방지 플래그
     private bool _isProcessing = false;
 
     private readonly Dictionary<string, Sprite> _spriteCache = new Dictionary<string, Sprite>();
@@ -150,8 +150,6 @@ public class GuessNumberManager : MonoBehaviour
         }
     }
 
-    // ... (LoadGameData, ApplyUISettings, ApplyLevelImages, ApplyButtonGradients, ApplyGradientToImage, ApplyGradientToTarget, UpdateProgressImage 등은 기존과 동일하므로 생략하지 않고 전체 코드 유지를 위해 아래에 포함합니다.)
-
     private void LoadGameData()
     {
         if (JsonLoader.Instance != null)
@@ -175,10 +173,8 @@ public class GuessNumberManager : MonoBehaviour
 
             if (imageCorrect != null && setting.correctImage != null)
                 UIManager.Instance.SetImageObj(imageCorrect.gameObject, setting.correctImage);
-
             if (imageWrong != null && setting.wrongImage != null)
                 UIManager.Instance.SetImageObj(imageWrong.gameObject, setting.wrongImage);
-
             if (buttonRetry != null && setting.retryButton != null)
                 UIManager.Instance.SetButtonObj(buttonRetry.gameObject, setting.retryButton).Forget();
 
@@ -188,7 +184,7 @@ public class GuessNumberManager : MonoBehaviour
 
         if (JsonLoader.Instance != null)
         {
-            Settings globalSettings = JsonLoader.Instance.LoadJsonData<Settings>("Settings.json"); // 경로 주의
+            Settings globalSettings = JsonLoader.Instance.LoadJsonData<Settings>("Settings.json");
 
             if (globalSettings != null && globalSettings.questionButton != null)
             {
@@ -556,7 +552,7 @@ public class GuessNumberManager : MonoBehaviour
         SetQuestion(_currentQuestionIndex);
     }
 
-    /// <summary> [추가] GameEnd 버튼 클릭 이벤트 </summary>
+    /// <summary> GameEnd 버튼 클릭 이벤트 </summary>
     private void OnGameEndClicked()
     {
         GameResultContext.CorrectCount = _currentQuestionIndex;
