@@ -672,7 +672,7 @@ public class CalculateNumberManager : MonoBehaviour
     {
         if (setting == null || UIManager.Instance == null) return;
         
-        this.buttonMargin = setting.buttonMargin;
+        buttonMargin = setting.buttonMargin;
 
         if (backButton && setting.backButton != null)
         {
