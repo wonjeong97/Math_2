@@ -27,7 +27,7 @@ public class NumberSystemQuestion
     public ImageSetting questionImage; 
     public VideoSetting questionVideo; 
     
-    // [신규 기능] 답변 텍스트별로 매칭될 이미지 (레벨1 등에서 사용)
+    // 답변 텍스트별로 매칭될 이미지 (레벨1 등에서 사용)
     // 예: answerText="A"일 때 imagePath="Image/Apple.png" 매핑
     public AnswerImagePair[] answerImages;
 }
@@ -37,6 +37,7 @@ public class AnswerImagePair
 {
     public string answerText; // 매핑할 답변 텍스트 (correctAnswers/wrongAnswers에 있는 값)
     public string imagePath;  // StreamingAssets 내부 경로
+    public Vector2 size;
 }
 
 [Serializable]
@@ -108,6 +109,7 @@ public class NumberSystemManager : MonoBehaviour
     // 버튼 초기 상태 복구용
     private Sprite _defaultButtonSprite; 
     private Color _defaultButtonColor;
+    private Vector2 _defaultButtonSize;
 
     private void Start()
     {
@@ -146,6 +148,12 @@ public class NumberSystemManager : MonoBehaviour
             {
                 _defaultButtonSprite = firstImg.sprite;
                 _defaultButtonColor = firstImg.color;
+            }
+            
+            RectTransform firstRect = answerButtons[0].GetComponent<RectTransform>();
+            if (firstRect != null)
+            {
+                _defaultButtonSize = firstRect.sizeDelta;
             }
         }
 
@@ -227,7 +235,7 @@ public class NumberSystemManager : MonoBehaviour
         }
     }
 
-    private void SetupButtons(NumberSystemQuestion q)
+ private void SetupButtons(NumberSystemQuestion q)
     {
         List<string> options = new List<string>();
         if (q.correctAnswers != null) options.AddRange(q.correctAnswers);
@@ -237,28 +245,31 @@ public class NumberSystemManager : MonoBehaviour
             if (slotsRemaining > 0) options.AddRange(q.wrongAnswers.Take(slotsRemaining));
         }
 
-        // 보기 섞기
         options = options.OrderBy(x => Random.value).ToList();
-        
-        // 버튼 섞어서 배치
         List<GameObject> shuffledButtons = answerButtons.OrderBy(x => Random.value).ToList();
-        PlaceButtonsInArea(shuffledButtons.Take(2).ToList(), leftAreaRect);
-        PlaceButtonsInArea(shuffledButtons.Skip(2).Take(2).ToList(), rightAreaRect);
 
+        // 1. 버튼 설정 (기존 로직 유지)
         for (int i = 0; i < 4; i++)
         {
             GameObject btnObj = shuffledButtons[i];
             Button btn = btnObj.GetComponent<Button>();
             Image btnImage = btnObj.GetComponent<Image>();
+            RectTransform btnRect = btnObj.GetComponent<RectTransform>();
+            
             btn.interactable = true;
 
-            // 버튼 초기화 (기본 상태 복구)
+            // 기본 상태 복구
             if (btnImage != null && _defaultButtonSprite != null)
             {
                 btnImage.sprite = _defaultButtonSprite;
-                btnImage.color = _defaultButtonColor; // 그라데이션 적용을 위해 흰색이어야 함
+                btnImage.color = _defaultButtonColor;
             }
-            // 그라데이션 활성화
+            // 크기 초기화
+            if (btnRect != null && _defaultButtonSize != Vector2.zero)
+            {
+                btnRect.sizeDelta = _defaultButtonSize;
+            }
+            
             ImageGlobalGradient gradient = btnObj.GetComponent<ImageGlobalGradient>();
             if (gradient != null) gradient.enabled = true;
 
@@ -267,24 +278,27 @@ public class NumberSystemManager : MonoBehaviour
                 string text = options[i];
                 TextMeshProUGUI tmp = btnObj.GetComponentInChildren<TextMeshProUGUI>();
                 
-                // [신규 로직] 해당 텍스트에 매핑된 이미지가 있는지 확인
-                string mappedImagePath = GetImagePathForAnswer(q, text);
+                AnswerImagePair pair = GetAnswerImagePair(q, text);
                 
-                if (!string.IsNullOrEmpty(mappedImagePath))
+                if (pair != null && !string.IsNullOrEmpty(pair.imagePath))
                 {
-                    // 이미지가 있으면 텍스트는 숨기고 이미지를 버튼 배경으로 설정
                     if (tmp != null) tmp.text = "";
-                    Sprite customSprite = LoadSpriteFromStreamingAssets(mappedImagePath);
+                    Sprite customSprite = LoadSpriteFromStreamingAssets(pair.imagePath);
+                    
                     if (customSprite != null && btnImage != null)
                     {
                         btnImage.sprite = customSprite;
-                        btnImage.color = Color.white; // 이미지가 보이도록 흰색
-                        if (gradient != null) gradient.enabled = false; // 이미지 본연 색상을 위해 그라데이션 끔
+                        btnImage.color = Color.white; 
+                        if (gradient != null) gradient.enabled = false; 
+                        
+                        if (pair.size != Vector2.zero && btnRect != null)
+                        {
+                            btnRect.sizeDelta = pair.size;
+                        }
                     }
                 }
                 else
                 {
-                    // 이미지가 없으면 텍스트 표시
                     if (tmp != null) 
                     {
                         tmp.text = text;
@@ -302,14 +316,27 @@ public class NumberSystemManager : MonoBehaviour
                 btnObj.SetActive(false); 
             }
         }
-    }
 
-    private string GetImagePathForAnswer(NumberSystemQuestion q, string answerText)
+        // 활성화된 버튼 수에 따라 균등 분배
+        List<GameObject> activeButtons = shuffledButtons.Take(options.Count).ToList();
+        
+        // 반으로 나눕니다. (예: 2개면 1/1, 4개면 2/2, 3개면 2/1)
+        int halfCount = Mathf.CeilToInt(activeButtons.Count / 2f);
+
+        List<GameObject> leftButtons = activeButtons.Take(halfCount).ToList();
+        List<GameObject> rightButtons = activeButtons.Skip(halfCount).ToList();
+
+        // 각각 왼쪽/오른쪽 영역에 배치
+        PlaceButtonsInArea(leftButtons, leftAreaRect);
+        PlaceButtonsInArea(rightButtons, rightAreaRect);
+    }
+   
+    private AnswerImagePair GetAnswerImagePair(NumberSystemQuestion q, string answerText)
     {
         if (q.answerImages == null) return null;
         foreach (var pair in q.answerImages)
         {
-            if (pair.answerText == answerText) return pair.imagePath;
+            if (pair.answerText == answerText) return pair;
         }
         return null;
     }
@@ -383,13 +410,20 @@ public class NumberSystemManager : MonoBehaviour
     private Sprite LoadSpriteFromStreamingAssets(string fileName)
     {
         if (string.IsNullOrEmpty(fileName)) return null;
+
         string path = Path.Combine(Application.streamingAssetsPath, fileName).Replace("\\", "/");
+        
         if (File.Exists(path))
         {
             byte[] fileData = File.ReadAllBytes(path);
             Texture2D texture = new Texture2D(2, 2);
+            
             if (texture.LoadImage(fileData)) 
+            {
+                texture.wrapMode = TextureWrapMode.Clamp; 
+
                 return Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), new Vector2(0.5f, 0.5f));
+            }
         }
         return null;
     }
@@ -445,45 +479,57 @@ public class NumberSystemManager : MonoBehaviour
         }
     }
 
-    private void PlaceButtonsInArea(List<GameObject> buttonsToPlace, RectTransform areaRect)
+  private void PlaceButtonsInArea(List<GameObject> buttonsToPlace, RectTransform areaRect)
     {
-        // (CalculateNumberManager의 PlaceButtonsInArea 로직 동일하게 사용)
         if (areaRect == null || buttonsToPlace == null || buttonsToPlace.Count == 0) return;
-        GameObject sampleObj = buttonsToPlace[0];
-        RectTransform sampleRt = sampleObj.GetComponent<RectTransform>();
-        if (sampleRt == null) return;
 
         Rect rect = areaRect.rect;
         Vector2 halfAreaSize = rect.size * 0.5f;
         const int columns = 1;
         const int rows = 2; 
+        
         float cellWidth = rect.width / columns;
         float cellHeight = rect.height / rows;
-        Vector3 scale = sampleRt.localScale;
-        float buttonWidth = sampleRt.sizeDelta.x * scale.x;
-        float buttonHeight = sampleRt.sizeDelta.y * scale.y;
-        float maxJitterX = Mathf.Max(0f, (cellWidth - buttonWidth) * 0.5f - buttonMargin);
-        float maxJitterY = Mathf.Max(0f, (cellHeight - buttonHeight) * 0.5f - buttonMargin);
+        
+        // [삭제] 첫 번째 버튼 기준 샘플링 제거
+        // GameObject sampleObj = buttonsToPlace[0]; ...
 
         List<Vector2> slots = new List<Vector2>();
         for (int row = 0; row < rows; row++)
+        {
             for (int col = 0; col < columns; col++)
             {
                 float x = -halfAreaSize.x + cellWidth * (col + 0.5f);
                 float y =  halfAreaSize.y - cellHeight * (row + 0.5f);
                 slots.Add(new Vector2(x, y));
             }
+        }
 
-        for (int i = slots.Count - 1; i > 0; i--) { int j = Random.Range(0, i + 1); (slots[i], slots[j]) = (slots[j], slots[i]); }
+        for (int i = slots.Count - 1; i > 0; i--) 
+        { 
+            int j = Random.Range(0, i + 1); 
+            (slots[i], slots[j]) = (slots[j], slots[i]); 
+        }
 
         int count = Mathf.Min(buttonsToPlace.Count, slots.Count);
         for (int i = 0; i < count; i++)
         {
             GameObject obj = buttonsToPlace[i];
             RectTransform rt = obj.GetComponent<RectTransform>();
+            
+            // 각 버튼마다 개별적으로 크기를 확인하여 Jitter(흔들기) 범위를 계산
+            Vector3 scale = rt.localScale;
+            float currentBtnWidth = rt.sizeDelta.x * scale.x;
+            float currentBtnHeight = rt.sizeDelta.y * scale.y;
+
+            // 버튼이 셀보다 크면 0, 작으면 여유 공간만큼 Jitter 허용
+            float maxJitterX = Mathf.Max(0f, (cellWidth - currentBtnWidth) * 0.5f - buttonMargin);
+            float maxJitterY = Mathf.Max(0f, (cellHeight - currentBtnHeight) * 0.5f - buttonMargin);
+
             Vector2 basePos = slots[i];
             float offsetX = maxJitterX > 0f ? Random.Range(-maxJitterX, maxJitterX) : 0f;
             float offsetY = maxJitterY > 0f ? Random.Range(-maxJitterY, maxJitterY) : 0f;
+            
             rt.SetParent(areaRect, false);
             rt.anchorMin = rt.anchorMax = new Vector2(0.5f, 0.5f);
             rt.pivot = new Vector2(0.5f, 0.5f);

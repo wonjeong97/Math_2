@@ -95,6 +95,12 @@ public class ImageSetting
     public string sourceImage;
     public Color color = Color.white;
     public UIImageType type = UIImageType.Simple;
+    
+    [Header("Fade Settings")]
+    public bool useFade;           // 페이드 효과 사용 여부
+    public float fadeDuration = 1f;// 페이드 소요 시간
+    public bool isFadeOut;         // true: Fade Out(사라짐), false: Fade In(나타남)
+    public bool loop;              // true: 효과 반복 (깜빡임/PingPong)
 }
 
 [Serializable]

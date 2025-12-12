@@ -240,7 +240,14 @@ public class UIManager : MonoBehaviour
         Texture2D texture = new Texture2D(2, 2, TextureFormat.RGBA32, false);
         bool ok = texture.LoadImage(fileData);
 
-        return !ok ? null : texture;
+        if (ok)
+        {
+            // 텍스처의 가장자리가 반대편에서 나오지 않도록 Clamp로 설정
+            texture.wrapMode = TextureWrapMode.Clamp; 
+            return texture;
+        }
+        
+        return null;
     }
 
     /// <summary> 타입 T 컴포넌트를 가져오거나 없으면 추가해서 반환 </summary>
