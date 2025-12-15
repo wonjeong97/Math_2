@@ -43,15 +43,15 @@ public sealed class TitleManager : BaseManager<TitleSetting>
         }
         catch (OperationCanceledException)
         {
-            Debug.LogWarning("[TitleManager] => Initialize Canceled");
+            Debug.LogWarning("[Title] => Initialize Canceled");
         }
         catch (Exception e)
         {
-            Debug.LogError($"[TitleManager] => Initialize Exception: {e}");
+            Debug.LogError($"[Title] => Initialize Exception: {e}");
         }
         finally
         {
-            Debug.Log("[TitleManager] => Initialize Finished");
+            Debug.Log("[Title] => Initialize Finished");
         }
     }
     
@@ -65,11 +65,12 @@ public sealed class TitleManager : BaseManager<TitleSetting>
         try
         {
             await fader.FadeOut(fadeImage, fadeTime, DestroyToken);
-
+            
+            Debug.Log("[Title] Player Clicked Start");
             AsyncOperation op = SceneManager.LoadSceneAsync("LevelSelect", LoadSceneMode.Single);
             if (op == null)
             {
-                Debug.LogError("[TitleManager] HandleStartButtonAsync-> LoadSceneAsync returned null");
+                Debug.LogError("[Title] HandleStartButtonAsync-> LoadSceneAsync returned null");
                 return;
             }
             
@@ -85,7 +86,7 @@ public sealed class TitleManager : BaseManager<TitleSetting>
         }
         catch (Exception e)
         {
-            Debug.LogError($"[TitleManager] HandleStartButtonAsync-> Exception: {e}");
+            Debug.LogError($"[Title] HandleStartButtonAsync-> Exception: {e}");
         }
     }
 }

@@ -1,212 +1,102 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using Cysharp.Threading.Tasks;
-using TMPro;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using TMPro; 
 using Random = UnityEngine.Random;
 
-#region Data Structures
-
-[Serializable]
-public class LevelProgressSetting
+public class GuessNumberManager : BaseGameManager<GuessNumberSetting, GuessNumberQuestion>
 {
-    public ImageSetting[] steps;
-}
-
-[Serializable]
-public class GuessNumberSetting
-{
-    public GuessNumberQuestion[] questions;
-    public ImageSetting[] levelImages;
-    public ImageSetting[] gameTypeImages;
-    public LevelProgressSetting[] levelProgresses; 
-    public ButtonSetting backButton;
-    public float buttonMargin = 20f;
-    
-    public ImageSetting correctImage;
-    public ImageSetting wrongImage;
-    public ButtonSetting retryButton;
-    public ButtonSetting gameEndButton;
-}
-
-#endregion
-
-public class GuessNumberManager : MonoBehaviour
-{
-    [Header("Top UI")]
-    [SerializeField] private Image levelImage;
-    [SerializeField] private Image gameTypeImage;
-    [SerializeField] private Image progressImage;
-
-    [Header("Layout Areas")]
-    [SerializeField] private RectTransform leftAreaRect;
-    [SerializeField] private RectTransform rightAreaRect;
-    
-    private float buttonMargin = 20f; 
-
-    [Header("Question UI Objects")]
-    [SerializeField] private TextMeshProUGUI questionTextObj; 
-    [SerializeField] private Image questionImageObj;       
-
-    [Header("Question Zones")]
+    [Header("--- GuessNumber Specific ---")]
     [SerializeField] private Transform leftQuestionZone;
     [SerializeField] private Transform rightQuestionZone;
 
-    [Header("Buttons")]
-    [SerializeField] private GameObject[] answerButtons;
-    [SerializeField] private Button backButton;
-    
-    [Header("Result UI Objects")]
-    [SerializeField] private GameObject pageCorrect;
-    [SerializeField] private Image imageCorrect;      
-    
-    [SerializeField] private GameObject pageWrong;    
-    [SerializeField] private Image imageWrong;        
-    [SerializeField] private Button buttonRetry;      
-    [SerializeField] private Button buttonGameEnd;    
-
-    private GuessNumberSetting setting;
-    
-    private List<GuessNumberQuestion> _currentLevelQuestions;
-    private int _currentQuestionIndex;
-    private int _totalQuestions = 4; 
-
-    private GuessNumberQuestion _currentQuestion;
+    // 진행 상태 변수
+    private int _sequenceIndex = 0;
     private List<string> _remainingCorrectAnswers;
-    private int _sequenceIndex;
-    
-    // 중복 클릭 방지 플래그
-    private bool _isProcessing = false;
 
-    private readonly Dictionary<string, Sprite> _spriteCache = new Dictionary<string, Sprite>();
+    protected override string GetJsonFileName() => "GuessNumber.json";
 
-    private void Start()
+    protected override int GetQuestionLevel(GuessNumberQuestion question) => question.level;
+
+    // [중요] 초기화 순서 수정
+    protected override void Initialize()
     {
-        Initialize();
-    }
-
-    private void Initialize()
-    {
-        // 1. 시작 시 결과 페이지 비활성화
-        if (pageCorrect != null) pageCorrect.SetActive(false);
-        if (pageWrong != null) pageWrong.SetActive(false);
-
-        // 2. 오답 페이지 버튼 이벤트 연결
-        if (buttonRetry != null)
-        {
-            buttonRetry.onClick.RemoveAllListeners();
-            buttonRetry.onClick.AddListener(OnRetryClicked);
-        }
-
-        if (buttonGameEnd != null)
-        {
-            buttonGameEnd.onClick.RemoveAllListeners();
-            buttonGameEnd.onClick.AddListener(OnGameEndClicked);
-        }
-
+        // 1. 데이터 먼저 로드
         LoadGameData();
 
-        if (setting == null)
-        {
-            Debug.LogError("[GuessNumberManager] Data Load Failed.");
-            return;
-        }
-
+        // 2. 스타일 및 UI 세팅 적용 (부모 Initialize보다 먼저 실행해야 함)
         ApplyUISettings();
+        ApplyButtonStyles();
 
-        int selectedLevel = LevelSelectContext.SelectedLevel;
-        if (selectedLevel <= 0) selectedLevel = 1;
-        
-        ApplyLevelImages(selectedLevel);
-        ApplyButtonGradients(selectedLevel);
-
-        if (backButton)
-        {
-            backButton.onClick.RemoveAllListeners();
-            backButton.onClick.AddListener(() => SceneManager.LoadScene("LevelSelect"));
-        }
-
-        if (setting.questions != null)
-        {
-            var levelQuestions = setting.questions
-                .Where(q => q.level == selectedLevel)
-                .ToList();
-
-            if (levelQuestions.Count == 0)
-            {
-                Debug.LogWarning($"Level {selectedLevel} 데이터가 없습니다.");
-                return;
-            }
-
-            int count = Mathf.Min(levelQuestions.Count, _totalQuestions);
-            _currentLevelQuestions = levelQuestions.OrderBy(x => Random.value).Take(count).ToList();
-            _totalQuestions = _currentLevelQuestions.Count;
-            _currentQuestionIndex = 0;
-            
-            SetQuestion(_currentQuestionIndex);
-        }
+        // 3. 부모 초기화 실행 (버튼 기본 상태 저장 및 게임 시작)
+        base.Initialize();
     }
 
-    private void LoadGameData()
-    {
-        if (JsonLoader.Instance != null)
-        {
-            setting = JsonLoader.Instance.LoadJsonData<GuessNumberSetting>("JSON/GuessNumber.json");
-        }
-    }
-
+    // UI 세팅 적용 (이미지, 버튼 등)
     private void ApplyUISettings()
     {
-        if (UIManager.Instance == null) return;
+        if (currentSetting == null || UIManager.Instance == null) return;
 
-        if (setting != null)
+        this.buttonMargin = currentSetting.buttonMargin;
+
+        // 공통 UI 요소 설정
+        if (backButton && currentSetting.backButton != null)
+            UIManager.Instance.SetButtonObj(backButton.gameObject, currentSetting.backButton).Forget();
+
+        if (imageCorrect != null && currentSetting.correctImage != null)
+            UIManager.Instance.SetImageObj(imageCorrect.gameObject, currentSetting.correctImage);
+
+        if (imageWrong != null && currentSetting.wrongImage != null)
+            UIManager.Instance.SetImageObj(imageWrong.gameObject, currentSetting.wrongImage);
+
+        if (buttonRetry != null && currentSetting.retryButton != null)
+            UIManager.Instance.SetButtonObj(buttonRetry.gameObject, currentSetting.retryButton).Forget();
+
+        if (buttonGameEnd != null && currentSetting.gameEndButton != null)
+            UIManager.Instance.SetButtonObj(buttonGameEnd.gameObject, currentSetting.gameEndButton).Forget();
+
+        // 상단 이미지 (레벨, 게임타입) 적용
+        int levelIndex = LevelSelectContext.SelectedLevel - 1;
+        if (levelIndex >= 0)
         {
-            buttonMargin = setting.buttonMargin;
-
-            if (backButton && setting.backButton != null)
+            if (levelImage && currentSetting.levelImages != null && levelIndex < currentSetting.levelImages.Length)
             {
-                UIManager.Instance.SetButtonObj(backButton.gameObject, setting.backButton).Forget();
+                UIManager.Instance.SetImageObj(levelImage.gameObject, currentSetting.levelImages[levelIndex]);
+                levelImage.gameObject.SetActive(true);
             }
-
-            if (imageCorrect != null && setting.correctImage != null)
-                UIManager.Instance.SetImageObj(imageCorrect.gameObject, setting.correctImage);
-            if (imageWrong != null && setting.wrongImage != null)
-                UIManager.Instance.SetImageObj(imageWrong.gameObject, setting.wrongImage);
-            if (buttonRetry != null && setting.retryButton != null)
-                UIManager.Instance.SetButtonObj(buttonRetry.gameObject, setting.retryButton).Forget();
-
-            if (buttonGameEnd != null && setting.gameEndButton != null)
-                UIManager.Instance.SetButtonObj(buttonGameEnd.gameObject, setting.gameEndButton).Forget();
+            if (gameTypeImage && currentSetting.gameTypeImages != null && levelIndex < currentSetting.gameTypeImages.Length)
+            {
+                UIManager.Instance.SetImageObj(gameTypeImage.gameObject, currentSetting.gameTypeImages[levelIndex]);
+                gameTypeImage.gameObject.SetActive(true);
+            }
         }
+    }
 
-        if (JsonLoader.Instance != null)
+    // 버튼 스타일 적용 (Global Settings)
+    private void ApplyButtonStyles()
+    {
+        if (JsonLoader.Instance != null && UIManager.Instance != null && answerButtons != null)
         {
             Settings globalSettings = JsonLoader.Instance.LoadJsonData<Settings>("Settings.json");
-
             if (globalSettings != null && globalSettings.questionButton != null)
             {
-                if (answerButtons != null)
+                foreach (GameObject btn in answerButtons)
                 {
-                    foreach (GameObject btnObj in answerButtons)
+                    if (btn == null) continue;
+
+                    UIManager.Instance.SetButtonObj(btn, globalSettings.questionButton).Forget();
+
+                    if (globalSettings.questionButton.buttonText != null)
                     {
-                        if (btnObj == null) continue;
-
-                        UIManager.Instance.SetButtonObj(btnObj, globalSettings.questionButton).Forget();
-
-                        if (globalSettings.questionButton.buttonText != null)
+                        var tmp = btn.GetComponentInChildren<TextMeshProUGUI>();
+                        if (tmp)
                         {
-                            TextMeshProUGUI tmp = btnObj.GetComponentInChildren<TextMeshProUGUI>();
-                            if (tmp != null)
-                            {
-                                tmp.enableAutoSizing = true;
-                                tmp.fontSizeMax = globalSettings.questionButton.buttonText.fontSize;
-                                tmp.fontSizeMin = globalSettings.questionButton.buttonText.fontSize * 0.4f;
-                                tmp.enableWordWrapping = true; 
-                                tmp.margin = new Vector4(20, 10, 20, 10); 
-                            }
+                            tmp.enableAutoSizing = true;
+                            tmp.fontSizeMax = globalSettings.questionButton.buttonText.fontSize;
+                            tmp.fontSizeMin = globalSettings.questionButton.buttonText.fontSize * 0.4f;
+                            tmp.enableWordWrapping = true; // GuessNumber는 텍스트가 길 수 있으므로 래핑 활성화
                         }
                     }
                 }
@@ -214,192 +104,89 @@ public class GuessNumberManager : MonoBehaviour
         }
     }
 
-    private void ApplyLevelImages(int level)
+    protected override void StartGameLogic()
     {
-        if (setting == null || UIManager.Instance == null) return;
+        int selectedLevel = LevelSelectContext.SelectedLevel > 0 ? LevelSelectContext.SelectedLevel : 1;
 
-        int index = level - 1;
-
-        if (levelImage != null && setting.levelImages != null && index < setting.levelImages.Length)
+        if (currentSetting?.questions != null)
         {
-            var imgData = setting.levelImages[index];
-            if (imgData != null)
+            var levelQuestions = currentSetting.questions.Where(q => q.level == selectedLevel).ToList();
+            if (levelQuestions.Count > 0)
             {
-                UIManager.Instance.SetImageObj(levelImage.gameObject, imgData);
-                levelImage.gameObject.SetActive(true);
+                int count = Mathf.Min(levelQuestions.Count, totalQuestions);
+                currentLevelQuestions = levelQuestions.OrderBy(x => Random.value).Take(count).ToList();
+                totalQuestions = currentLevelQuestions.Count;
+                SetQuestionBase(0);
             }
-        }
-
-        if (gameTypeImage != null && setting.gameTypeImages != null && index < setting.gameTypeImages.Length)
-        {
-            var typeData = setting.gameTypeImages[index];
-            if (typeData != null)
+            else
             {
-                UIManager.Instance.SetImageObj(gameTypeImage.gameObject, typeData);
-                gameTypeImage.gameObject.SetActive(true);
-            }
-        }
-    }
-    
-    private void ApplyButtonGradients(int level)
-    {
-        if (JsonLoader.Instance == null) return;
-
-        LevelSetting levelSetting = JsonLoader.Instance.LoadJsonData<LevelSetting>("JSON/LevelSetting.json");
-        
-        if (levelSetting == null || levelSetting.levelGradients == null) return;
-
-        int index = level - 1;
-        if (index < 0 || index >= levelSetting.levelGradients.Length)
-        {
-            Debug.LogWarning($"[GuessNumberManager] No gradient data for Level {level}");
-            return;
-        }
-
-        GradientData data = levelSetting.levelGradients[index];
-
-        ApplyGradientToTarget(questionTextObj, data);
-
-        if (answerButtons != null)
-        {
-            foreach (var btnObj in answerButtons)
-            {
-                if (btnObj == null) continue;
-                TextMeshProUGUI tmp = btnObj.GetComponentInChildren<TextMeshProUGUI>();
-                ApplyGradientToTarget(tmp, data);
-
-                Image btnImage = btnObj.GetComponent<Image>();
-                ApplyGradientToImage(btnImage, data);
-            }
-        }
-    }
-    
-    private void ApplyGradientToImage(Image targetImage, GradientData data)
-    {
-        if (targetImage == null || data == null) return;
-
-        targetImage.color = Color.white;
-
-        ImageGlobalGradient gradient = UIManager.GetOrAdd<ImageGlobalGradient>(targetImage.gameObject);
-        
-        if (gradient != null)
-        {
-            Color[] colors = new Color[] { data.topLeft, data.topRight, data.bottomRight, data.bottomLeft };
-            int offset = Random.Range(0, 4);
-            Color newTL = colors[(0 + offset) % 4];
-            Color newTR = colors[(1 + offset) % 4];
-            Color newBR = colors[(2 + offset) % 4];
-            Color newBL = colors[(3 + offset) % 4];
-
-            gradient.SetGradient(newTL, newTR, newBL, newBR);
-            gradient.enabled = true;
-        }
-    }
-    
-    private void ApplyGradientToTarget(TextMeshProUGUI tmp, GradientData data)
-    {
-        if (tmp == null || data == null) return;
-
-        tmp.enableVertexGradient = false;
-        tmp.color = Color.white;
-
-        TextGlobalGradient gradient = UIManager.GetOrAdd<TextGlobalGradient>(tmp.gameObject);
-        if (gradient != null)
-        {
-            gradient.SetGradient(data.topLeft, data.topRight, data.bottomLeft, data.bottomRight);
-            gradient.enabled = true; 
-            gradient.ApplyGradient(); 
-        }
-    }
-
-    private void UpdateProgressImage(int level, int questionIndex)
-    {
-        if (progressImage == null || setting == null || setting.levelProgresses == null) return;
-
-        int levelIdx = level - 1;
-        if (levelIdx < 0 || levelIdx >= setting.levelProgresses.Length) return;
-
-        var stepSettings = setting.levelProgresses[levelIdx].steps;
-        if (stepSettings == null) return;
-
-        if (questionIndex >= 0 && questionIndex < stepSettings.Length)
-        {
-            var stepData = stepSettings[questionIndex];
-            if (stepData != null)
-            {
-                UIManager.Instance.SetImageObj(progressImage.gameObject, stepData);
-                progressImage.gameObject.SetActive(true);
+                Debug.LogWarning($"Level {selectedLevel} 데이터가 없습니다.");
             }
         }
     }
 
-    private void SetQuestion(int index)
+    // 개별 문제 UI 세팅
+    protected override void SetupSpecificQuestionUI(GuessNumberQuestion q)
     {
-        // 범위를 벗어난 경우 체크는 HandleCorrectAnswer에서 이미 처리하지만 안전장치로 유지
-        if (index >= _currentLevelQuestions.Count) return; 
-        
-        // 문제 셋업 시작 시 플래그 해제
-        _isProcessing = false;
-
-        UpdateProgressImage(LevelSelectContext.SelectedLevel, index);
-
-        _currentQuestion = _currentLevelQuestions[index];
-        _remainingCorrectAnswers = new List<string>(_currentQuestion.correctAnswers);
+        // 상태 초기화
         _sequenceIndex = 0;
+        _remainingCorrectAnswers = new List<string>(q.correctAnswers); 
 
+        // 진행도 업데이트
+        UpdateProgressImage(q.level, currentQuestionIndex);
+
+        // 1. 좌우 랜덤 배치 결정 (50%)
         bool isTextLeft = Random.Range(0, 2) == 0;
-        
         Transform textParent = isTextLeft ? leftQuestionZone : rightQuestionZone;
         Transform imageParent = isTextLeft ? rightQuestionZone : leftQuestionZone;
 
-        if (questionTextObj != null && textParent != null)
+        // 2. 텍스트 설정 및 배치
+        if (questionTextObj && textParent)
         {
             questionTextObj.transform.SetParent(textParent, false);
-            bool hasText = !string.IsNullOrEmpty(_currentQuestion.questionText);
+            bool hasText = !string.IsNullOrEmpty(q.questionText);
             
             if (hasText)
             {
-                questionTextObj.text = _currentQuestion.questionText;
-                TextGlobalGradient gradient = questionTextObj.GetComponent<TextGlobalGradient>();
-                if (gradient != null && gradient.enabled)
-                {
-                    gradient.ApplyGradient();
-                }
+                questionTextObj.text = q.questionText;
                 questionTextObj.gameObject.SetActive(true);
             }
             else
             {
                 questionTextObj.gameObject.SetActive(false);
             }
-            textParent.gameObject.SetActive(hasText);
+            // 부모 오브젝트 활성/비활성 처리
+            if (textParent.gameObject != null) textParent.gameObject.SetActive(hasText);
         }
 
-        if (questionImageObj != null && imageParent != null)
+        // 3. 이미지 설정 및 배치
+        if (questionImageObj && imageParent)
         {
             questionImageObj.transform.SetParent(imageParent, false);
-            bool hasImage = _currentQuestion.questionImage != null && !string.IsNullOrEmpty(_currentQuestion.questionImage.sourceImage);
+            bool hasImage = q.questionImage != null && !string.IsNullOrEmpty(q.questionImage.sourceImage);
 
             if (hasImage && UIManager.Instance != null)
             {
-                UIManager.Instance.SetImageObj(questionImageObj.gameObject, _currentQuestion.questionImage);
+                UIManager.Instance.SetImageObj(questionImageObj.gameObject, q.questionImage);
                 questionImageObj.gameObject.SetActive(true);
-                imageParent.gameObject.SetActive(true);
+                if (imageParent.gameObject != null) imageParent.gameObject.SetActive(true);
             }
             else
             {
                 questionImageObj.gameObject.SetActive(false);
-                imageParent.gameObject.SetActive(false);
+                // 이미지가 없으면 부모 영역도 꺼서 레이아웃 정리 (선택사항)
+                if (imageParent.gameObject != null) imageParent.gameObject.SetActive(false);
             }
         }
-
-        SetupAndPlaceButtons(_currentQuestion);
     }
 
-    private void SetupAndPlaceButtons(GuessNumberQuestion q)
+    // 정답 버튼 세팅
+    protected override void SetupAnswerButtons(GuessNumberQuestion q)
     {
         int totalSlots = 4;
         List<string> displayTexts = new List<string>();
 
+        // 문제 유형별 보기 구성
         if (q.type == QuestionType.Sequence)
         {
             displayTexts.AddRange(q.correctAnswers.Take(totalSlots));
@@ -417,80 +204,100 @@ public class GuessNumberManager : MonoBehaviour
                 displayTexts = displayTexts.Take(totalSlots).ToList();
                 _remainingCorrectAnswers = new List<string>(displayTexts);
             }
+            
             int slotsLeft = totalSlots - displayTexts.Count;
             if (slotsLeft > 0 && q.wrongAnswers != null)
                 displayTexts.AddRange(q.wrongAnswers.OrderBy(x => Random.value).Take(slotsLeft));
         }
-        else 
+        else // SingleChoice
         {
-            displayTexts.Add(q.correctAnswers[0]);
+            if(q.correctAnswers.Length > 0) displayTexts.Add(q.correctAnswers[0]);
             if (q.wrongAnswers != null)
                 displayTexts.AddRange(q.wrongAnswers.OrderBy(x => Random.value).Take(totalSlots - 1));
         }
 
+        // 셔플
         List<string> shuffledTexts = displayTexts.OrderBy(x => Random.value).ToList();
         List<GameObject> shuffledButtons = answerButtons.OrderBy(x => Random.value).ToList();
         
+        // 버튼 배치 (2개씩 분할)
         List<GameObject> leftButtons = new List<GameObject> { shuffledButtons[0], shuffledButtons[1] };
         List<GameObject> rightButtons = new List<GameObject> { shuffledButtons[2], shuffledButtons[3] };
 
         PlaceButtonsInArea(leftButtons, leftAreaRect);
         PlaceButtonsInArea(rightButtons, rightAreaRect);
 
+        // 버튼 데이터 설정
         for (int i = 0; i < totalSlots; i++)
         {
             GameObject btnObj = shuffledButtons[i];
             string text = (i < shuffledTexts.Count) ? shuffledTexts[i] : "";
             
+            // 텍스트 설정
             TextMeshProUGUI tmp = btnObj.GetComponentInChildren<TextMeshProUGUI>();
-            if (tmp) 
-            {
-                tmp.text = text;
-                TextGlobalGradient gradient = tmp.GetComponent<TextGlobalGradient>();
-                if (gradient != null && gradient.enabled)
-                {
-                    gradient.ApplyGradient();
-                }
-            }
+            if (tmp) tmp.text = text;
 
+            // 버튼 리셋 (스타일 적용된 기본값으로 복구)
             Button btn = btnObj.GetComponent<Button>();
+            Image btnImage = btnObj.GetComponent<Image>();
+            
+            if (btnImage && defaultButtonSprite)
+            {
+                btnImage.sprite = defaultButtonSprite;
+                btnImage.color = defaultButtonColor;
+            }
+            
+            // 그라데이션 켜기
+            var gradient = btnObj.GetComponent<ImageGlobalGradient>();
+            if (gradient) gradient.enabled = true;
+
+            // 리스너 연결
             btn.onClick.RemoveAllListeners();
             if (!string.IsNullOrEmpty(text))
+            {
                 btn.onClick.AddListener(() => OnAnswerClicked(text, btnObj));
+            }
             
             btnObj.SetActive(!string.IsNullOrEmpty(text));
+            btn.interactable = true;
         }
     }
 
     private void OnAnswerClicked(string clickedText, GameObject btnObj)
     {
-        // 연출 진행 중이거나 오답창이 떠있으면 입력 무시
-        if (_isProcessing) return;
+        if (isProcessing) return;
 
         bool isCorrectAction = false;
         bool isLevelClear = false;
 
-        switch (_currentQuestion.type)
+        switch (currentQuestion.type)
         {
             case QuestionType.SingleChoice:
-                if (clickedText == _currentQuestion.correctAnswers[0]) { isCorrectAction = true; isLevelClear = true; }
+                if (currentQuestion.correctAnswers.Length > 0 && clickedText == currentQuestion.correctAnswers[0]) 
+                { 
+                    isCorrectAction = true; 
+                    isLevelClear = true; 
+                }
                 break;
+
             case QuestionType.MultipleChoice:
                 if (_remainingCorrectAnswers.Contains(clickedText))
                 {
                     isCorrectAction = true;
                     _remainingCorrectAnswers.Remove(clickedText);
-                    btnObj.SetActive(false);
+                    btnObj.SetActive(false); // 맞춘 버튼 숨기기
                     if (_remainingCorrectAnswers.Count == 0) isLevelClear = true;
                 }
                 break;
+
             case QuestionType.Sequence:
-                if (_sequenceIndex < _currentQuestion.correctAnswers.Length && clickedText == _currentQuestion.correctAnswers[_sequenceIndex])
+                if (_sequenceIndex < currentQuestion.correctAnswers.Length && 
+                    clickedText == currentQuestion.correctAnswers[_sequenceIndex])
                 {
                     isCorrectAction = true;
                     _sequenceIndex++;
-                    btnObj.SetActive(false);
-                    if (_sequenceIndex >= _currentQuestion.correctAnswers.Length) isLevelClear = true;
+                    btnObj.SetActive(false); // 맞춘 순서 숨기기
+                    if (_sequenceIndex >= currentQuestion.correctAnswers.Length) isLevelClear = true;
                 }
                 break;
         }
@@ -498,110 +305,30 @@ public class GuessNumberManager : MonoBehaviour
         if (isCorrectAction)
         {
             Debug.Log("Correct!");
-            // 문제가 완전히 클리어되었을 때
             if (isLevelClear)
             {
-                // 비동기 처리(연출 및 대기)를 위해 Forget 호출
-                HandleCorrectAnswer().Forget();
+                HandleCorrectAnswer();
             }
         }
         else
         {
             Debug.Log("Wrong!");
-            // 오답 페이지 활성화 및 플래그 설정
-            _isProcessing = true;
-            if (pageWrong != null) pageWrong.SetActive(true);
+            HandleWrongAnswer();
         }
     }
 
-    /// <summary> 정답 처리 비동기 메서드 </summary>
-    private async UniTaskVoid HandleCorrectAnswer()
+    private void UpdateProgressImage(int level, int index)
     {
-        _isProcessing = true;
-
-        // 1. Page_Correct 활성화
-        if (pageCorrect != null) pageCorrect.SetActive(true);
-
-        // 2. 1초 대기
-        await UniTask.Delay(TimeSpan.FromSeconds(1));
-
-        // 3. Page_Correct 비활성화
-        if (pageCorrect != null) pageCorrect.SetActive(false);
-
-        // 4. 다음 문제 또는 게임 종료 판단
-        _currentQuestionIndex++;
-        if (_currentQuestionIndex >= _totalQuestions) // 마지막 문제였다면
-        {   
-            GameResultContext.CorrectCount = _totalQuestions;
-            SceneManager.LoadScene("GameEnd");
-        }
-        else
+        if (!progressImage || currentSetting?.levelProgresses == null) return;
+        int lvIdx = level - 1;
+        if (lvIdx >= 0 && lvIdx < currentSetting.levelProgresses.Length)
         {
-            // 다음 문제 출제 (SetQuestion 내부에서 _isProcessing = false 처리됨)
-            SetQuestion(_currentQuestionIndex);
-        }
-    }
-
-    /// <summary> Retry 버튼 클릭 이벤트 </summary>
-    private void OnRetryClicked()
-    {
-        // 오답 페이지 닫기
-        if (pageWrong != null) pageWrong.SetActive(false);
-        
-        // 현재 문제 다시 세팅 (버튼 활성화 및 셔플 리셋)
-        SetQuestion(_currentQuestionIndex);
-    }
-
-    /// <summary> GameEnd 버튼 클릭 이벤트 </summary>
-    private void OnGameEndClicked()
-    {
-        GameResultContext.CorrectCount = _currentQuestionIndex;
-        SceneManager.LoadScene("GameEnd");
-    }
-
-    private void PlaceButtonsInArea(List<GameObject> buttonsToPlace, RectTransform areaRect)
-    {
-        if (areaRect == null || buttonsToPlace == null || buttonsToPlace.Count == 0) return;
-
-        GameObject sampleObj = buttonsToPlace[0];
-        RectTransform sampleRt = sampleObj.GetComponent<RectTransform>();
-        if (sampleRt == null) return;
-
-        Rect rect = areaRect.rect;
-        Vector2 halfAreaSize = rect.size * 0.5f;
-        const int columns = 1;
-        const int rows = 2;
-        float cellWidth = rect.width / columns;
-        float cellHeight = rect.height / rows;
-        Vector3 scale = sampleRt.localScale;
-        float buttonWidth = sampleRt.sizeDelta.x * scale.x;
-        float buttonHeight = sampleRt.sizeDelta.y * scale.y;
-        float maxJitterX = Mathf.Max(0f, (cellWidth - buttonWidth) * 0.5f - buttonMargin);
-        float maxJitterY = Mathf.Max(0f, (cellHeight - buttonHeight) * 0.5f - buttonMargin);
-
-        List<Vector2> slots = new List<Vector2>();
-        for (int row = 0; row < rows; row++)
-            for (int col = 0; col < columns; col++)
+            var steps = currentSetting.levelProgresses[lvIdx].steps;
+            if (index >= 0 && index < steps.Length)
             {
-                float x = -halfAreaSize.x + cellWidth * (col + 0.5f);
-                float y =  halfAreaSize.y - cellHeight * (row + 0.5f);
-                slots.Add(new Vector2(x, y));
+                UIManager.Instance.SetImageObj(progressImage.gameObject, steps[index]);
+                progressImage.gameObject.SetActive(true);
             }
-
-        for (int i = slots.Count - 1; i > 0; i--) { int j = Random.Range(0, i + 1); (slots[i], slots[j]) = (slots[j], slots[i]); }
-
-        int count = Mathf.Min(buttonsToPlace.Count, slots.Count);
-        for (int i = 0; i < count; i++)
-        {
-            GameObject obj = buttonsToPlace[i];
-            RectTransform rt = obj.GetComponent<RectTransform>();
-            Vector2 basePos = slots[i];
-            float offsetX = maxJitterX > 0f ? Random.Range(-maxJitterX, maxJitterX) : 0f;
-            float offsetY = maxJitterY > 0f ? Random.Range(-maxJitterY, maxJitterY) : 0f;
-            rt.SetParent(areaRect, false);
-            rt.anchorMin = rt.anchorMax = new Vector2(0.5f, 0.5f);
-            rt.pivot = new Vector2(0.5f, 0.5f);
-            rt.anchoredPosition = basePos + new Vector2(offsetX, offsetY);
         }
     }
 }

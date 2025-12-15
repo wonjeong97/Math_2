@@ -22,7 +22,7 @@
 	{
 	  "level": 1,
 	  "type": 0,
-	  "questionText": "네모 안에 들어갈 수를\n터치하세요!\n\n1, 2, ㅁ, 4",
+	  "questionText": "네모 안에 들어갈 수를\n터치하세요!\n1, 2, ㅁ, 4",
 	  "correctAnswers": [ "3" ],
 	  "wrongAnswers": [ "5", "1", "0" ]
 	},

@@ -233,6 +233,7 @@ public sealed class LevelManager : BaseManager<LevelSetting>
         // 3. "게임을 선택하세요!" 텍스트 그라데이션 변경
         ApplyPage2TextGradient(level);
 
+        Debug.Log($"[LevelManager] Player Clicked Level: {level}");
         ShowPageType();
     }
 
@@ -242,7 +243,7 @@ public sealed class LevelManager : BaseManager<LevelSetting>
         ApplyImageFromSetting(selectedLevelImage, managerSetting.gameLevelImages, level);
     }
 
-    /// <summary> [추가됨] 레벨에 따라 3개 게임 타입 버튼의 이미지를 교체한다. </summary>
+    /// <summary> 레벨에 따라 3개 게임 타입 버튼의 이미지를 교체한다. </summary>
     private void ApplyGameTypeImages(int level)
     {
         // Guess Number 버튼
@@ -268,12 +269,8 @@ public sealed class LevelManager : BaseManager<LevelSetting>
     private void ApplyImageFromSetting(GameObject targetObj, ImageSetting[] settings, int level)
     {
         int index = level - 1; // 레벨 1 -> 인덱스 0
-        if (index < 0 || index >= settings.Length)
-        {
-            // Debug.LogWarning($"[LevelManager] Level {level} is out of range for image settings.");
-            return;
-        }
-
+        if (index < 0 || index >= settings.Length) return;
+        
         ImageSetting imgSetting = settings[index];
         if (imgSetting != null)
         {
@@ -304,7 +301,8 @@ public sealed class LevelManager : BaseManager<LevelSetting>
     }
     
     private void OnClickBack()
-    {
+    {   
+        Debug.Log($"[LevelManager] Player Clicked Back");
         ShowPageLevel();
     }
 
@@ -317,6 +315,7 @@ public sealed class LevelManager : BaseManager<LevelSetting>
         }
 
         LevelSelectContext.SelectedGameType = type;
+        Debug.Log($"[LevelManager] Player Clicked Type: {type}");
         HandleLoadGameSceneAsync().Forget();
     }
 
