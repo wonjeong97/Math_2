@@ -1,144 +1,132 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Threading;
 using Cysharp.Threading.Tasks;
 using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
-using UnityEngine.Video;
 using Random = UnityEngine.Random;
 
 /// <summary>
-/// 모든 미니게임 매니저의 공통 기능을 담당하는 부모 클래스
-/// TSetting: 설정 데이터 클래스 (예: CalculateNumberSetting)
-/// TQuestion: 개별 문제 데이터 클래스 (예: CalculateNumberQuestion)
+/// 미니게임 매니저의 공통 부모 클래스.
+/// 공통 UI, 게임 흐름(정답/오답/종료), 초기화 로직 관리.
 /// </summary>
-public abstract class BaseGameManager<TSetting, TQuestion> : MonoBehaviour 
-    where TSetting : class 
+public abstract class BaseGameManager<TSetting, TQuestion> : BaseManager<TSetting>
+    where TSetting : class, IGameCommonSetting 
     where TQuestion : class
 {
     [Header("--- Base UI References ---")]
-    [SerializeField] protected Image levelImage;
-    [SerializeField] protected Image gameTypeImage;
-    [SerializeField] protected Image progressImage;
-    [SerializeField] protected Button backButton;
-    [SerializeField] protected Image fadeImage;
+    [SerializeField] protected Image levelImage;        // 상단 레벨 표시 이미지
+    [SerializeField] protected Image gameTypeImage;     // 상단 게임 타입 표시 이미지
+    [SerializeField] protected Image progressImage;     // 진행도(게이지) 이미지
+    [SerializeField] protected Button backButton;       // 뒤로가기 버튼
 
     [Header("--- Base Question UI ---")]
-    [SerializeField] protected TextMeshProUGUI questionTextObj;
-    [SerializeField] protected Image questionImageObj; // 단일 이미지용 (필요시 사용)
-    
-    [Header("--- Base Video UI ---")]
-    [SerializeField] protected GameObject questionVideoObject; 
-    protected RawImage _questionRawImage;
-    protected VideoPlayer _questionVideoPlayer;
+    [SerializeField] protected TextMeshProUGUI questionTextObj; // 문제 텍스트
+    [SerializeField] protected Image questionImageObj;          // 문제 이미지
 
     [Header("--- Base Buttons & Areas ---")]
-    [SerializeField] protected GameObject[] answerButtons;
-    [SerializeField] protected RectTransform leftAreaRect;
-    [SerializeField] protected RectTransform rightAreaRect;
-    protected float buttonMargin = 20f;
+    [SerializeField] protected GameObject[] answerButtons;      // 정답 버튼 배열 (4개)
+    [SerializeField] protected RectTransform leftAreaRect;      // 왼쪽 버튼 배치 영역
+    [SerializeField] protected RectTransform rightAreaRect;     // 오른쪽 버튼 배치 영역
+    private float buttonMargin = 20f;                           // 버튼 간 간격
 
     [Header("--- Base Result UI ---")]
-    [SerializeField] protected GameObject pageCorrect;
-    [SerializeField] protected Image imageCorrect;
-    [SerializeField] protected GameObject pageWrong;
-    [SerializeField] protected Image imageWrong;
-    [SerializeField] protected Button buttonRetry;
-    [SerializeField] protected Button buttonGameEnd;
+    [SerializeField] protected GameObject pageCorrect;  // 정답 페이지
+    [SerializeField] protected Image imageCorrect;      // 정답 이미지
+    [SerializeField] protected GameObject pageWrong;    // 오답 페이지
+    [SerializeField] protected Image imageWrong;        // 오답 이미지
+    [SerializeField] protected Button buttonRetry;      // 다시하기 버튼
+    [SerializeField] protected Button buttonGameEnd;    // 게임 종료 버튼
 
     // --- Data & State ---
-    protected TSetting currentSetting;
-    protected List<TQuestion> currentLevelQuestions;
-    protected int currentQuestionIndex = 0;
-    protected int totalQuestions = 4;
-    protected TQuestion currentQuestion;
-    protected bool isProcessing = false;
+    protected List<TQuestion> currentLevelQuestions;    // 현재 레벨의 문제 목록
+    protected int currentQuestionIndex;                 // 현재 진행 중인 문제 인덱스
+    protected int totalQuestions = 4;                   // 총 문제 수
+    protected TQuestion currentQuestion;                // 현재 문제 데이터
+    protected bool isProcessing;                        // 중복 입력 방지 플래그
 
-    // 버튼 복구용 캐싱
-    protected Sprite defaultButtonSprite;
-    protected Color defaultButtonColor;
-    protected Vector2 defaultButtonSize;
+    // 버튼 복구용 캐싱 데이터
+    private Sprite defaultButtonSprite;
+    private Color defaultButtonColor;
+    private Vector2 defaultButtonSize;
 
     // --- Abstract Methods ---
+    /// <summary> JSON 파일 이름 반환. </summary>
     protected abstract string GetJsonFileName();
+    
+    // JSON 경로 프로퍼티 구현
+    protected override string JsonPath => $"JSON/{GetJsonFileName()}";
+    
+    /// <summary> 문제 데이터에서 레벨 반환. </summary>
     protected abstract int GetQuestionLevel(TQuestion question);
-    protected abstract void SetupSpecificQuestionUI(TQuestion question); // 문제별 UI 세팅 (텍스트, 이미지 등)
-    protected abstract void SetupAnswerButtons(TQuestion question); // 정답 버튼 세팅
+    
+    /// <summary> 개별 문제 UI 설정 (텍스트, 이미지 등). </summary>
+    protected abstract void SetupSpecificQuestionUI(TQuestion question); 
+    
+    /// <summary> 정답 버튼 배치 및 설정. </summary>
+    protected abstract void SetupAnswerButtons(TQuestion question); 
 
-    protected virtual void Start()
-    {
-        Initialize();
-    }
+    /// <summary> 버튼 텍스트 줄바꿈 허용 여부 (기본 false). </summary>
+    protected virtual bool EnableButtonWordWrapping => false;
 
-    protected virtual void Initialize()
+    /// <summary>
+    /// 게임 매니저 초기화 진입점.
+    /// UI 설정, 버튼 스타일 적용, 게임 시작 로직 실행.
+    /// </summary>
+    protected override async UniTask Initialize()
     {
-        // 1. UI 초기화
+        // 1. 자식 컴포넌트 설정 (Hook)
+        OnSetupChildComponents();
+
+        // 2. 공통 UI 및 버튼 스타일 적용
+        ApplyCommonUISettings();
+        ApplyButtonStyles();
+
+        // 3. UI 리셋 및 리스너 등록
         if (pageCorrect) pageCorrect.SetActive(false);
         if (pageWrong) pageWrong.SetActive(false);
         if (questionImageObj) questionImageObj.gameObject.SetActive(false);
-        
-        // 비디오 초기화
-        if (questionVideoObject)
-        {
-            _questionRawImage = questionVideoObject.GetComponent<RawImage>();
-            _questionVideoPlayer = questionVideoObject.GetComponent<VideoPlayer>();
-            questionVideoObject.SetActive(false);
-        }
 
-        // 2. 버튼 리스너 연결
         if (buttonRetry) { buttonRetry.onClick.RemoveAllListeners(); buttonRetry.onClick.AddListener(OnRetryClicked); }
         if (buttonGameEnd) { buttonGameEnd.onClick.RemoveAllListeners(); buttonGameEnd.onClick.AddListener(OnGameEndClicked); }
         if (backButton) { backButton.onClick.RemoveAllListeners(); backButton.onClick.AddListener(() => SceneManager.LoadScene("LevelSelect")); }
 
-        // 3. 버튼 기본 상태 저장
-        if (answerButtons != null && answerButtons.Length > 0)
-        {
-            Image img = answerButtons[0].GetComponent<Image>();
-            RectTransform rt = answerButtons[0].GetComponent<RectTransform>();
-            if (img) { defaultButtonSprite = img.sprite; defaultButtonColor = img.color; }
-            if (rt) defaultButtonSize = rt.sizeDelta;
-        }
+        // 4. 버튼 기본 상태 캡처 (스타일 적용 후)
+        CaptureDefaultButtonState();
 
-        // 4. 데이터 로드
-        LoadGameData();
-        
-        if (currentSetting == null)
+        if (managerSetting == null)
         {
-            Debug.LogError($"[{this.GetType().Name}] Data Load Failed.");
+            Debug.LogError($"[{GetType().Name}] Data Load Failed.");
             return;
         }
 
-        // 공통 UI/스타일 적용
-        ApplyButtonGradients(LevelSelectContext.SelectedLevel);
+        // 5. 추가 비동기 초기화 (Hook)
+        await OnGameInitializeAsync();
 
-        // 5. 문제 필터링 및 시작
+        // 6. 그라데이션 및 게임 시작
+        ApplyButtonGradients(LevelSelectContext.SelectedLevel);
         StartGameLogic();
         
-        // 6. 씬 진입 페이드 인
-        if (fadeImage != null && FadeManager.Instance != null)
+        // 7. 페이드 인
+        if (fader != null && fadeImage != null)
         {
-            // 1초 동안 페이드 인 (Alpha 1 -> 0)
-            FadeManager.Instance.FadeIn(fadeImage, 1.0f).Forget();
+            await fader.FadeIn(fadeImage, fadeTime, DestroyToken);
         }
     }
-
-    protected void LoadGameData()
-    {
-        if (JsonLoader.Instance != null)
-        {
-            currentSetting = JsonLoader.Instance.LoadJsonData<TSetting>($"JSON/{GetJsonFileName()}");
-        }
-    }
-
-    protected virtual void StartGameLogic()
-    {
-        // 자식 클래스에서 override하여 questions 리스트를 가져오는 로직 구현 필요
-        // (TSetting이 제네릭이라 questions 필드에 직접 접근이 어려우므로, 
-        //  자식에서 _currentLevelQuestions를 채우고 SetQuestion(0) 호출 권장)
-    }
-
+    
+    /// <summary> 자식 클래스에서 컴포넌트 할당 등을 수행할 때 사용 (동기). </summary>
+    protected virtual void OnSetupChildComponents() { }
+    
+    /// <summary> 자식 클래스에서 추가적인 비동기 초기화가 필요할 때 사용. </summary>
+    protected virtual async UniTask OnGameInitializeAsync() { await UniTask.CompletedTask; }
+    
+    /// <summary> 게임 로직 시작 (문제 필터링 등). </summary>
+    protected virtual void StartGameLogic() { }
+    
+    /// <summary> 지정된 인덱스의 문제로 UI 설정. </summary>
     protected void SetQuestionBase(int index)
     {
         if (currentLevelQuestions == null || index >= currentLevelQuestions.Count) return;
@@ -147,142 +135,225 @@ public abstract class BaseGameManager<TSetting, TQuestion> : MonoBehaviour
         currentQuestionIndex = index;
         currentQuestion = currentLevelQuestions[index];
 
-        // UI 리셋
         if (questionImageObj) questionImageObj.gameObject.SetActive(false);
-        if (questionVideoObject)
-        {
-            if (_questionVideoPlayer) _questionVideoPlayer.Stop();
-            questionVideoObject.SetActive(false);
-        }
 
-        // 진행도 업데이트 (Setting 구조가 제각각이라 추상화가 복잡하면 자식에게 위임 가능하지만, 여기선 생략)
-        
-        // 문제 UI 세팅 (자식 구현)
         SetupSpecificQuestionUI(currentQuestion);
-        
-        // 정답 버튼 세팅 (자식 구현)
         SetupAnswerButtons(currentQuestion);
     }
 
-    // --- Media Helpers ---
-    protected void PlayVideo(VideoSetting videoSetting)
+    // --- Common Utilities ---
+
+    /// <summary> 버튼의 스타일(이미지, 색상, 크기, 상태)을 기본값으로 복구. </summary>
+    protected void RestoreButtonDefault(Button btn, Image btnImage, RectTransform btnRect = null)
     {
-        if (!questionVideoObject || !_questionVideoPlayer || !_questionRawImage) return;
-
-        string fullPath = Path.Combine(Application.streamingAssetsPath, videoSetting.fileName).Replace("\\", "/");
-        if (File.Exists(fullPath))
+        // 1. 이미지 및 색상
+        if (btnImage && defaultButtonSprite) 
+        { 
+            btnImage.sprite = defaultButtonSprite; 
+            btnImage.color = defaultButtonColor; 
+        }
+        
+        // 2. 사이즈
+        if (btnRect != null && defaultButtonSize != Vector2.zero)
         {
-            _questionVideoPlayer.url = fullPath;
-            _questionVideoPlayer.isLooping = true;
-            _questionVideoPlayer.Play();
+            btnRect.sizeDelta = defaultButtonSize;
+        }
 
-            if (videoSetting.size != Vector2.zero)
-                _questionRawImage.rectTransform.sizeDelta = videoSetting.size;
+        // 3. 그라데이션
+        ImageGlobalGradient gradient = btn.GetComponent<ImageGlobalGradient>();
+        if (gradient) gradient.enabled = true;
 
-            questionVideoObject.SetActive(true);
+        // 4. 버튼 상태
+        if (btn) 
+        { 
+            btn.transition = Selectable.Transition.ColorTint; 
+            btn.spriteState = default; 
         }
     }
 
-    protected Sprite LoadSpriteFromStreamingAssets(string fileName)
+    /// <summary> 진행도 이미지 업데이트. </summary>
+    protected void UpdateProgressImage(int level, int index)
     {
-        if (string.IsNullOrEmpty(fileName)) return null;
-        string path = Path.Combine(Application.streamingAssetsPath, fileName).Replace("\\", "/");
-        if (File.Exists(path))
+        if (!progressImage || managerSetting?.levelProgresses == null) return;
+        int lvIdx = level - 1;
+        if (lvIdx >= 0 && lvIdx < managerSetting.levelProgresses.Length)
         {
-            byte[] fileData = File.ReadAllBytes(path);
-            Texture2D texture = new Texture2D(2, 2);
-            if (texture.LoadImage(fileData))
+            var steps = managerSetting.levelProgresses[lvIdx].steps;
+            if (index >= 0 && index < steps.Length)
             {
-                texture.wrapMode = TextureWrapMode.Clamp; // 중요: 1픽셀 잘림 방지
-                return Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), new Vector2(0.5f, 0.5f));
+                UIManager.Instance.SetImageObj(progressImage.gameObject, steps[index]);
+                progressImage.gameObject.SetActive(true);
             }
         }
-        return null;
+    }
+    
+    /// <summary> 이미지 페이드 효과 비동기 처리. </summary>
+    protected async UniTaskVoid HandleImageFadeAsync(Image target, ImageSetting setting, CancellationToken token)
+    {
+        float duration = setting.fadeDuration > 0 ? setting.fadeDuration : 1f;
+        float startAlpha = setting.isFadeOut ? 1f : 0f;
+        float endAlpha = setting.isFadeOut ? 0f : 1f;
+        SetAlpha(target, startAlpha);
+        do {
+            await FadeAlpha(target, startAlpha, endAlpha, duration, token);
+            if (setting.loop) await FadeAlpha(target, endAlpha, startAlpha, duration, token);
+            else break;
+        } while (setting.loop && target != null);
+    }
+    
+    /// <summary> 알파값 선형 보간 (Lerp). </summary>
+    private async UniTask FadeAlpha(Image target, float from, float to, float duration, CancellationToken token)
+    {
+        float time = 0f;
+        while (time < duration) {
+            token.ThrowIfCancellationRequested();
+            if (target == null) return;
+            time += Time.deltaTime;
+            float t = time / duration;
+            SetAlpha(target, Mathf.Lerp(from, to, t));
+            await UniTask.Yield(PlayerLoopTiming.Update, token);
+        }
+        SetAlpha(target, to);
     }
 
-    // --- Game Logic Flow ---
-    protected virtual void HandleCorrectAnswer()
+    private void SetAlpha(Image target, float alpha) { if (target) { Color c = target.color; c.a = alpha; target.color = c; } }
+    
+    /// <summary> 초기화 시 버튼의 기본 상태(스프라이트, 색상, 크기) 저장. </summary>
+    private void CaptureDefaultButtonState()
     {
-        HandleCorrectAnswerAsync().Forget();
+        if (answerButtons != null && answerButtons.Length > 0)
+        {
+            Image img = answerButtons[0].GetComponent<Image>();
+            RectTransform rt = answerButtons[0].GetComponent<RectTransform>();
+            if (img) { defaultButtonSprite = img.sprite; defaultButtonColor = img.color; }
+            if (rt) defaultButtonSize = rt.sizeDelta;
+        }
     }
+    
+    /// <summary> 공통 UI(뒤로가기, 상단 이미지 등) 설정 적용. </summary>
+    private void ApplyCommonUISettings()
+    {
+        if (managerSetting == null || ui == null) return;
+        this.buttonMargin = managerSetting.buttonMargin;
+        if (backButton && managerSetting.backButton != null) ui.SetButtonObj(backButton.gameObject, managerSetting.backButton).Forget();
+        if (imageCorrect && managerSetting.correctImage != null) ui.SetImageObj(imageCorrect.gameObject, managerSetting.correctImage);
+        if (imageWrong && managerSetting.wrongImage != null) ui.SetImageObj(imageWrong.gameObject, managerSetting.wrongImage);
+        if (buttonRetry && managerSetting.retryButton != null) ui.SetButtonObj(buttonRetry.gameObject, managerSetting.retryButton).Forget();
+        if (buttonGameEnd && managerSetting.gameEndButton != null) ui.SetButtonObj(buttonGameEnd.gameObject, managerSetting.gameEndButton).Forget();
+
+        int levelIndex = LevelSelectContext.SelectedLevel - 1;
+        if (levelIndex >= 0)
+        {
+            if (levelImage && managerSetting.levelImages != null && levelIndex < managerSetting.levelImages.Length)
+            {
+                ui.SetImageObj(levelImage.gameObject, managerSetting.levelImages[levelIndex]);
+                levelImage.gameObject.SetActive(true);
+            }
+            if (gameTypeImage && managerSetting.gameTypeImages != null && levelIndex < managerSetting.gameTypeImages.Length)
+            {
+                ui.SetImageObj(gameTypeImage.gameObject, managerSetting.gameTypeImages[levelIndex]);
+                gameTypeImage.gameObject.SetActive(true);
+            }
+        }
+    }
+    
+    /// <summary> 전역 설정(Settings.json)을 통한 버튼 스타일 적용. </summary>
+    private void ApplyButtonStyles()
+    {
+        if (JsonLoader.Instance == null || UIManager.Instance == null || answerButtons == null) return;
+        Settings globalSettings = JsonLoader.Instance.settings;
+        if (globalSettings != null && globalSettings.questionButton != null)
+        {
+            foreach (GameObject btn in answerButtons)
+            {
+                if (btn == null) continue;
+                UIManager.Instance.SetButtonObj(btn, globalSettings.questionButton).Forget();
+                if (globalSettings.questionButton.buttonText != null)
+                {
+                    var tmp = btn.GetComponentInChildren<TextMeshProUGUI>();
+                    if (tmp)
+                    {
+                        tmp.enableAutoSizing = true;
+                        tmp.fontSizeMax = globalSettings.questionButton.buttonText.fontSize;
+                        tmp.fontSizeMin = globalSettings.questionButton.buttonText.fontSize * 0.4f;
+                        tmp.enableWordWrapping = EnableButtonWordWrapping;
+                    }
+                }
+            }
+        }
+    }
+    
+    /// <summary> StreamingAssets에서 스프라이트 로드. </summary>
+    protected Sprite LoadSpriteFromStreamingAssets(string fileName)
+    {
+        if (UIManager.Instance == null) return null;
+        return UIManager.Instance.LoadSprite(fileName);
+    }
+    
+    /// <summary> 정답 처리 (비동기 호출 래퍼). </summary>
+    protected virtual void HandleCorrectAnswer() { HandleCorrectAnswerAsync().Forget(); }
 
     private async UniTaskVoid HandleCorrectAnswerAsync()
     {   
         Debug.Log($"[{SceneManager.GetActiveScene().name}] Correct ({currentQuestionIndex + 1}/{totalQuestions})");
         isProcessing = true;
         if (pageCorrect) pageCorrect.SetActive(true);
-        
-        // 정답 페이지 보여주는 시간
         await UniTask.Delay(TimeSpan.FromSeconds(2));
-        
         currentQuestionIndex++;
-        
-        // 마지막 문제인지 확인
-        if (currentQuestionIndex >= totalQuestions)
+        if (currentQuestionIndex >= totalQuestions) 
         {
-            // 마지막 문제라면 PageCorrect를 끄지 않고 유지한 채 페이드 아웃
-            float fadeTime = 1.0f;
-            if (JsonLoader.Instance != null && JsonLoader.Instance.settings != null)
-            {
-                fadeTime = JsonLoader.Instance.settings.fadeTime;
-            }
-
-            // 페이드 아웃
-            if (fadeImage != null && FadeManager.Instance != null)
-            {
-                await FadeManager.Instance.FadeOut(fadeImage, fadeTime);
-            }
-            
-            // 페이드 아웃 완료 후 게임 종료
+            // 마지막 문제면 페이드 아웃 후 종료
+            if (fader != null && fadeImage != null) await fader.FadeOut(fadeImage, fadeTime, DestroyToken);
             OnGameEndClicked();
         }
         else
         {
-            // 다음 문제가 남았을 때만 PageCorrect 끄기
+            // 다음 문제 진행
             if (pageCorrect) pageCorrect.SetActive(false);
             SetQuestionBase(currentQuestionIndex);
         }
     }
-
+    
+    /// <summary> 오답 처리 로직 (UI 표시). </summary>
     protected virtual void HandleWrongAnswer()
     {
         Debug.Log($"[{SceneManager.GetActiveScene().name}] Wrong ({currentQuestionIndex + 1}/{totalQuestions})");
         isProcessing = true;    
         if (pageWrong) pageWrong.SetActive(true);
     }
-
+    
+    /// <summary> 다시하기 버튼 클릭 핸들러. </summary>
     protected virtual void OnRetryClicked()
     {   
         Debug.Log($"[{SceneManager.GetActiveScene().name}] Retry ({currentQuestionIndex + 1}/{totalQuestions})");
         if (pageWrong) pageWrong.SetActive(false);
         SetQuestionBase(currentQuestionIndex);
     }
-
-    protected virtual void OnGameEndClicked()
-    {   
-        Debug.Log($"[{SceneManager.GetActiveScene().name}] Player gave up ({currentQuestionIndex + 1}/{totalQuestions})");
-        GameResultContext.CorrectCount = currentQuestionIndex; // 혹은 맞춘 개수 로직
+    
+    /// <summary> 게임 종료 버튼 클릭 핸들러 (비동기 래퍼). </summary>
+    protected virtual void OnGameEndClicked() { HandleGameEndAsync().Forget(); }
+    
+    /// <summary> 게임 종료 처리 (페이드 아웃 -> 결과 화면 이동). </summary>
+    private async UniTaskVoid HandleGameEndAsync()
+    {
+        Debug.Log($"[{SceneManager.GetActiveScene().name}] Game End / Give Up");
+        if (fader != null && fadeImage != null) await fader.FadeOut(fadeImage, fadeTime, DestroyToken);
+        GameResultContext.CorrectCount = currentQuestionIndex;
         SceneManager.LoadScene("GameEnd");
     }
-
-    // --- UI Helpers ---
-    protected void ApplyButtonGradients(int level)
+    
+    /// <summary> 레벨별 버튼/텍스트 그라데이션 적용. </summary>
+    private void ApplyButtonGradients(int level)
     {
         if (JsonLoader.Instance == null) return;
         LevelSetting levelSetting = JsonLoader.Instance.LoadJsonData<LevelSetting>("JSON/LevelSetting.json");
         if (levelSetting == null || levelSetting.levelGradients == null) return;
-
         int index = level - 1;
         if (index < 0 || index >= levelSetting.levelGradients.Length) return;
-
         GradientData data = levelSetting.levelGradients[index];
-
         if (questionTextObj) ApplyGradientToTarget(questionTextObj, data);
-
-        if (answerButtons != null)
-        {
-            foreach (var btnObj in answerButtons)
-            {
+        if (answerButtons != null) {
+            foreach (var btnObj in answerButtons) {
                 if (!btnObj) continue;
                 TextMeshProUGUI tmp = btnObj.GetComponentInChildren<TextMeshProUGUI>();
                 ApplyGradientToTarget(tmp, data);
@@ -291,77 +362,60 @@ public abstract class BaseGameManager<TSetting, TQuestion> : MonoBehaviour
             }
         }
     }
-
-    protected void ApplyGradientToImage(Image targetImage, GradientData data)
+    
+    /// <summary> 이미지 그라데이션 적용. </summary>
+    private void ApplyGradientToImage(Image targetImage, GradientData data)
     {
         if (!targetImage || data == null) return;
         targetImage.color = Color.white;
         ImageGlobalGradient gradient = UIManager.GetOrAdd<ImageGlobalGradient>(targetImage.gameObject);
-        if (gradient)
-        {
+        if (gradient) {
             Color[] colors = { data.topLeft, data.topRight, data.bottomRight, data.bottomLeft };
             int offset = Random.Range(0, 4);
-            gradient.SetGradient(
-                colors[(0 + offset) % 4], colors[(1 + offset) % 4],
-                colors[(3 + offset) % 4], colors[(2 + offset) % 4]); // 순서 주의
+            gradient.SetGradient(colors[(0 + offset) % 4], colors[(1 + offset) % 4], colors[(3 + offset) % 4], colors[(2 + offset) % 4]);
             gradient.enabled = true;
         }
     }
-
-    protected void ApplyGradientToTarget(TextMeshProUGUI tmp, GradientData data)
+    
+    /// <summary> 텍스트 그라데이션 적용. </summary>
+    private void ApplyGradientToTarget(TextMeshProUGUI tmp, GradientData data)
     {
         if (!tmp || data == null) return;
         tmp.enableVertexGradient = false;
         tmp.color = Color.white;
         TextGlobalGradient gradient = UIManager.GetOrAdd<TextGlobalGradient>(tmp.gameObject);
-        if (gradient)
-        {
+        if (gradient) {
             gradient.SetGradient(data.topLeft, data.topRight, data.bottomLeft, data.bottomRight);
             gradient.enabled = true;
             gradient.ApplyGradient();
         }
     }
 
+    /// <summary> 지정된 영역 내에 버튼들을 랜덤하게 배치. </summary>
     protected void PlaceButtonsInArea(List<GameObject> buttonsToPlace, RectTransform areaRect)
     {
         if (!areaRect || buttonsToPlace == null || buttonsToPlace.Count == 0) return;
-
         Rect rect = areaRect.rect;
         Vector2 halfAreaSize = rect.size * 0.5f;
         const int columns = 1;
         const int rows = 2; 
-        
         float cellWidth = rect.width / columns;
         float cellHeight = rect.height / rows;
-
         List<Vector2> slots = new List<Vector2>();
-        for (int row = 0; row < rows; row++)
-            for (int col = 0; col < columns; col++)
-                slots.Add(new Vector2(
-                    -halfAreaSize.x + cellWidth * (col + 0.5f),
-                     halfAreaSize.y - cellHeight * (row + 0.5f)
-                ));
-
-        // Shuffle slots
+        for (int row = 0; row < rows; row++) for (int col = 0; col < columns; col++) slots.Add(new Vector2(-halfAreaSize.x + cellWidth * (col + 0.5f), halfAreaSize.y - cellHeight * (row + 0.5f)));
         for (int i = slots.Count - 1; i > 0; i--) { int j = Random.Range(0, i + 1); (slots[i], slots[j]) = (slots[j], slots[i]); }
-
         int count = Mathf.Min(buttonsToPlace.Count, slots.Count);
-        for (int i = 0; i < count; i++)
-        {
+        for (int i = 0; i < count; i++) {
             GameObject obj = buttonsToPlace[i];
             RectTransform rt = obj.GetComponent<RectTransform>();
-            
-            // Jitter 계산
             Vector3 scale = rt.localScale;
             float w = rt.sizeDelta.x * scale.x;
             float h = rt.sizeDelta.y * scale.y;
             float jitterX = Mathf.Max(0f, (cellWidth - w) * 0.5f - buttonMargin);
             float jitterY = Mathf.Max(0f, (cellHeight - h) * 0.5f - buttonMargin);
-
             Vector2 basePos = slots[i];
             float offsetX = jitterX > 0 ? Random.Range(-jitterX, jitterX) : 0f;
             float offsetY = jitterY > 0 ? Random.Range(-jitterY, jitterY) : 0f;
-
             rt.SetParent(areaRect, false);
             rt.anchorMin = rt.anchorMax = new Vector2(0.5f, 0.5f);
             rt.pivot = new Vector2(0.5f, 0.5f);

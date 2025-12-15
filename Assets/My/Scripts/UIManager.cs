@@ -211,6 +211,16 @@ public class UIManager : MonoBehaviour
     #endregion
 
     #region UIUtility
+    
+    public Sprite LoadSprite(string relativePath)
+    {
+        Texture2D tex = LoadTextureFromStreamingAssets(relativePath);
+        if (tex != null)
+        {
+            return Sprite.Create(tex, new Rect(0, 0, tex.width, tex.height), new Vector2(0.5f, 0.5f));
+        }
+        return null;
+    }
 
     /// <summary> Addressables 핸들을 취소 토큰과 함께 대기 후 결과 반환 </summary>
     private static async UniTask<T> AwaitWithCancellation<T>(AsyncOperationHandle<T> handle, CancellationToken token)

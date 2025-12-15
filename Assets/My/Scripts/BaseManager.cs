@@ -5,38 +5,49 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
+/// <summary>
+/// 모든 매니저의 기본 추상 클래스.
+/// 공통 싱글톤 참조 및 초기화 흐름 관리.
+/// </summary>
 public abstract class BaseManager<TSetting> : MonoBehaviour
 {   
     [Header("Fade Image")]
-    [SerializeField] protected Image fadeImage;
+    [SerializeField] protected Image fadeImage; // 페이드 이미지
 
-    private Settings setting;
-    protected TSetting managerSetting;
-    protected abstract string JsonPath { get; }
+    private Settings setting; // 전역 설정
+    protected TSetting managerSetting; // 매니저 설정
+    protected abstract string JsonPath { get; } // JSON 파일 경로
 
-    protected UIManager ui;
-    protected FadeManager fader;
-    protected CancellationToken DestroyToken => this.GetCancellationTokenOnDestroy();
+    protected UIManager ui; // UI 매니저
+    protected FadeManager fader; // 페이드 매니저
+    protected CancellationToken DestroyToken => this.GetCancellationTokenOnDestroy(); // 취소 토큰
 
-    protected float fadeTime;
+    protected float fadeTime; // 페이드 시간
     
+    /// <summary>
+    /// 초기화 진입점.
+    /// 데이터 로드 및 초기화 실행.
+    /// </summary>
     protected virtual async void Start()
     {
         try
         {
+            // 싱글톤 확인
             if (JsonLoader.Instance == null) return;
-            if (JsonLoader.Instance.settings != null) setting = JsonLoader.Instance.settings; // setting.json 설정
+            if (JsonLoader.Instance.settings != null) setting = JsonLoader.Instance.settings; 
             else return;
 
-            if (UIManager.Instance != null) ui = UIManager.Instance; // UIManager 저장
+            if (UIManager.Instance != null) ui = UIManager.Instance; 
             else return;
 
             if (FadeManager.Instance != null) fader = FadeManager.Instance;
             else return;
 
-            managerSetting = JsonLoader.Instance.LoadJsonData<TSetting>(JsonPath); // 각 매니저 세팅 클래스 설정
+            // 데이터 로드
+            managerSetting = JsonLoader.Instance.LoadJsonData<TSetting>(JsonPath);
             fadeTime = setting.fadeTime;
             
+            // 초기화 호출
             await Initialize();
         }
         catch (OperationCanceledException)
@@ -53,5 +64,6 @@ public abstract class BaseManager<TSetting> : MonoBehaviour
         }
     }
     
+    /// <summary> 매니저별 초기화 로직. </summary>
     protected abstract UniTask Initialize();
 }

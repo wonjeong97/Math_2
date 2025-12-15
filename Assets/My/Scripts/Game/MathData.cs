@@ -1,22 +1,25 @@
 using System;
 using UnityEngine;
 
-public enum QuestionType
+// 공통 UI 설정을 위한 인터페이스 정의
+public interface IGameCommonSetting
 {
-    SingleChoice,   // 정답 1개 (기존 방식)
-    MultipleChoice, // 화면에 있는 정답 버튼을 모두 눌러야 함
-    Sequence        // 정답을 순서대로 눌러야 함
+    ButtonSetting backButton { get; }
+    float buttonMargin { get; }
+    ImageSetting correctImage { get; }
+    ImageSetting wrongImage { get; }
+    ButtonSetting retryButton { get; }
+    ButtonSetting gameEndButton { get; }
+    ImageSetting[] levelImages { get; }
+    ImageSetting[] gameTypeImages { get; }
+    LevelProgressSetting[] levelProgresses { get; }
 }
 
-[Serializable]
-public class GuessNumberQuestion
+public enum QuestionType
 {
-    public int level;
-    public QuestionType type;       // 문제 유형
-    public string questionText;     // 문제 텍스트
-    public ImageSetting questionImage;
-    public string[] correctAnswers; // 정답 목록 (순서 나열인 경우 순서대로 입력)
-    public string[] wrongAnswers;   // 오답 후보군
+    SingleChoice,
+    MultipleChoice,
+    Sequence
 }
 
 [Serializable]
@@ -25,22 +28,47 @@ public class LevelProgressSetting
     public ImageSetting[] steps;
 }
 
+// -------------------- Guess Number --------------------
 [Serializable]
-public class GuessNumberSetting
+public class GuessNumberQuestion
+{
+    public int level;
+    public QuestionType type;
+    public string questionText;
+    public ImageSetting questionImage;
+    public string[] correctAnswers;
+    public string[] wrongAnswers;
+}
+
+[Serializable]
+public class GuessNumberSetting : IGameCommonSetting // 인터페이스 구현
 {
     public GuessNumberQuestion[] questions;
+    
+    // IGameCommonSetting 구현 필드들
     public ImageSetting[] levelImages;
     public ImageSetting[] gameTypeImages;
     public LevelProgressSetting[] levelProgresses; 
     public ButtonSetting backButton;
     public float buttonMargin = 20f;
-    
     public ImageSetting correctImage;
     public ImageSetting wrongImage;
     public ButtonSetting retryButton;
     public ButtonSetting gameEndButton;
+    
+    // 인터페이스 프로퍼티 구현
+    ImageSetting[] IGameCommonSetting.levelImages => levelImages;
+    ImageSetting[] IGameCommonSetting.gameTypeImages => gameTypeImages;
+    LevelProgressSetting[] IGameCommonSetting.levelProgresses => levelProgresses;
+    ButtonSetting IGameCommonSetting.backButton => backButton;
+    float IGameCommonSetting.buttonMargin => buttonMargin;
+    ImageSetting IGameCommonSetting.correctImage => correctImage;
+    ImageSetting IGameCommonSetting.wrongImage => wrongImage;
+    ButtonSetting IGameCommonSetting.retryButton => retryButton;
+    ButtonSetting IGameCommonSetting.gameEndButton => gameEndButton;
 }
 
+// -------------------- Calculate Number --------------------
 [Serializable]
 public class CalculateNumberQuestion
 {
@@ -50,7 +78,6 @@ public class CalculateNumberQuestion
     public string[] correctAnswers;
     public string[] wrongAnswers;
     public ImageSetting[] questionImages;
-    public VideoSetting questionVideo;
     public ButtonOverrideSetting buttonStyleOverride;
 }
 
@@ -58,18 +85,16 @@ public class CalculateNumberQuestion
 public class ButtonOverrideSetting
 {
     public bool useOverride;
-
-    [Header("Images (StreamingAssets Path)")]
     public string normalImageName;
-
     public string pressedImageName;
     public Color buttonColor = Color.white;
 }
 
 [Serializable]
-public class CalculateNumberSetting
+public class CalculateNumberSetting : IGameCommonSetting // 인터페이스 구현
 {
     public CalculateNumberQuestion[] questions;
+    
     public ImageSetting[] levelImages;
     public ImageSetting[] gameTypeImages;
     public LevelProgressSetting[] levelProgresses;
@@ -79,46 +104,63 @@ public class CalculateNumberSetting
     public ImageSetting wrongImage;
     public ButtonSetting retryButton;
     public ButtonSetting gameEndButton;
+
+    // 인터페이스 구현
+    ImageSetting[] IGameCommonSetting.levelImages => levelImages;
+    ImageSetting[] IGameCommonSetting.gameTypeImages => gameTypeImages;
+    LevelProgressSetting[] IGameCommonSetting.levelProgresses => levelProgresses;
+    ButtonSetting IGameCommonSetting.backButton => backButton;
+    float IGameCommonSetting.buttonMargin => buttonMargin;
+    ImageSetting IGameCommonSetting.correctImage => correctImage;
+    ImageSetting IGameCommonSetting.wrongImage => wrongImage;
+    ButtonSetting IGameCommonSetting.retryButton => retryButton;
+    ButtonSetting IGameCommonSetting.gameEndButton => gameEndButton;
 }
 
+// -------------------- Number System --------------------
 [Serializable]
 public class NumberSystemQuestion
 {
     public int level;
     public QuestionType type;
     public string questionText;
-    
     public string[] correctAnswers;
     public string[] wrongAnswers;
-    
     public ImageSetting questionImage; 
-    public VideoSetting questionVideo; 
-    
     public AnswerImagePair[] answerImages;
 }
 
 [Serializable]
 public class AnswerImagePair
 {
-    public string answerText; // 매핑할 답변 텍스트 (correctAnswers/wrongAnswers에 있는 값)
-    public string imagePath;  // StreamingAssets 내부 경로
+    public string answerText;
+    public string imagePath;
     public Vector2 size;
 }
 
 [Serializable]
-public class NumberSystemSetting
+public class NumberSystemSetting : IGameCommonSetting // 인터페이스 구현
 {
     public NumberSystemQuestion[] questions;
     
     public ImageSetting[] levelImages;       
     public ImageSetting[] gameTypeImages;    
     public LevelProgressSetting[] levelProgresses; 
-    
     public ButtonSetting backButton;
     public float buttonMargin = 20f; 
-    
     public ImageSetting correctImage;
     public ImageSetting wrongImage;
     public ButtonSetting retryButton;
     public ButtonSetting gameEndButton;
+
+    // 인터페이스 구현
+    ImageSetting[] IGameCommonSetting.levelImages => levelImages;
+    ImageSetting[] IGameCommonSetting.gameTypeImages => gameTypeImages;
+    LevelProgressSetting[] IGameCommonSetting.levelProgresses => levelProgresses;
+    ButtonSetting IGameCommonSetting.backButton => backButton;
+    float IGameCommonSetting.buttonMargin => buttonMargin;
+    ImageSetting IGameCommonSetting.correctImage => correctImage;
+    ImageSetting IGameCommonSetting.wrongImage => wrongImage;
+    ButtonSetting IGameCommonSetting.retryButton => retryButton;
+    ButtonSetting IGameCommonSetting.gameEndButton => gameEndButton;
 }
