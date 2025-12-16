@@ -58,6 +58,9 @@ public class LogSaver : MonoBehaviour
     private string _currentLogPath;
     private string _logFolder;
     
+    // 메인 스레드에서만 접근 가능한 Application.productName을 캐싱할 변수 [수정됨]
+    private string _productName;
+
     // 메일 발송 조건 충족 여부
     private bool _shouldSendEmail; 
 
@@ -74,6 +77,9 @@ public class LogSaver : MonoBehaviour
             Destroy(gameObject);
             return;
         }
+        
+        // [수정됨] 메인 스레드에서 앱 이름 미리 캐싱
+        _productName = Application.productName;
 
         // PC 전용 경로 설정 로직
         if (useCustomPath && !string.IsNullOrEmpty(customPath))
@@ -222,7 +228,10 @@ public class LogSaver : MonoBehaviour
             {
                 mail.From = new MailAddress(senderEmail);
                 mail.To.Add(recipientEmail);
-                mail.Subject = $"[{Application.productName}] Unity Log Report"; 
+                
+                // Application.productName 대신 캐싱된 _productName 사용
+                mail.Subject = $"[{_productName}] Unity Log Report"; 
+                
                 mail.Body = $"발송 조건: {triggerLevel}\n로그 파일을 첨부합니다.\n파일명: {Path.GetFileName(filePath)}";
 
                 // Attachment를 별도의 using 블록으로 감싸서 사용 후 즉시 해제 보장

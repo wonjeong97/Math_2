@@ -35,7 +35,7 @@
 	  "type": 0,
 	  "questionText": "엘리베이터에서 3층 버튼을 눌러야해요.\n3을 찾아 터치하세요!",
 	  "correctAnswers": [ "3" ],
-	  "wrongAnswers": [ "1", "2", "4" ]
+	  "wrongAnswers": [ "5", "0", "4" ]
 	},
 	{
 	  "level": 1,
@@ -60,6 +60,20 @@
 		  "size": { "x": 524, "y": 204 }
 		}
 	  ]
+	},
+	{
+	  "level": 1,
+	  "type": 0,
+	  "questionText": "다음 중 숫자 '오'는\n무엇일까요?",
+	  "correctAnswers": [ "5" ],
+	  "wrongAnswers": [ "1", "2", "3" ]
+	},
+	{
+	  "level": 1,
+	  "type": 0,
+	  "questionText": "가장 작은 숫자를\n터치하세요!",
+	  "correctAnswers": [ "1" ],
+	  "wrongAnswers": [ "9", "5", "3" ]
 	},
 	{
 	  "level": 2,
@@ -90,6 +104,20 @@
 	  "wrongAnswers": [ "서른", "쉰", "예순" ]
 	},
 	{
+	  "level": 2,
+	  "type": 0,
+	  "questionText": "8 ? 2 = 6 일 때,\n?에 들어갈 기호를 고르세요.",
+	  "correctAnswers": [ "-" ],
+	  "wrongAnswers": [ "+", "x", "÷" ]
+	},
+	{
+	  "level": 2,
+	  "type": 0,
+	  "questionText": "20은 다른 말로 무엇일까요?",
+	  "correctAnswers": [ "스물" ],
+	  "wrongAnswers": [ "열", "서른", "마흔" ]
+	},
+	{
 	  "level": 3,
 	  "type": 0,
 	  "questionText": "10 ? 2 = 5 일 때,\n?에 들어갈 기호를 고르세요.",
@@ -106,7 +134,7 @@
 	{
 	  "level": 3,
 	  "type": 1,
-	  "questionText": "자연수를 고르세요.",
+	  "questionText": "자연수를 모두 고르세요.",
 	  "correctAnswers": [ "1", "100" ],
 	  "wrongAnswers": [ "0", "-1", "0.5" ]
 	},
@@ -116,6 +144,20 @@
 	  "questionText": "가장 큰 수는 무엇일까요?",
 	  "correctAnswers": [ "10" ],
 	  "wrongAnswers": [ "-5", "0", "1" ]
+	},
+	{
+	  "level": 3,
+	  "type": 0,
+	  "questionText": "다음 중 음의 정수(음수)는\n무엇일까요?",
+	  "correctAnswers": [ "-5" ],
+	  "wrongAnswers": [ "0", "5", "10" ]
+	},
+	{
+	  "level": 3,
+	  "type": 0,
+	  "questionText": "자연수가 아닌 수를\n골라보세요.",
+	  "correctAnswers": [ "0" ],
+	  "wrongAnswers": [ "1", "2", "100" ]
 	},
 	{
 	  "level": 4,
@@ -146,32 +188,60 @@
 	  "wrongAnswers": [ "1/100", "10/1", "1/2" ]
 	},
 	{
+	  "level": 4,
+	  "type": 0,
+	  "questionText": "1/2을 소수로 나타내면\n무엇일까요?",
+	  "correctAnswers": [ "0.5" ],
+	  "wrongAnswers": [ "0.2", "0.1", "5.0" ]
+	},
+	{
+	  "level": 4,
+	  "type": 0,
+	  "questionText": "75%를 분수로 나타내면\n무엇일까요?",
+	  "correctAnswers": [ "3/4" ],
+	  "wrongAnswers": [ "1/4", "1/2", "2/5" ]
+	},
+	{
 	  "level": 5,
 	  "type": 1,
-	  "questionText": "정수를 고르세요.",
+	  "questionText": "정수를 모두 고르세요.",
 	  "correctAnswers": [ "-3", "0", "5" ],
 	  "wrongAnswers": [ "1.5", "1/2", "3.14" ]
 	},
 	{
 	  "level": 5,
-	  "type": 1,
+	  "type": 0,
 	  "questionText": "정수가 아닌 유리수를 고르세요.",
-	  "correctAnswers": [ "0.5", "-1/3" ],
-	  "wrongAnswers": [ "2", "-5", "0", "√2" ]
+	  "correctAnswers": [ "-3/5" ],
+	  "wrongAnswers": [ "-3", "√4", "4" ]
 	},
 	{
 	  "level": 5,
 	  "type": 0,
 	  "questionText": "다음 중 무리수는 무엇일까요?",
-	  "correctAnswers": [ "√2" ],
-	  "wrongAnswers": [ "0", "1.5", "-4" ]
+	  "correctAnswers": [ "√3" ],
+	  "wrongAnswers": [ "√16", "0.25", "2/7" ]
 	},
 	{
 	  "level": 5,
 	  "type": 0,
 	  "questionText": "유리수가 아닌 것은 무엇일까요?",
-	  "correctAnswers": [ "π" ],
-	  "wrongAnswers": [ "0.333...", "22/7", "-10" ]
+	  "correctAnswers": [ "√7" ],
+	  "wrongAnswers": [ "0.333..", "22/7", "-10" ]
+	},
+	{
+	  "level": 5,
+	  "type": 0,
+	  "questionText": "순환하지 않는 무한소수를\n무엇이라고 부를까요?",
+	  "correctAnswers": [ "무리수" ],
+	  "wrongAnswers": [ "유리수", "정수", "자연수" ]
+	},
+	{
+	  "level": 5,
+	  "type": 0,
+	  "questionText": "실수 중에서 유리수가 아닌 수를\n무엇이라고 부를까요?",
+	  "correctAnswers": [ "무리수" ],
+	  "wrongAnswers": [ "정수", "자연수", "유한소수" ]
 	}
   ],
   "levelImages": [

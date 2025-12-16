@@ -4,11 +4,6 @@
 	  "level": 1,
 	  "type": 0,
 	  "questionText": "4, 5, 6, 7... 다음에 오는 수는\n무엇일까요?",
-	  "__questionImage": {
-		"position": { "x": 0, "y": 0 },
-		"size": { "x": 100, "y": 100 },
-		"sourceImage": "Image/GuessNumber/좌측 상단 종목(레벨1-수 맞추기).png"
-	  },
 	  "correctAnswers": [ "8" ],
 	  "wrongAnswers": [ "6", "7", "5" ]
 	},
@@ -34,17 +29,31 @@
 	  "wrongAnswers": [ "2", "5", "4" ]
 	},
 	{
+	  "level": 1,
+	  "type": 0,
+	  "questionText": "3 과 5 사이의 수는\n무엇일까요?",
+	  "correctAnswers": [ "4" ],
+	  "wrongAnswers": [ "2", "6", "1" ]
+	},
+	{
+	  "level": 1,
+	  "type": 0,
+	  "questionText": "가장 작은 수를\n터치하세요!",
+	  "correctAnswers": [ "1" ],
+	  "wrongAnswers": [ "9", "5", "3" ]
+	},
+	{
 	  "level": 2,
 	  "type": 1,
 	  "questionText": "짝수를 모두 골라보세요.",
-	  "correctAnswers": [ "2", "4", "6", "8", "10" ],
+	  "correctAnswers": [ "2", "6" ],
 	  "wrongAnswers": [ "1", "3", "5", "7", "9" ]
 	},
 	{
 	  "level": 2,
 	  "type": 1,
 	  "questionText": "홀수를 모두 골라보세요.",
-	  "correctAnswers": [ "1", "3", "5", "7", "9" ],
+	  "correctAnswers": [ "3", "7" ],
 	  "wrongAnswers": [ "2", "4", "6", "8", "10" ]
 	},
 	{
@@ -60,6 +69,20 @@
 	  "questionText": "1, 1, 2, 2, 3 다음에 올 수는\n무엇일까요?",
 	  "correctAnswers": [ "3" ],
 	  "wrongAnswers": [ "1", "2", "4" ]
+	},
+	{
+	  "level": 2,
+	  "type": 0,
+	  "questionText": "10, 20, 30 ... 다음에 올 수는\n무엇일까요?",
+	  "correctAnswers": [ "40" ],
+	  "wrongAnswers": [ "60", "50", "75" ]
+	},
+	{
+	  "level": 2,
+	  "type": 1,
+	  "questionText": "5보다 작은 수를\n모두 골라보세요.",
+	  "correctAnswers": [ "1", "3", "4" ],
+	  "wrongAnswers": [ "5", "6", "8", "9" ]
 	},
 	{
 	  "level": 3,
@@ -90,6 +113,20 @@
 	  "wrongAnswers": [ "1", "0", "6" ]
 	},
 	{
+	  "level": 3,
+	  "type": 0,
+	  "questionText": "531 에서 십의 자리 숫자는\n무엇일까요?",
+	  "correctAnswers": [ "3" ],
+	  "wrongAnswers": [ "5", "1", "0" ]
+	},
+	{
+	  "level": 3,
+	  "type": 0,
+	  "questionText": "1/2 과 크기가 같은 소수는\n무엇일까요?",
+	  "correctAnswers": [ "0.5" ],
+	  "wrongAnswers": [ "0.2", "1.2", "0.1" ]
+	},
+	{
 	  "level": 4,
 	  "type": 0,
 	  "questionText": "소수점을 한자리 올림하면\n4가 되는 수는 무엇일까요?",
@@ -106,7 +143,7 @@
 	{
 	  "level": 4,
 	  "type": 1,
-	  "questionText": "3의 배수가 아닌 것을 골라보세요.",
+	  "questionText": "3의 배수가 아닌 것을\n골라보세요.",
 	  "correctAnswers": [ "142" ],
 	  "wrongAnswers": [ "93", "63", "117" ]
 	},
@@ -116,6 +153,20 @@
 	  "questionText": "12의 약수가 아닌 것을\n골라보세요.",
 	  "correctAnswers": [ "8" ],
 	  "wrongAnswers": [ "2", "6", "12" ]
+	},
+	{
+	  "level": 4,
+	  "type": 1,
+	  "questionText": "16의 약수를 모두\n골라보세요.",
+	  "correctAnswers": [ "2", "4", "8" ],
+	  "wrongAnswers": [ "3", "6", "12", "32" ]
+	},
+	{
+	  "level": 4,
+	  "type": 0,
+	  "questionText": "다음 중 소수(Prime Number)는\n무엇일까요?",
+	  "correctAnswers": [ "7" ],
+	  "wrongAnswers": [ "4", "9", "15" ]
 	},
 	{
 	  "level": 5,
@@ -144,6 +195,20 @@
 	  "questionText": "18과 24의 최대공약수를\n찾아보세요.",
 	  "correctAnswers": [ "6" ],
 	  "wrongAnswers": [ "2", "3", "9" ]
+	},
+	{
+	  "level": 5,
+	  "type": 0,
+	  "questionText": "4와 6의 최소공배수를\n찾아보세요.",
+	  "correctAnswers": [ "12" ],
+	  "wrongAnswers": [ "2", "24", "10" ]
+	},
+	{
+	  "level": 5,
+	  "type": 2,
+	  "questionText": "절댓값이 큰 순서대로\n터치하세요.",
+	  "correctAnswers": [ "-10", "5", "-3", "0" ],
+	  "wrongAnswers": [ ]
 	}
   ],
   "levelImages": [

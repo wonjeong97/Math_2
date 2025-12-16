@@ -181,6 +181,7 @@ public class Settings
     public CloseSetting closeSetting;
     public FontMaps fontMap;
     public ButtonSetting questionButton;
+    public SoundSetting[] sounds;
 }
 
 #endregion

@@ -1,10 +1,14 @@
 using UnityEngine;
 using TMPro;
 
+/// <summary>
+/// TextMeshProUGUI의 전체 텍스트 영역에 대해 4방향(Top-Left, Top-Right, Bottom-Left, Bottom-Right) 그라데이션을 적용하는 클래스.
+/// (기본 TMP 그라데이션은 글자 단위로 적용되지만, 이 스크립트는 전체 문장을 하나의 덩어리로 보고 색상을 입힘)
+/// </summary>
 [RequireComponent(typeof(TextMeshProUGUI))]
 public class TextGlobalGradient : MonoBehaviour
 {
-    // 그라데이션 색상 저장
+    // 4방향 그라데이션 색상
     public Color topLeft = Color.white;
     public Color topRight = Color.white;
     public Color bottomLeft = Color.white;
@@ -19,45 +23,48 @@ public class TextGlobalGradient : MonoBehaviour
 
     private void OnEnable()
     {
-        // 켜질 때 적용
+        // 활성화 시 즉시 적용
         ApplyGradient();
     }
 
-    // AutoSize는 Update 루프에서 계산되므로, 모든 계산이 끝난 LateUpdate에서 색상을 입혀야 함
+    /// <summary>
+    /// 매 프레임 UI 레이아웃 계산 후(LateUpdate) 색상을 다시 입힘.
+    /// (TMP의 AutoSize 기능이나 텍스트 변경 시 메쉬가 재생성되므로 지속적인 업데이트 필요)
+    /// </summary>
     private void LateUpdate()
     {
-        // 성능 최적화: 텍스트가 변경되었거나 활성화 상태일 때만 체크하도록 할 수 있으나,
-        // AutoSize의 경우 프레임마다 미세하게 변할 수 있어 LateUpdate에서 지속 적용하는 것이 가장 안전함.
         ApplyGradient();
     }
 
-    /// <summary> 외부에서 색상을 설정하고 즉시 적용 </summary>
+    /// <summary> 외부에서 색상을 설정하고 즉시 적용. </summary>
     public void SetGradient(Color tl, Color tr, Color bl, Color br)
     {
         topLeft = tl;
         topRight = tr;
         bottomLeft = bl;
         bottomRight = br;
-        // LateUpdate에서 자동 적용되므로 여기서 호출 안 해도 되지만, 즉각 반응을 위해 남겨둠
+        
         ApplyGradient();
     }
 
-    /// <summary> 텍스트 전체 영역 기준 그라데이션 적용 </summary>
+    /// <summary>
+    /// 실제 그라데이션 로직 수행.
+    /// 전체 텍스트의 Bounds를 계산하고, 각 정점의 위치 비율에 따라 색상을 보간.
+    /// </summary>
     public void ApplyGradient()
     {
         if (!_tmp) _tmp = GetComponent<TextMeshProUGUI>();
 
-        // [중요 수정] ForceMeshUpdate 제거
-        // _tmp.ForceMeshUpdate(); -> 이 호출이 AutoSize 계산을 방해하거나 초기화시킴
-        // LateUpdate에서 호출하므로 이미 최신 메쉬 정보가 있음
+        // [참고] ForceMeshUpdate()는 AutoSize 계산을 방해할 수 있으므로 제거함.
+        // LateUpdate에서 호출되므로 이미 최신 메쉬 정보가 존재함.
 
         TMP_TextInfo textInfo = _tmp.textInfo;
         int charCount = textInfo.characterCount;
         
-        // 텍스트가 없거나 메쉬 정보가 없으면 리턴
+        // 텍스트가 없거나 메쉬 정보가 유효하지 않으면 리턴
         if (charCount == 0 || textInfo.meshInfo == null) return;
 
-        // 2. 전체 텍스트의 Bounds(범위) 계산
+        // 1. 전체 텍스트의 실제 표시 영역(Bounds) 계산
         float minX = float.MaxValue;
         float maxX = float.MinValue;
         float minY = float.MaxValue;
@@ -65,19 +72,19 @@ public class TextGlobalGradient : MonoBehaviour
 
         for (int i = 0; i < charCount; i++)
         {
+            // 보이지 않는 문자(공백 등)는 건너뜀
             if (!textInfo.characterInfo[i].isVisible) continue;
             
-            // AutoSize가 적용된 후의 실제 정점 위치를 가져옴
             int matIndex = textInfo.characterInfo[i].materialReferenceIndex;
             int vertIndex = textInfo.characterInfo[i].vertexIndex;
             
-            // meshInfo 배열 범위 체크 (안전장치)
+            // 배열 범위 안전장치
             if (matIndex >= textInfo.meshInfo.Length) continue;
 
             Vector3[] vertices = textInfo.meshInfo[matIndex].vertices;
             if (vertices == null) continue;
 
-            // 글자의 4개 꼭짓점 확인
+            // 해당 글자의 4개 꼭짓점을 확인하여 전체 min/max 갱신
             for (int v = 0; v < 4; v++)
             {
                 Vector3 pos = vertices[vertIndex + v];
@@ -88,12 +95,13 @@ public class TextGlobalGradient : MonoBehaviour
             }
         }
 
+        // 유효한 영역이 없으면 리턴
         if (minX >= maxX || minY >= maxY) return;
 
         float width = maxX - minX;
         float height = maxY - minY;
 
-        // 3. 색상 보간 및 적용
+        // 2. 각 정점의 위치 비율에 따라 색상 보간(Lerp) 및 적용
         for (int i = 0; i < charCount; i++)
         {
             if (!textInfo.characterInfo[i].isVisible) continue;
@@ -112,18 +120,20 @@ public class TextGlobalGradient : MonoBehaviour
             {
                 Vector3 pos = vertices[vertIndex + v];
                 
-                // 위치 비율 (0~1)
+                // 전체 영역 내에서의 가로/세로 비율 (0~1) 계산
                 float hRatio = (width == 0) ? 0 : (pos.x - minX) / width;
                 float vRatio = (height == 0) ? 0 : (pos.y - minY) / height;
 
+                // 상단/하단 가로축 색상 보간
                 Color bottom = Color.Lerp(bottomLeft, bottomRight, hRatio);
                 Color top = Color.Lerp(topLeft, topRight, hRatio);
                 
+                // 수직축 보간하여 최종 색상 결정
                 newColors[vertIndex + v] = Color.Lerp(bottom, top, vRatio);
             }
         }
 
-        // 4. 메쉬에 색상 업데이트
+        // 3. 수정된 색상 데이터를 메쉬에 반영
         _tmp.UpdateVertexData(TMP_VertexDataUpdateFlags.Colors32);
     }
 }
