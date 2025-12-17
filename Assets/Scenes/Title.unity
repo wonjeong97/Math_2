@@ -869,7 +869,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &988859086
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1358,17 +1358,17 @@ PrefabInstance:
     - target: {fileID: 4865714525237607318, guid: 0e0f27635752615428482bea6e7299d6,
         type: 3}
       propertyPath: senderEmail
-      value: wonjeong@gmail.com
+      value: wonjeong@huliac.com
       objectReference: {fileID: 0}
     - target: {fileID: 4865714525237607318, guid: 0e0f27635752615428482bea6e7299d6,
         type: 3}
       propertyPath: recipientEmail
-      value: wonjeong@gmail.com
+      value: wonjeong@huliac.com
       objectReference: {fileID: 0}
     - target: {fileID: 4865714525237607318, guid: 0e0f27635752615428482bea6e7299d6,
         type: 3}
       propertyPath: senderPassword
-      value: elgq bcvd atcz pfqb
+      value: ywdv ywkg nhuw tllm
       objectReference: {fileID: 0}
     - target: {fileID: 7471579750980099176, guid: 0e0f27635752615428482bea6e7299d6,
         type: 3}

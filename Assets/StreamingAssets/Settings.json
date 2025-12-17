@@ -17,11 +17,11 @@
 	"buttonText": { "fontSize": 180 }
   },
   "sounds": [
-	{ "key": "BGM1", "clipPath": "Sounds/BGM1.wav", "volume": 1.0 },
-	{ "key": "BGM2", "clipPath": "Sounds/BGM2.wav", "volume": 1.0 },
-	{ "key": "BGM3", "clipPath": "Sounds/BGM3.wav", "volume": 1.0 },
-	{ "key": "Button", "clipPath": "Sounds/Button.mp3", "volume": 1.0 },
-	{ "key": "Correct", "clipPath": "Sounds/Correct.mp3", "volume": 1.0 },
-	{ "key": "Wrong", "clipPath": "Sounds/Wrong.mp3", "volume": 1.0 }
+	{ "key": "BGM1", "clipPath": "Sound/BGM1.wav", "volume": 1.0 },
+	{ "key": "BGM2", "clipPath": "Sound/BGM2.wav", "volume": 1.0 },
+	{ "key": "BGM3", "clipPath": "Sound/BGM3.wav", "volume": 1.0 },
+	{ "key": "Button", "clipPath": "Sound/Button.mp3", "volume": 1.0 },
+	{ "key": "Correct", "clipPath": "Sound/Correct.mp3", "volume": 1.0 },
+	{ "key": "Wrong", "clipPath": "Sound/Wrong.mp3", "volume": 1.0 }
   ]
 }

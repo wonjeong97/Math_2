@@ -246,9 +246,8 @@ public class LogSaver : MonoBehaviour
                         smtpClient.EnableSsl = true;
                         smtpClient.Timeout = 5000;
 
-                        ServicePointManager.ServerCertificateValidationCallback = 
-                            delegate (object s, X509Certificate certificate, X509Chain chain, SslPolicyErrors sslPolicyErrors) 
-                            { return true; };
+                        ServicePointManager.ServerCertificateValidationCallback =
+                            (s, certificate, chain, sslPolicyErrors) => true;
 
                         smtpClient.Send(mail);
                     }
@@ -270,7 +269,7 @@ public class LogSaver : MonoBehaviour
         catch (System.Exception e)
         {
             // 삭제 실패 원인 확인용 로그
-            Debug.LogError($"[LogSaver] 처리 중 오류 발생 (전송은 성공했을 수 있음): {e.Message}");
+            Debug.LogError($"[LogSaver] 처리 중 오류 발생: {e.Message}");
             return false;
         }
     }
