@@ -110,7 +110,12 @@ public class GameEndManager : BaseManager<GameEndSetting>
     private async UniTaskVoid HandleHomeButtonAsync()
     {
         try
-        {
+        {   
+            if (SoundManager.Instance != null)
+            {
+                SoundManager.Instance.PlaySFX("Button");    
+            }
+            
             // 1. Fade Out
             if (fader != null && fadeImage != null)
             {

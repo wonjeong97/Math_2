@@ -43,7 +43,11 @@ public class CalculateNumberManager : BaseGameManager<CalculateNumberSetting, Ca
     /// 선택된 레벨의 문제를 로드하고 첫 번째 문제를 설정.
     /// </summary>
     protected override void StartGameLogic()
-    {
+    {   
+        if (SoundManager.Instance != null)
+        {
+            SoundManager.Instance.PlayBGM("BGM1");    
+        }
         int selectedLevel = LevelSelectContext.SelectedLevel > 0 ? LevelSelectContext.SelectedLevel : 1;
         
         // BaseManager의 managerSetting 사용
@@ -178,6 +182,11 @@ public class CalculateNumberManager : BaseGameManager<CalculateNumberSetting, Ca
         if (isProcessing) return;
         bool isCorrect = false;
         bool isLevelClear = false;
+        
+        if (SoundManager.Instance != null)
+        {
+            SoundManager.Instance.PlaySFX("Button");    
+        }
 
         switch (currentQuestion.type)
         {

@@ -1362,6 +1362,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4865714525237607318, guid: 0e0f27635752615428482bea6e7299d6,
         type: 3}
+      propertyPath: useCustomPath
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4865714525237607318, guid: 0e0f27635752615428482bea6e7299d6,
+        type: 3}
       propertyPath: recipientEmail
       value: wonjeong@huliac.com
       objectReference: {fileID: 0}

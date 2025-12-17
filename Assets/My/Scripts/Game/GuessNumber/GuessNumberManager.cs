@@ -31,7 +31,11 @@ public class GuessNumberManager : BaseGameManager<GuessNumberSetting, GuessNumbe
     /// 선택된 레벨의 문제를 필터링하고 첫 번째 문제를 출제.
     /// </summary>
     protected override void StartGameLogic()
-    {
+    {   
+        if (SoundManager.Instance != null)
+        {
+            SoundManager.Instance.PlayBGM("BGM2");    
+        }
         int selectedLevel = LevelSelectContext.SelectedLevel > 0 ? LevelSelectContext.SelectedLevel : 1;
         
         // BaseManager의 managerSetting 사용
@@ -177,9 +181,13 @@ public class GuessNumberManager : BaseGameManager<GuessNumberSetting, GuessNumbe
     private void OnAnswerClicked(string clickedText, GameObject btnObj)
     {
         if (isProcessing) return;
-
         bool isCorrectAction = false;
         bool isLevelClear = false;
+        
+        if (SoundManager.Instance != null)
+        {
+            SoundManager.Instance.PlaySFX("Button");    
+        }
 
         switch (currentQuestion.type)
         {

@@ -305,6 +305,12 @@ public abstract class BaseGameManager<TSetting, TQuestion> : BaseManager<TSettin
         Debug.Log($"[{SceneManager.GetActiveScene().name}] Correct ({currentQuestionIndex + 1}/{totalQuestions})");
         isProcessing = true;
         if (pageCorrect) pageCorrect.SetActive(true);
+        
+        if (SoundManager.Instance != null)
+        {
+            SoundManager.Instance.PlaySFX("Correct");    
+        }
+        
         await UniTask.Delay(TimeSpan.FromSeconds(2));
         currentQuestionIndex++;
         if (currentQuestionIndex >= totalQuestions) 
@@ -326,12 +332,23 @@ public abstract class BaseGameManager<TSetting, TQuestion> : BaseManager<TSettin
         Debug.Log($"[{SceneManager.GetActiveScene().name}] Wrong ({currentQuestionIndex + 1}/{totalQuestions})");
         isProcessing = true;    
         if (pageWrong) pageWrong.SetActive(true);
+        
+        if (SoundManager.Instance != null)
+        {
+            SoundManager.Instance.PlaySFX("Wrong");    
+        }
     }
     
     /// <summary> 다시하기 버튼 클릭 핸들러. </summary>
     protected virtual void OnRetryClicked()
     {   
         Debug.Log($"[{SceneManager.GetActiveScene().name}] Retry ({currentQuestionIndex + 1}/{totalQuestions})");
+        
+        if (SoundManager.Instance != null)
+        {
+            SoundManager.Instance.PlaySFX("Button");    
+        }
+        
         if (pageWrong) pageWrong.SetActive(false);
         SetQuestionBase(currentQuestionIndex);
     }
@@ -343,6 +360,12 @@ public abstract class BaseGameManager<TSetting, TQuestion> : BaseManager<TSettin
     private async UniTaskVoid HandleGameEndAsync()
     {
         Debug.Log($"[{SceneManager.GetActiveScene().name}] Game End");
+        
+        if (SoundManager.Instance != null)
+        {
+            SoundManager.Instance.PlaySFX("Button");    
+        }
+        
         if (fader != null && fadeImage != null) await fader.FadeOut(fadeImage, fadeTime, DestroyToken);
         GameResultContext.CorrectCount = currentQuestionIndex;
         SceneManager.LoadScene("GameEnd");
@@ -456,6 +479,14 @@ public abstract class BaseGameManager<TSetting, TQuestion> : BaseManager<TSettin
             rt.anchorMin = rt.anchorMax = new Vector2(0.5f, 0.5f);
             rt.pivot = new Vector2(0.5f, 0.5f);
             rt.anchoredPosition = basePos + new Vector2(offsetX, offsetY);
+        }
+    }
+
+    protected void OnDestroy()
+    {
+        if (SoundManager.Instance != null)
+        {
+            SoundManager.Instance.PlayBGM(null);    
         }
     }
 }

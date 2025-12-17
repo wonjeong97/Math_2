@@ -29,7 +29,11 @@ public class NumberSystemManager : BaseGameManager<NumberSystemSetting, NumberSy
     /// 레벨에 맞는 문제를 로드하고 셔플하여 첫 번째 문제를 출제.
     /// </summary>
     protected override void StartGameLogic()
-    {
+    {   
+        if (SoundManager.Instance != null)
+        {
+            SoundManager.Instance.PlayBGM("BGM3");    
+        }
         int selectedLevel = LevelSelectContext.SelectedLevel > 0 ? LevelSelectContext.SelectedLevel : 1;
         
         // BaseManager의 managerSetting 사용
@@ -169,7 +173,12 @@ public class NumberSystemManager : BaseGameManager<NumberSystemSetting, NumberSy
         if (isProcessing) return;
         bool isCorrect = false;
         bool isLevelClear = false;
-
+        
+        if (SoundManager.Instance != null)
+        {
+            SoundManager.Instance.PlaySFX("Button");    
+        }
+        
         switch (currentQuestion.type)
         {
             case QuestionType.SingleChoice:
