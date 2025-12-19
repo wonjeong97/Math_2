@@ -14,8 +14,8 @@ public abstract class BaseManager<TSetting> : MonoBehaviour
     [Header("Fade Image")]
     [SerializeField] protected Image fadeImage; // 페이드 이미지
 
-    private Settings setting; // 전역 설정
-    protected TSetting managerSetting; // 매니저 설정
+    private Settings setting; // 전역 설정 (JsonLoader에서 로드됨)
+    protected TSetting managerSetting; // 매니저별 설정 (자식 클래스용)
     protected abstract string JsonPath { get; } // JSON 파일 경로
 
     protected UIManager ui; // UI 매니저
@@ -32,8 +32,9 @@ public abstract class BaseManager<TSetting> : MonoBehaviour
     {
         try
         {
-            // 싱글톤 확인
+            // 1. 싱글톤 및 필수 매니저 확인
             if (JsonLoader.Instance == null) return;
+            
             if (JsonLoader.Instance.settings != null) setting = JsonLoader.Instance.settings; 
             else return;
 
@@ -43,11 +44,11 @@ public abstract class BaseManager<TSetting> : MonoBehaviour
             if (FadeManager.Instance != null) fader = FadeManager.Instance;
             else return;
 
-            // 데이터 로드
+            // 2. 데이터 로드
             managerSetting = JsonLoader.Instance.LoadJsonData<TSetting>(JsonPath);
             fadeTime = setting.fadeTime;
-            
-            // 초기화 호출
+
+            // 4. 자식 클래스 초기화 호출
             await Initialize();
         }
         catch (OperationCanceledException)

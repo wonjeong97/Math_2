@@ -29,11 +29,7 @@ public class NumberSystemManager : BaseGameManager<NumberSystemSetting, NumberSy
     /// 레벨에 맞는 문제를 로드하고 셔플하여 첫 번째 문제를 출제.
     /// </summary>
     protected override void StartGameLogic()
-    {   
-        if (SoundManager.Instance != null)
-        {
-            SoundManager.Instance.PlayBGM("BGM3");    
-        }
+    {
         int selectedLevel = LevelSelectContext.SelectedLevel > 0 ? LevelSelectContext.SelectedLevel : 1;
         
         // BaseManager의 managerSetting 사용
@@ -108,14 +104,8 @@ public class NumberSystemManager : BaseGameManager<NumberSystemSetting, NumberSy
         // 셔플
         options = options.OrderBy(x => Random.value).ToList();
         List<GameObject> shuffledButtons = answerButtons.OrderBy(x => Random.value).ToList();
-        
-        // 배치 (좌우 균등 분할)
-        List<GameObject> activeBtns = shuffledButtons.Take(options.Count).ToList();
-        int half = Mathf.CeilToInt(activeBtns.Count / 2f);
-        PlaceButtonsInArea(activeBtns.Take(half).ToList(), leftAreaRect);
-        PlaceButtonsInArea(activeBtns.Skip(half).ToList(), rightAreaRect);
 
-        // 버튼 데이터 매핑
+        // 1. 버튼 데이터 매핑 및 크기 설정을 먼저 수행
         for (int i = 0; i < 4; i++)
         {
             GameObject btnObj = shuffledButtons[i];
@@ -151,7 +141,21 @@ public class NumberSystemManager : BaseGameManager<NumberSystemSetting, NumberSy
                         if(gradient) gradient.enabled = false;
                         
                         // 설정된 크기 적용
-                        if (pair.size != Vector2.zero && btnRect) btnRect.sizeDelta = pair.size;
+                        if (pair.size != Vector2.zero && btnRect)
+                        {
+                            // 안전장치: 버튼 크기가 너무 크면 화면 내로 스케일 조정 (예: 가로 900 제한)
+                            float maxWidth = 900f; // 화면 절반(1920/2)보다 약간 작게 설정
+                            Vector2 finalSize = pair.size;
+
+                            if (finalSize.x > maxWidth)
+                            {
+                                float ratio = maxWidth / finalSize.x;
+                                finalSize.x *= ratio;
+                                finalSize.y *= ratio;
+                            }
+                            
+                            btnRect.sizeDelta = finalSize;
+                        }
                     }
                 }
                 else
@@ -165,6 +169,12 @@ public class NumberSystemManager : BaseGameManager<NumberSystemSetting, NumberSy
             }
             else btnObj.SetActive(false);
         }
+
+        // 2. 크기가 확정된 상태에서 배치 수행
+        List<GameObject> activeBtns = shuffledButtons.Take(options.Count).ToList();
+        int half = Mathf.CeilToInt(activeBtns.Count / 2f);
+        PlaceButtonsInArea(activeBtns.Take(half).ToList(), leftAreaRect);
+        PlaceButtonsInArea(activeBtns.Skip(half).ToList(), rightAreaRect);
     }
 
     /// <summary> 정답 버튼 클릭 핸들러. </summary>
@@ -173,12 +183,7 @@ public class NumberSystemManager : BaseGameManager<NumberSystemSetting, NumberSy
         if (isProcessing) return;
         bool isCorrect = false;
         bool isLevelClear = false;
-        
-        if (SoundManager.Instance != null)
-        {
-            SoundManager.Instance.PlaySFX("Button");    
-        }
-        
+
         switch (currentQuestion.type)
         {
             case QuestionType.SingleChoice:

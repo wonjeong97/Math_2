@@ -92,13 +92,6 @@
 	{
 	  "level": 1,
 	  "type": 0,
-	  "questionText": "사탕 5개 중에서\n2개를 먹었어요.\n몇 개가 남았을까요?",
-	  "correctAnswers": [ "3" ],
-	  "wrongAnswers": [ "2", "4", "1" ]
-	},
-	{
-	  "level": 1,
-	  "type": 0,
 	  "questionText": "1 + 2는 무엇일까요?",
 	  "correctAnswers": [ "3" ],
 	  "wrongAnswers": [ "2", "4", "5" ]
