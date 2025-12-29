@@ -29,6 +29,11 @@ public class GameManager : MonoBehaviour
     private void Start()
     {
         Cursor.visible = false;
+
+        if (reporter && reporter.show)
+        {
+            reporter.show = false;
+        }
     }
 
     private void Update()
@@ -78,7 +83,7 @@ public class GameManager : MonoBehaviour
 
             float limitTime = 60f; 
             
-            if (JsonLoader.Instance != null && JsonLoader.Instance.settings != null)
+            if (JsonLoader.Instance && JsonLoader.Instance.settings != null)
             {
                 limitTime = JsonLoader.Instance.settings.inactivityTime;
             }
@@ -98,7 +103,7 @@ public class GameManager : MonoBehaviour
         _isTransitioning = true;
         _currentInactivityTimer = 0f;
         
-        Debug.Log("Inactivity Detected: Returning to Title...");
+        Debug.Log("Inactivity Detected: Returning to Title");
         ReturnToTitleAsync().Forget();
     }
 
