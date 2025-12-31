@@ -102,6 +102,11 @@ public class CalculateNumberManager : BaseGameManager<CalculateNumberSetting, Ca
                 questionImageRoot.SetParent(contentParent, false);
                 questionImageRoot.gameObject.SetActive(true);
 
+                questionImageRoot.anchorMin = new Vector2(0.5f, 0.5f);
+                questionImageRoot.anchorMax = new Vector2(0.5f, 0.5f);
+                questionImageRoot.pivot = new Vector2(0.5f, 0.5f);
+                questionImageRoot.anchoredPosition = Vector2.zero;
+                
                 foreach (var imgSetting in q.questionImages)
                 {
                     if (imgSetting == null) continue;
