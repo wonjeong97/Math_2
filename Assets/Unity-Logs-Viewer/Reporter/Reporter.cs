@@ -100,6 +100,10 @@ public class Reporter : MonoBehaviour
             return s;
         }
 
+        /// <summary>
+        /// 저장된 장면 인덱스에 해당하는 장면 이름을 반환한다.
+        /// </summary>
+        /// <returns>`loadedScene`가 255이면 "AssetBundleScene", `_scenes`가 null이거나 인덱스가 범위를 벗어나면 "Unknown", 그렇지 않으면 해당 인덱스의 장면 이름(값이 null이면 "Unknown").</returns>
         public string GetSceneName()
         {
             if (loadedScene == 255) return "AssetBundleScene";
@@ -319,6 +323,14 @@ public class Reporter : MonoBehaviour
 #endif
     string systemMemorySize;
 
+    /// <summary>
+    /// 싱글톤 Reporter 인스턴스를 설정하고 중복 인스턴스를 제거한다.
+    /// </summary>
+    /// <remarks>
+    /// Instance가 비어있으면 이 객체를 싱글톤으로 등록하고 게임 오브젝트를 씬 전환 시 파괴되지 않도록 유지한 뒤 필요 시 초기화를 수행한다.
+    /// 또한 Unity 버전이 해당 이벤트를 지원하면 씬 로드 콜백(SceneManager.sceneLoaded)을 등록한다.
+    /// 이미 다른 인스턴스가 존재하면 이 게임 오브젝트를 파괴한다.
+    /// </remarks>
     void Awake()
     {
         if (Instance == null)
@@ -339,6 +351,12 @@ public class Reporter : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// 인스턴스가 파괴될 때 호출되어 리소스와 이벤트 핸들러를 정리한다.
+    /// </summary>
+    /// <remarks>
+    /// 생성한 흰색 텍스처가 존재하면 즉시 파괴하고(메모리 해제), UNITY_CHANGE3가 활성화된 경우 씬 로드 이벤트 구독을 해제한다.
+    /// </remarks>
     private void OnDestroy()
     {   
         if (whiteTex != null)
@@ -375,6 +393,14 @@ public class Reporter : MonoBehaviour
 
     public bool initialized;
 
+    /// <summary>
+    /// Reporter 인스턴스를 초기화하고 런타임 및 UI 설정을 로드하여 리포터를 준비합니다.
+    /// </summary>
+    /// <remarks>
+    /// 단일 인스턴스를 보장하고 씬/로그 콜백을 등록하며 GUI 콘텐츠와 스타일을 설정합니다. 
+    /// 또한 사용자 설정(보기 모드, 표시 토글, 필터 텍스트, UI 크기 등)을 불러오고 디바이스/시스템 정보를 수집합니다. 
+    /// 저장된 설정에 따라 리포터를 화면에 표시할 수 있습니다.
+    /// </remarks>
     private void Initialize()
     {
         if (!_created)
@@ -491,6 +517,12 @@ public class Reporter : MonoBehaviour
     
     private Texture2D whiteTex;
     
+    /// <summary>
+    /// size와 images 설정을 바탕으로 인게임 리포터에서 사용하는 GUI 스타일과 관련 리소스(흰 텍스처, GUIStyle들, GUISkin 인스턴스)를 초기화한다.
+    /// </summary>
+    /// <remarks>
+    /// 필요한 경우 흰색 1x1 텍스처를 지연 생성하며, 툴바·로그·그래프용 스킨들을 복제하여 각 스크롤바 치수를 구성한다.
+    /// </remarks>
     private void InitializeStyle()
     {
         int paddingX = (int)(size.x * 0.2f);
@@ -2109,6 +2141,16 @@ public class Reporter : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// 매 프레임 호출되어 성능과 상태를 갱신하고 대기 중인 스레드 로그를 처리한다.
+    /// </summary>
+    /// <remarks>
+    /// - 현재 FPS 문자열과 가비지 컬렉션 기반 총 메모리 값을 갱신한다.
+    /// - 활성 씬의 이름을 씬 캐시 배열에 보장하여 씬 관련 표시를 준비한다.
+    /// - 스레드에서 큐된 로그를 메인 로그로 병합하고 큐를 비운다.
+    /// - 설정에 따라 게임 매니저 제어가 활성화되어 있으면 리포터를 표시한다.
+    /// - 내부 타이머를 사용해 일정 간격과 프레임 기준으로 FPS 값을 계산한다.
+    /// </remarks>
     void Update()
     {
         fpsText = fps.ToString("0.000");

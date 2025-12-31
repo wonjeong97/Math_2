@@ -10,6 +10,9 @@ public class ButtonSpinner : MonoBehaviour
     private RectTransform _textRect;
     private Quaternion _fixedRotation;
 
+    /// <summary>
+    /// 자식에 있는 TextMeshProUGUI의 RectTransform을 찾아 저장하고 그 객체의 현재 월드 회전값을 고정값으로 기록합니다.
+    /// </summary>
     private void Awake()
     {
         // 자식으로 있는 TextMeshProUGUI를 찾음
@@ -22,6 +25,13 @@ public class ButtonSpinner : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// isSpinning이 true일 때 버튼 이미지(GameObject)를 Z축을 중심으로 회전시킵니다.
+    /// </summary>
+    /// <remarks>
+    /// 회전 속도는 rotateSpeed에 비례하고 Time.deltaTime을 곱해 프레임 독립적으로 적용됩니다.
+    /// rotateSpeed가 음수이면 시계 방향으로 회전합니다. isSpinning이 false이면 동작을 수행하지 않습니다.
+    /// </remarks>
     private void Update()
     {
         if (!isSpinning) return;
@@ -39,7 +49,10 @@ public class ButtonSpinner : MonoBehaviour
         _textRect.rotation = _fixedRotation;
     }
 
-    /// <summary> 외부에서 회전 여부를 제어할 수 있는 함수 </summary>
+    /// <summary>
+    /// 버튼의 회전 동작을 외부에서 켜거나 끕니다.
+    /// </summary>
+    /// <param name="active">회전을 활성화하려면 true, 비활성화하려면 false.</param>
     public void SetSpinning(bool active)
     {
         isSpinning = active;
