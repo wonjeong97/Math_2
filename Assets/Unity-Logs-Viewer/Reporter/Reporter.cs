@@ -102,7 +102,9 @@ public class Reporter : MonoBehaviour
 
         public string GetSceneName()
         {
-            return loadedScene == 255 ? "AssetBundleScene" : _scenes[loadedScene];
+            if (loadedScene == 255) return "AssetBundleScene";
+            if (_scenes == null || loadedScene >= _scenes.Length) return "Unknown";
+            return _scenes[loadedScene] ?? "Unknown";
         }
     }
 
@@ -338,7 +340,9 @@ public class Reporter : MonoBehaviour
     }
 
     private void OnDestroy()
-    {
+    {   
+        if (whiteTex != null)
+            DestroyImmediate(whiteTex);
 #if UNITY_CHANGE3
         SceneManager.sceneLoaded -= _OnLevelWasLoaded;
 #endif
@@ -484,15 +488,20 @@ public class Reporter : MonoBehaviour
 #endif
         systemMemorySize = SystemInfo.systemMemorySize.ToString();
     }
-
+    
+    private Texture2D whiteTex;
+    
     private void InitializeStyle()
     {
         int paddingX = (int)(size.x * 0.2f);
         int paddingY = (int)(size.y * 0.2f);
-        
-        Texture2D whiteTex = new Texture2D(1, 1);
-        whiteTex.SetPixel(0, 0, Color.white);
-        whiteTex.Apply();
+
+        if (whiteTex == null)
+        {
+            whiteTex = new Texture2D(1, 1);
+            whiteTex.SetPixel(0, 0, Color.white);
+            whiteTex.Apply();
+        }
         
         nonStyle = new GUIStyle
         {
@@ -2108,7 +2117,7 @@ public class Reporter : MonoBehaviour
 
 #if UNITY_CHANGE3
         int sceneIndex = SceneManager.GetActiveScene().buildIndex;
-        if (sceneIndex != -1 && string.IsNullOrEmpty(_scenes[sceneIndex]))
+        if (sceneIndex >= 0 && sceneIndex < _scenes.Length && string.IsNullOrEmpty(_scenes[sceneIndex]))
             _scenes[SceneManager.GetActiveScene().buildIndex] = SceneManager.GetActiveScene().name;
 #else
 		int sceneIndex = Application.loadedLevel;
