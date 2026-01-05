@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -9,17 +10,16 @@ using UnityEngine.UI;
 public class LevelSetting
 {   
     // --- 공통 배경 설정 ---
-    public ImageSetting commonBackground;       // 전체 공통 배경
+    public ImageSetting commonBackground;       
     
     // --- 1페이지 (레벨 선택) 설정 ---
-    public TextSetting infoText;                // 안내 텍스트
-    public ButtonSetting[] levelButtons;        // 레벨 버튼 설정 배열
+    public TextSetting infoText;                
+    public ButtonSetting[] levelButtons;        
 
     // --- 2페이지 (게임 타입 선택) 설정 ---
-    public ImageSetting[] gameLevelImages;      // 상단 타이틀 이미지 ("Level N Game")
-    
-    public TextSetting page2InfoText;           // 2페이지 안내 텍스트
-    public GradientData[] levelGradients;       // 레벨별 텍스트 그라데이션
+    public ImageSetting[] gameLevelImages;      
+    public TextSetting page2InfoText;           
+    public GradientData[] levelGradients;       
 
     // 게임 타입 버튼 설정
     public ButtonSetting buttonTypeGuessNumber;
@@ -30,18 +30,17 @@ public class LevelSetting
     public ImageSetting[] calculateNumberLevelImages; 
     public ImageSetting[] numberSystemLevelImages;    
 
-    public ButtonSetting buttonBack;            // 뒤로가기 버튼
+    public ButtonSetting buttonBack;            
 }
 
-/// <summary> 레벨 및 게임 타입 선택 화면을 관리하는 매니저. </summary>
 public sealed class LevelManager : BaseManager<LevelSetting>
 {
     [Header("Pages")]
-    [SerializeField] private GameObject pageLevel;   // 1페이지
-    [SerializeField] private GameObject pageType;    // 2페이지
+    [SerializeField] private GameObject pageLevel;   
+    [SerializeField] private GameObject pageType;    
 
     [Header("Backgrounds")]
-    [SerializeField] private GameObject backgroundObj; // 공통 배경 오브젝트
+    [SerializeField] private GameObject backgroundObj; 
 
     [Header("Level Buttons")]
     [SerializeField] private Button[] levelButtons; 
@@ -63,12 +62,10 @@ public sealed class LevelManager : BaseManager<LevelSetting>
 
     private int _selectedLevel = -1;
 
-    /// <summary> 초기화 진입점 </summary>
     protected override async UniTask Initialize()
     {
         try
         {
-            // 공통 배경 설정
             if (backgroundObj != null && managerSetting.commonBackground != null)
             {
                 await ui.SetImageObj(backgroundObj, managerSetting.commonBackground, DestroyToken);
@@ -85,7 +82,6 @@ public sealed class LevelManager : BaseManager<LevelSetting>
 
             ShowPageLevel();
 
-            // 씬 시작 페이드 인
             if (fader != null && fadeImage != null)
             {
                 await fader.FadeIn(fadeImage, fadeTime, DestroyToken);
@@ -103,24 +99,44 @@ public sealed class LevelManager : BaseManager<LevelSetting>
         }
     }
 
+    /// <summary> 1페이지 버튼 설정 </summary>
     private async UniTask SetupLevelButtonsUIAsync()
     {
         if (ui == null || managerSetting == null || managerSetting.levelButtons == null) return;
+        if (levelButtons == null) return;
+
         int count = Mathf.Min(levelButtons.Length, managerSetting.levelButtons.Length);
+        List<UniTask> tasks = new List<UniTask>();
+
         for (int i = 0; i < count; i++)
         {
             if (levelButtons[i] == null) continue;
-            await ui.SetButtonObj(levelButtons[i].gameObject, managerSetting.levelButtons[i], DestroyToken);
+            tasks.Add(ui.SetButtonObj(levelButtons[i].gameObject, managerSetting.levelButtons[i], DestroyToken));
         }
+
+        await UniTask.WhenAll(tasks);
     }
 
+    /// <summary> 2페이지 버튼 설정</summary>
     private async UniTask SetupTypeButtonsUIAsync()
     {
         if (ui == null || managerSetting == null) return;
-        if (buttonTypeGuessNumber != null) await ui.SetButtonObj(buttonTypeGuessNumber.gameObject, managerSetting.buttonTypeGuessNumber, DestroyToken);
-        if (buttonTypeCalculateNumber != null) await ui.SetButtonObj(buttonTypeCalculateNumber.gameObject, managerSetting.buttonTypeCalculateNumber, DestroyToken);
-        if (buttonTypeNumberSystem != null) await ui.SetButtonObj(buttonTypeNumberSystem.gameObject, managerSetting.buttonTypeNumberSystem, DestroyToken);
-        if (buttonBack != null) await ui.SetButtonObj(buttonBack.gameObject, managerSetting.buttonBack, DestroyToken);
+        
+        List<UniTask> tasks = new List<UniTask>();
+
+        if (buttonTypeGuessNumber != null) 
+            tasks.Add(ui.SetButtonObj(buttonTypeGuessNumber.gameObject, managerSetting.buttonTypeGuessNumber, DestroyToken));
+        
+        if (buttonTypeCalculateNumber != null) 
+            tasks.Add(ui.SetButtonObj(buttonTypeCalculateNumber.gameObject, managerSetting.buttonTypeCalculateNumber, DestroyToken));
+        
+        if (buttonTypeNumberSystem != null) 
+            tasks.Add(ui.SetButtonObj(buttonTypeNumberSystem.gameObject, managerSetting.buttonTypeNumberSystem, DestroyToken));
+        
+        if (buttonBack != null) 
+            tasks.Add(ui.SetButtonObj(buttonBack.gameObject, managerSetting.buttonBack, DestroyToken));
+
+        await UniTask.WhenAll(tasks);
     }
 
     private void SetupLevelButtonListeners()
@@ -132,7 +148,6 @@ public sealed class LevelManager : BaseManager<LevelSetting>
             if (btn == null) continue;
             btn.onClick.RemoveAllListeners();
             int levelIndex = i + 1;
-            // [중요] 비동기 핸들러 연결
             btn.onClick.AddListener(() => OnClickLevel(levelIndex).Forget());
         }
     }
@@ -143,7 +158,6 @@ public sealed class LevelManager : BaseManager<LevelSetting>
         if (buttonTypeCalculateNumber != null) { buttonTypeCalculateNumber.onClick.RemoveAllListeners(); buttonTypeCalculateNumber.onClick.AddListener(() => OnClickGameType(GameType.CalculateNumber)); }
         if (buttonTypeNumberSystem != null) { buttonTypeNumberSystem.onClick.RemoveAllListeners(); buttonTypeNumberSystem.onClick.AddListener(() => OnClickGameType(GameType.NumberSystem)); }
         
-        // [중요] 비동기 핸들러 연결
         if (buttonBack != null) { buttonBack.onClick.RemoveAllListeners(); buttonBack.onClick.AddListener(() => OnClickBack().Forget()); }
     }
 
@@ -159,6 +173,10 @@ public sealed class LevelManager : BaseManager<LevelSetting>
         if (pageType != null) pageType.SetActive(true);
     }
 
+    // =================================================================================
+    // 페이지 전환 로직
+    // =================================================================================
+
     /// <summary> 레벨 버튼 클릭 핸들러 (1페이지 -> 2페이지) </summary>
     private async UniTaskVoid OnClickLevel(int level)
     {   
@@ -168,21 +186,24 @@ public sealed class LevelManager : BaseManager<LevelSetting>
 
         Debug.Log($"[LevelManager] Player Clicked Level: {level}");
 
-        // 1. Fade Out (화면 깜빡임 방지)
+        // 1. Fade Out
         if (fader != null && fadeImage != null)
         {
             await fader.FadeOut(fadeImage, fadeTime * 0.5f, DestroyToken); 
         }
 
-        // 2. 페이지 전환 (오브젝트 활성화)
+        // 2. 페이지 전환
         ShowPageType();
 
-        // 3. UI 갱신 및 비디오 로드 (오브젝트가 켜진 상태여야 VideoPlayer 오류가 안 남)
-        ApplySelectedLevelImage(level);
-        ApplyGameTypeImages(level);
+        // 3. UI 갱신 및 비디오 로드 대기
+        var t1 = ApplySelectedLevelImageAsync(level);
+        var t2 = ApplyGameTypeImagesAsync(level);
+        
         ApplyPage2TextGradient(level);
 
-        // 4. Fade In (화면 밝아짐)
+        await UniTask.WhenAll(t1, t2);
+
+        // 4. Fade In
         if (fader != null && fadeImage != null)
         {
             await fader.FadeIn(fadeImage, fadeTime * 0.5f, DestroyToken);
@@ -193,7 +214,6 @@ public sealed class LevelManager : BaseManager<LevelSetting>
     private async UniTaskVoid OnClickBack()
     {   
         SoundManager.Instance?.PlaySFX("Button");
-        Debug.Log($"[LevelManager] Player Clicked Back");
 
         // 1. Fade Out
         if (fader != null && fadeImage != null)
@@ -204,33 +224,43 @@ public sealed class LevelManager : BaseManager<LevelSetting>
         // 2. 페이지 전환
         ShowPageLevel();
 
-        // 3. Fade In
+        // 3. 1페이지 버튼 비디오 다시 재생 대기
+        await SetupLevelButtonsUIAsync();
+
+        // 4. Fade In
         if (fader != null && fadeImage != null)
         {
             await fader.FadeIn(fadeImage, fadeTime * 0.5f, DestroyToken);
         }
     }
-    
 
-    private void ApplySelectedLevelImage(int level)
+    // =================================================================================
+    // 비동기 이미지 교체 헬퍼 메서드
+    // =================================================================================
+
+    private async UniTask ApplySelectedLevelImageAsync(int level)
     {
         if (selectedLevelImage == null || managerSetting?.gameLevelImages == null) return;
-        ApplyImageFromSetting(selectedLevelImage, managerSetting.gameLevelImages, level);
+        await ApplyImageFromSettingAsync(selectedLevelImage, managerSetting.gameLevelImages, level);
     }
 
-    private void ApplyGameTypeImages(int level)
+    private async UniTask ApplyGameTypeImagesAsync(int level)
     {
+        List<UniTask> tasks = new List<UniTask>();
+
         if (buttonTypeGuessNumber != null && managerSetting.guessNumberLevelImages != null)
-            ApplyImageFromSetting(buttonTypeGuessNumber.gameObject, managerSetting.guessNumberLevelImages, level);
+            tasks.Add(ApplyImageFromSettingAsync(buttonTypeGuessNumber.gameObject, managerSetting.guessNumberLevelImages, level));
 
         if (buttonTypeCalculateNumber != null && managerSetting.calculateNumberLevelImages != null)
-            ApplyImageFromSetting(buttonTypeCalculateNumber.gameObject, managerSetting.calculateNumberLevelImages, level);
+            tasks.Add(ApplyImageFromSettingAsync(buttonTypeCalculateNumber.gameObject, managerSetting.calculateNumberLevelImages, level));
 
         if (buttonTypeNumberSystem != null && managerSetting.numberSystemLevelImages != null)
-            ApplyImageFromSetting(buttonTypeNumberSystem.gameObject, managerSetting.numberSystemLevelImages, level);
+            tasks.Add(ApplyImageFromSettingAsync(buttonTypeNumberSystem.gameObject, managerSetting.numberSystemLevelImages, level));
+
+        await UniTask.WhenAll(tasks);
     }
 
-    private void ApplyImageFromSetting(GameObject targetObj, ImageSetting[] settings, int level)
+    private async UniTask ApplyImageFromSettingAsync(GameObject targetObj, ImageSetting[] settings, int level)
     {
         int index = level - 1;
         if (index < 0 || index >= settings.Length) return;
@@ -238,8 +268,8 @@ public sealed class LevelManager : BaseManager<LevelSetting>
         ImageSetting imgSetting = settings[index];
         if (imgSetting != null)
         {
-            // 단순 이미지/비디오 교체는 await 없이 실행 (Forget)
-            ui.SetImageObj(targetObj, imgSetting).Forget();
+            // 비디오 로딩을 위해 await 사용
+            await ui.SetImageObj(targetObj, imgSetting, DestroyToken);
         }
     }
     
@@ -268,7 +298,6 @@ public sealed class LevelManager : BaseManager<LevelSetting>
         
         SoundManager.Instance?.PlaySFX("Button");
         LevelSelectContext.SelectedGameType = type;
-        Debug.Log($"[LevelManager] Player Clicked Type: {type}");
         HandleLoadGameSceneAsync().Forget();
     }
 
