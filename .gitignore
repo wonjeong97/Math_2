@@ -103,4 +103,5 @@ InitTestScene*.unity*
 # Auto-generated scenes by play mode tests
 /[Aa]ssets/[Ii]nit[Tt]est[Ss]cene*.unity*
 
-Assets/~UnityDirMonSyncFile~*
+# Unity Temporary Files
+~UnityDirMonSyncFile~*

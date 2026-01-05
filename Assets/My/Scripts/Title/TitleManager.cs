@@ -44,7 +44,10 @@ public sealed class TitleManager : BaseManager<TitleSetting>
             SoundManager.Instance?.PlayBGM(null);
             
             // UI 설정 적용
-            ui.SetImageObj(titleBackgroundImage, managerSetting.titleBackgroundImage);
+            if (titleBackgroundImage != null && managerSetting.titleBackgroundImage != null)
+            {
+                await ui.SetImageObj(titleBackgroundImage, managerSetting.titleBackgroundImage, DestroyToken);
+            }
             ui.SetTextObj(titleText1, managerSetting.titleText1).Forget();
             ui.SetTextObj(titleText2, managerSetting.titleText2).Forget();
             await ui.SetButtonObj(titleStartButton, managerSetting.titleStartButton, DestroyToken);
@@ -77,7 +80,7 @@ public sealed class TitleManager : BaseManager<TitleSetting>
     /// <summary> 시작 버튼 클릭 핸들러 (비동기 래퍼). </summary>
     private void OnStartButtonClicked()
     {   
-        SoundManager.Instance?.PlaySFX("Button");
+        //SoundManager.Instance?.PlaySFX("Button");
         HandleStartButtonAsync().Forget();
     }
     
