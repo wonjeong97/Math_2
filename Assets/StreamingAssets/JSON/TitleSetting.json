@@ -7,7 +7,7 @@
   "titleStartButton": {
 	"position": { "x": 475, "y": 760 },
 	"size": { "x": 488, "y": 205 },
-	"buttonBackgroundImage": { "sourceImage": "Video/Title/시작하기.mp4" }
+	"buttonBackgroundImage": { "sourceImage": "Video/Title/시작하기.webm" }
   },
   "titleText1":  {
 	"position": {"x": 535, "y": 125},
