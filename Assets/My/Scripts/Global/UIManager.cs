@@ -129,7 +129,7 @@ public class UIManager : MonoBehaviour
         }
     }
 
-    /// <summary> 버튼 오브젝트 설정 (배경 이미지, 텍스트, 위치 등). </summary>
+    /// <summary> 버튼 오브젝트 설정 (배경 이미지/비디오, 텍스트, 위치 등). </summary>
     public async UniTask SetButtonObj(GameObject buttonObj, ButtonSetting buttonSetting, CancellationToken token = default, string overrideText = null)
     {
         if (!buttonObj || buttonSetting == null)
@@ -144,30 +144,81 @@ public class UIManager : MonoBehaviour
             return;
         }
 
-        // 버튼 위치/크기 설정
+        // 1. 버튼 위치/크기/회전/스케일 설정
         ApplyRect(buttonRt, size: buttonSetting.size, anchoredPos: new Vector2(buttonSetting.position.x, -buttonSetting.position.y), rotation: buttonSetting.rotation, scale: buttonSetting.scale);
 
-        // 버튼 배경 이미지 설정
-        if (!buttonObj.TryGetComponent(out Image bgImage))
+        // 2. 버튼 배경 (이미지 vs 비디오) 설정
+        if (buttonSetting.buttonBackgroundImage != null && !string.IsNullOrEmpty(buttonSetting.buttonBackgroundImage.sourceImage))
         {
-            Debug.LogError("[UIManager] SetButtonObj-> Button GameObject has no Image");
-            return;
-        }
+            string path = buttonSetting.buttonBackgroundImage.sourceImage;
+            string ext = Path.GetExtension(path).ToLower();
+            bool isVideo = ext == ".webm" || ext == ".mp4" || ext == ".mov" || ext == ".avi";
 
-        if (buttonSetting.buttonBackgroundImage != null)
-        {
-            Texture2D tex = LoadTextureFromStreamingAssets(buttonSetting.buttonBackgroundImage.sourceImage);
-            if (tex != null)
+            // 기존 컴포넌트 가져오기
+            Image bgImage = buttonObj.GetComponent<Image>();
+            Button btnComp = buttonObj.GetComponent<Button>();
+            UIVideoPlayer videoPlayer = buttonObj.GetComponent<UIVideoPlayer>();
+
+            if (isVideo)
             {
-                Sprite sprite = Sprite.Create(tex, new Rect(0, 0, tex.width, tex.height), new Vector2(0.5f, 0.5f));
-                bgImage.sprite = sprite;
-            }
+                // [비디오 모드]
+                // 1) 기존 Image 컴포넌트 삭제 (충돌 방지)
+                if (bgImage != null) DestroyImmediate(bgImage, true);
 
-            bgImage.color = buttonSetting.buttonBackgroundImage.color;
-            bgImage.type = (Image.Type)buttonSetting.buttonBackgroundImage.type;
+                // 2) UIVideoPlayer 추가 (RawImage 자동 생성됨)
+                if (videoPlayer == null) videoPlayer = GetOrAdd<UIVideoPlayer>(buttonObj);
+
+                // 3) RawImage 활성화
+                RawImage rawImage = buttonObj.GetComponent<RawImage>();
+                if (rawImage) rawImage.enabled = true;
+
+                // 4) 비디오 재생
+                string fullPath = Path.Combine(Application.streamingAssetsPath, path);
+                fullPath = "file://" + fullPath.Replace("\\", "/");
+
+                videoPlayer.SetColor(buttonSetting.buttonBackgroundImage.color);
+                
+                try 
+                {
+                    await videoPlayer.PlayVideoAsync(fullPath, token);
+                }
+                catch (Exception ex)
+                {
+                    Debug.LogError($"[UIManager] Button video playback failed: {ex.Message}");
+                }
+
+                // 5) 버튼의 타겟 그래픽을 RawImage로 변경해야 클릭 반응이 정상 작동함
+                if (btnComp && rawImage) btnComp.targetGraphic = rawImage;
+            }
+            else
+            {
+                // [이미지 모드]
+                // 1) 비디오 관련 컴포넌트 삭제
+                if (videoPlayer != null) DestroyImmediate(videoPlayer, true);
+                if (buttonObj.TryGetComponent(out VideoPlayer vp)) DestroyImmediate(vp, true);
+                if (buttonObj.TryGetComponent(out RawImage raw)) DestroyImmediate(raw, true);
+
+                // 2) Image 컴포넌트 추가
+                if (bgImage == null) bgImage = buttonObj.AddComponent<Image>();
+                bgImage.enabled = true;
+
+                // 3) 이미지 로드
+                Texture2D tex = LoadTextureFromStreamingAssets(path);
+                if (tex != null)
+                {
+                    Sprite sprite = Sprite.Create(tex, new Rect(0, 0, tex.width, tex.height), new Vector2(0.5f, 0.5f));
+                    bgImage.sprite = sprite;
+                }
+
+                bgImage.color = buttonSetting.buttonBackgroundImage.color;
+                bgImage.type = (Image.Type)buttonSetting.buttonBackgroundImage.type;
+
+                // 4) 버튼 타겟 그래픽을 Image로 복구
+                if (btnComp) btnComp.targetGraphic = bgImage;
+            }
         }
 
-        // 버튼 텍스트 설정 (자식 컴포넌트)
+        // 3. 버튼 텍스트 설정
         if (buttonSetting.buttonText != null)
         {
             TextMeshProUGUI tmp = buttonObj.GetComponentInChildren<TextMeshProUGUI>(true);

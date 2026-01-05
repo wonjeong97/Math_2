@@ -17,6 +17,7 @@
 	"buttonText": { "fontSize": 180 }
   },
   "sounds": [
+	  { "key": "LevelSelect_BGM", "clipPath": "Sound/LevelSelect/ArcadeGameBGM#17.wav", "volume": 1.0 },
 	{ "key": "BGM1", "clipPath": "Sound/BGM1.wav", "volume": 1.0 },
 	{ "key": "BGM2", "clipPath": "Sound/BGM2.wav", "volume": 1.0 },
 	{ "key": "BGM3", "clipPath": "Sound/BGM3.wav", "volume": 1.0 },
