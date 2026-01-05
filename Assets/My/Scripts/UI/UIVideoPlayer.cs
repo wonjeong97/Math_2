@@ -49,12 +49,17 @@ public class UIVideoPlayer : MonoBehaviour
             // 2. 준비 대기
             while (!_videoPlayer.isPrepared)
             {
-                if (token.IsCancellationRequested) return;
+                if (token.IsCancellationRequested)
+                {
+                    _rawImage.color = _targetColor;
+                    return;
+                }
                 
                 elapsed += Time.deltaTime;
                 if (elapsed > timeout)
                 {
                     Debug.LogError($"[UIVideoPlayer] Video preparation timeout: {url}");
+                    _rawImage.color = _targetColor;
                     return;
                 }
                 await UniTask.Yield(PlayerLoopTiming.Update);
