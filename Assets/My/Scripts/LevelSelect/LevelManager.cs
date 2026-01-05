@@ -7,14 +7,15 @@ using UnityEngine.UI;
 /// <summary> 레벨 선택 씬(LevelSelect)의 설정 데이터 클래스. </summary>
 [Serializable]
 public class LevelSetting
-{
+{   
+    // --- 공통 배경 설정 ---
+    public ImageSetting commonBackground;       // 전체 공통 배경
+    
     // --- 1페이지 (레벨 선택) 설정 ---
-    public ImageSetting pageLevelBackground;    // 1페이지 배경
     public TextSetting infoText;                // 안내 텍스트 (예: "레벨을 선택하세요")
     public ButtonSetting[] levelButtons;        // 레벨 버튼 설정 배열
 
     // --- 2페이지 (게임 타입 선택) 설정 ---
-    public ImageSetting pageTypeBackground;     // 2페이지 배경
     public ImageSetting[] gameLevelImages;      // 상단 타이틀 이미지 ("Level N Game")
     
     public TextSetting page2InfoText;           // 2페이지 안내 텍스트
@@ -46,8 +47,7 @@ public sealed class LevelManager : BaseManager<LevelSetting>
     [SerializeField] private GameObject pageType;    // 2페이지 (타입 선택)
 
     [Header("Backgrounds")]
-    [SerializeField] private GameObject pageLevelBackgroundObj; // 1페이지 배경 오브젝트
-    [SerializeField] private GameObject pageTypeBackgroundObj;  // 2페이지 배경 오브젝트
+    [SerializeField] private GameObject backgroundObj;
 
     [Header("Level Buttons (1~N)")]
     [SerializeField] private Button[] levelButtons;  // 레벨 버튼 배열 (인덱스 0 -> Level 1)
@@ -78,7 +78,10 @@ public sealed class LevelManager : BaseManager<LevelSetting>
     {
         try
         {
-            await ApplyBackgroundsAsync();
+            if (backgroundObj != null && managerSetting.commonBackground != null)
+            {
+                await ui.SetImageObj(backgroundObj, managerSetting.commonBackground, DestroyToken);
+            }
             
             ui.SetTextObj(page1InfoText, managerSetting.infoText).Forget();
             ui.SetTextObj(page2InfoTextObj, managerSetting.page2InfoText).Forget();
@@ -105,24 +108,6 @@ public sealed class LevelManager : BaseManager<LevelSetting>
         catch (Exception e)
         {
             Debug.LogError($"[LevelManager] Initialize-> Exception: {e}");
-        }
-    }
-
-    /// <summary> 배경 이미지 설정. </summary>
-    private async UniTask ApplyBackgroundsAsync()
-    {
-        if (ui == null || managerSetting == null) return;
-
-        // 1페이지 배경
-        if (pageLevelBackgroundObj != null && managerSetting.pageLevelBackground != null)
-        {
-            await ui.SetImageObj(pageLevelBackgroundObj, managerSetting.pageLevelBackground, DestroyToken);
-        }
-
-        // 2페이지 배경
-        if (pageTypeBackgroundObj != null && managerSetting.pageTypeBackground != null)
-        {
-            await ui.SetImageObj(pageTypeBackgroundObj, managerSetting.pageTypeBackground, DestroyToken);
         }
     }
 
