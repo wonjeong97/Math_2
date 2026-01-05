@@ -9,6 +9,7 @@ using UnityEngine;
 using UnityEngine.AddressableAssets;
 using UnityEngine.ResourceManagement.AsyncOperations;
 using UnityEngine.UI;
+using UnityEngine.Video;
 using Object = UnityEngine.Object;
 
 /// <summary> JSON 설정 데이터를 기반으로 UI 오브젝트(Text, Image, Button)를 동적으로 설정하고 관리하는 매니저. </summary>
@@ -48,8 +49,8 @@ public class UIManager : MonoBehaviour
         }
     }
 
-    /// <summary>  이미지 오브젝트 설정 (스트리밍 에셋 로드, 타입, 위치 등). </summary>
-    public void SetImageObj(GameObject imageObj, ImageSetting imageSetting)
+   /// <summary> 이미지 오브젝트 설정 (이미지 또는 동영상). </summary>
+    public async UniTask SetImageObj(GameObject imageObj, ImageSetting imageSetting, CancellationToken token = default)
     {
         if (!imageObj || imageSetting == null)
         {
@@ -57,18 +58,67 @@ public class UIManager : MonoBehaviour
             return;
         }
 
-        if (imageObj.TryGetComponent(out Image img) && imageObj.TryGetComponent(out RectTransform rt))
+        if (!imageObj.TryGetComponent(out RectTransform rt))
         {
-            // 이미지 로드 및 스프라이트 생성
-            Texture2D tex = LoadTextureFromStreamingAssets(imageSetting.sourceImage);
-            if (tex != null)
-            {
-                img.sprite = Sprite.Create(tex, new Rect(0, 0, tex.width, tex.height), new Vector2(0.5f, 0.5f));
-                img.color = imageSetting.color;
-                img.type = (Image.Type)imageSetting.type;
-            }
+             Debug.LogError("[UIManager] SetImageObj => No RectTransform");
+             return;
+        }
 
-            ApplyRect(rt, size: imageSetting.size, anchoredPos: new Vector2(imageSetting.position.x, -imageSetting.position.y), rotation: imageSetting.rotation, scale: imageSetting.scale);
+        // 1. 위치/크기/회전/스케일 설정
+        ApplyRect(rt, size: imageSetting.size, anchoredPos: new Vector2(imageSetting.position.x, -imageSetting.position.y), rotation: imageSetting.rotation, scale: imageSetting.scale);
+
+        // 2. 소스 파일 확인 (이미지 vs 비디오)
+        if (!string.IsNullOrEmpty(imageSetting.sourceImage))
+        {
+            string path = imageSetting.sourceImage;
+            string ext = Path.GetExtension(path).ToLower();
+            bool isVideo = ext == ".webm" || ext == ".mp4";
+
+            Image imgComp = imageObj.GetComponent<Image>();
+            UIVideoPlayer videoPlayer = imageObj.GetComponent<UIVideoPlayer>();
+
+            if (isVideo)
+            {
+                // [비디오 모드]
+                // Image 컴포넌트가 있다면 삭제
+                if (imgComp != null) DestroyImmediate(imgComp, true);
+
+                // UIVideoPlayer 추가 (RawImage, VideoPlayer 자동 생성)
+                if (videoPlayer == null) videoPlayer = GetOrAdd<UIVideoPlayer>(imageObj);
+
+                // RawImage 활성화
+                RawImage rawImage = imageObj.GetComponent<RawImage>();
+                if (rawImage) rawImage.enabled = true;
+
+                // 비디오 재생
+                string fullPath = Path.Combine(Application.streamingAssetsPath, path);
+                fullPath = "file://" + fullPath.Replace("\\", "/");
+                
+                videoPlayer.SetColor(imageSetting.color);
+                await videoPlayer.PlayVideoAsync(fullPath, token);
+            }
+            else
+            {
+                // [이미지 모드]
+                // 비디오 관련 컴포넌트 삭제
+                if (videoPlayer != null) DestroyImmediate(videoPlayer, true);
+                if (imageObj.TryGetComponent(out VideoPlayer vp)) DestroyImmediate(vp, true);
+                if (imageObj.TryGetComponent(out RawImage raw)) DestroyImmediate(raw, true);
+
+                // Image 컴포넌트 추가
+                if (imgComp == null) imgComp = imageObj.AddComponent<Image>();
+                imgComp.enabled = true;
+
+                // 텍스처 로드 및 스프라이트 적용
+                Texture2D tex = LoadTextureFromStreamingAssets(path);
+                if (tex != null)
+                {
+                    imgComp.sprite = Sprite.Create(tex, new Rect(0, 0, tex.width, tex.height), new Vector2(0.5f, 0.5f));
+                }
+                
+                imgComp.color = imageSetting.color;
+                imgComp.type = (Image.Type)imageSetting.type;
+            }
         }
     }
 

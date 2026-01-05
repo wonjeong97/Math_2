@@ -2,13 +2,13 @@
   "titleBackgroundImage": {
 	"position": { "x": 960, "y": 540 },
 	"size": { "x": 1920, "y": 1080 },
-	"sourceImage": "Image/Title/TitleSample.png",
+	"sourceImage": "Video/배경.mp4",
 	"color": {"r": 0, "g": 0, "b": 0, "a": 1}
   },
   "titleStartButton": {
 	"position": { "x": 475, "y": 760 },
 	"size": { "x": 488, "y": 205 },
-	"buttonBackgroundImage": { "sourceImage": "Image/Title/시작하기.png" }
+	"buttonBackgroundImage": { "sourceImage": "Video/Title/시작하기.mp4" }
   },
   "titleText1":  {
 	"position": {"x": 535, "y": 125},
