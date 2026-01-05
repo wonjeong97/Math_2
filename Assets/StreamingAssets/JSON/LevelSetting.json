@@ -102,27 +102,27 @@
     {
       "position": {"x": 200, "y": 100},
       "size": {"x": 200, "y": 90},
-      "sourceImage": "Image/LevelSelect/좌측 상단 레벨1.png"
+      "sourceImage": "Image/LevelSelect/레벨1.png"
     },
     {
       "position": {"x": 200, "y": 100},
       "size": {"x": 200, "y": 90},
-      "sourceImage": "Image/LevelSelect/좌측 상단 레벨2.png"
+      "sourceImage": "Image/LevelSelect/레벨2.png"
     },
     {
       "position": {"x": 200, "y": 100},
       "size": {"x": 200, "y": 90},
-      "sourceImage": "Image/LevelSelect/좌측 상단 레벨3.png"
+      "sourceImage": "Image/LevelSelect/레벨3.png"
     },
     {
       "position": {"x": 200, "y": 100},
       "size": {"x": 200, "y": 90},
-      "sourceImage": "Image/LevelSelect/좌측 상단 레벨4.png"
+      "sourceImage": "Image/LevelSelect/레벨4.png"
     },
     {
       "position": {"x": 200, "y": 100},
       "size": {"x": 200, "y": 90},
-      "sourceImage": "Image/LevelSelect/좌측 상단 레벨5.png"
+      "sourceImage": "Image/LevelSelect/레벨5.png"
     }
   ],
   "buttonTypeGuessNumber": {
@@ -144,81 +144,81 @@
     {
       "position": {"x": 565, "y": 640},
       "size": {"x": 372, "y": 542},
-      "sourceImage": "Image/LevelSelect/레벨1 선택 화면1.png"
+      "sourceImage": "Video/LevelSelect/레벨1_수 맞추기.webm"
     },
     {
       "position": {"x": 565, "y": 640},
       "size": {"x": 372, "y": 542},
-      "sourceImage": "Image/LevelSelect/레벨2 선택 화면1.png"
+      "sourceImage": "Video/LevelSelect/레벨2_수 맞추기.webm"
     },
     {
       "position": {"x": 565, "y": 640},
       "size": {"x": 372, "y": 542},
-      "sourceImage": "Image/LevelSelect/레벨3 선택 화면1.png"
+      "sourceImage": "Video/LevelSelect/레벨3_수 맞추기.webm"
     },
     {
       "position": {"x": 565, "y": 640},
       "size": {"x": 372, "y": 542},
-      "sourceImage": "Image/LevelSelect/레벨4 선택 화면1.png"
+      "sourceImage": "Video/LevelSelect/레벨4_수 맞추기.webm"
     },
     {
       "position": {"x": 565, "y": 640},
       "size": {"x": 372, "y": 542},
-      "sourceImage": "Image/LevelSelect/레벨5 선택 화면1.png"
+      "sourceImage": "Video/LevelSelect/레벨5_수 맞추기.webm"
     }
   ],
   "calculateNumberLevelImages": [
     {
       "position": {"x": 1400, "y": 800},
       "size": {"x": 647, "y": 335},
-      "sourceImage": "Image/LevelSelect/레벨1 선택 화면3.png"
+      "sourceImage": "Video/LevelSelect/레벨1_수 계산하기.webm"
     },
     {
       "position": {"x": 1400, "y": 800},
       "size": {"x": 647, "y": 335},
-      "sourceImage": "Image/LevelSelect/레벨2 선택 화면3.png"
+      "sourceImage": "Video/LevelSelect/레벨2_수 계산하기.webm"
     },
     {
       "position": {"x": 1400, "y": 800},
       "size": {"x": 647, "y": 335},
-      "sourceImage": "Image/LevelSelect/레벨3 선택 화면3.png"
+      "sourceImage": "Video/LevelSelect/레벨3_수 계산하기.webm"
     },
     {
       "position": {"x": 1400, "y": 800},
       "size": {"x": 647, "y": 335},
-      "sourceImage": "Image/LevelSelect/레벨4 선택 화면3.png"
+      "sourceImage": "Video/LevelSelect/레벨4_수 계산하기.webm"
     },
     {
       "position": {"x": 1400, "y": 800},
       "size": {"x": 647, "y": 335},
-      "sourceImage": "Image/LevelSelect/레벨5 선택 화면3.png"
+      "sourceImage": "Video/LevelSelect/레벨5_수 계산하기.webm"
     }
   ],
   "numberSystemLevelImages": [
     {
       "position": {"x": 1400, "y": 425},
       "size": {"x": 372, "y": 335},
-      "sourceImage": "Image/LevelSelect/레벨1 선택 화면2.png"
+      "sourceImage": "Video/LevelSelect/레벨1_수의 체계.webm"
     },
     {
       "position": {"x": 1400, "y": 425},
       "size": {"x": 372, "y": 335},
-      "sourceImage": "Image/LevelSelect/레벨2 선택 화면2.png"
+      "sourceImage": "Video/LevelSelect/레벨2_수의 체계.webm"
     },
     {
       "position": {"x": 1400, "y": 425},
       "size": {"x": 372, "y": 335},
-      "sourceImage": "Image/LevelSelect/레벨3 선택 화면2.png"
+      "sourceImage": "Video/LevelSelect/레벨3_수의 체계.webm"
     },
     {
       "position": {"x": 1400, "y": 425},
       "size": {"x": 372, "y": 335},
-      "sourceImage": "Image/LevelSelect/레벨4 선택 화면2.png"
+      "sourceImage": "Video/LevelSelect/레벨4_수의 체계.webm"
     },
     {
       "position": {"x": 1400, "y": 425},
       "size": {"x": 372, "y": 335},
-      "sourceImage": "Image/LevelSelect/레벨5 선택 화면2.png"
+      "sourceImage": "Video/LevelSelect/레벨5_수의 체계.webm"
     }
   ],
   "buttonBack": {
