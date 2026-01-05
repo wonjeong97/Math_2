@@ -78,7 +78,7 @@ public sealed class LevelManager : BaseManager<LevelSetting>
     {
         try
         {
-            ApplyBackgrounds();
+            await ApplyBackgroundsAsync();
             
             ui.SetTextObj(page1InfoText, managerSetting.infoText).Forget();
             ui.SetTextObj(page2InfoTextObj, managerSetting.page2InfoText).Forget();
@@ -109,18 +109,20 @@ public sealed class LevelManager : BaseManager<LevelSetting>
     }
 
     /// <summary> 배경 이미지 설정. </summary>
-    private void ApplyBackgrounds()
+    private async UniTask ApplyBackgroundsAsync()
     {
         if (ui == null || managerSetting == null) return;
 
+        // 1페이지 배경
         if (pageLevelBackgroundObj != null && managerSetting.pageLevelBackground != null)
         {
-            ui.SetImageObj(pageLevelBackgroundObj, managerSetting.pageLevelBackground);
+            await ui.SetImageObj(pageLevelBackgroundObj, managerSetting.pageLevelBackground, DestroyToken);
         }
 
+        // 2페이지 배경
         if (pageTypeBackgroundObj != null && managerSetting.pageTypeBackground != null)
         {
-            ui.SetImageObj(pageTypeBackgroundObj, managerSetting.pageTypeBackground);
+            await ui.SetImageObj(pageTypeBackgroundObj, managerSetting.pageTypeBackground, DestroyToken);
         }
     }
 
