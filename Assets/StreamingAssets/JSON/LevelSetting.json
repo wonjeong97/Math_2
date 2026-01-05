@@ -143,81 +143,81 @@
   "guessNumberLevelImages": [
     {
       "position": {"x": 565, "y": 640},
-      "size": {"x": 372, "y": 542},
+      "size": {"x": 500, "y": 500},
       "sourceImage": "Video/LevelSelect/레벨1_수 맞추기.webm"
     },
     {
       "position": {"x": 565, "y": 640},
-      "size": {"x": 372, "y": 542},
+      "size": {"x": 500, "y": 500},
       "sourceImage": "Video/LevelSelect/레벨2_수 맞추기.webm"
     },
     {
       "position": {"x": 565, "y": 640},
-      "size": {"x": 372, "y": 542},
+      "size": {"x": 500, "y": 500},
       "sourceImage": "Video/LevelSelect/레벨3_수 맞추기.webm"
     },
     {
       "position": {"x": 565, "y": 640},
-      "size": {"x": 372, "y": 542},
+      "size": {"x": 500, "y": 500},
       "sourceImage": "Video/LevelSelect/레벨4_수 맞추기.webm"
     },
     {
       "position": {"x": 565, "y": 640},
-      "size": {"x": 372, "y": 542},
+      "size": {"x": 500, "y": 500},
       "sourceImage": "Video/LevelSelect/레벨5_수 맞추기.webm"
     }
   ],
   "calculateNumberLevelImages": [
     {
-      "position": {"x": 1400, "y": 800},
-      "size": {"x": 647, "y": 335},
+      "position": {"x": 1400, "y": 820},
+      "size": {"x": 500, "y": 500},
       "sourceImage": "Video/LevelSelect/레벨1_수 계산하기.webm"
     },
     {
-      "position": {"x": 1400, "y": 800},
-      "size": {"x": 647, "y": 335},
+      "position": {"x": 1400, "y": 820},
+      "size": {"x": 500, "y": 500},
       "sourceImage": "Video/LevelSelect/레벨2_수 계산하기.webm"
     },
     {
-      "position": {"x": 1400, "y": 800},
-      "size": {"x": 647, "y": 335},
+      "position": {"x": 1400, "y": 820},
+      "size": {"x": 500, "y": 500},
       "sourceImage": "Video/LevelSelect/레벨3_수 계산하기.webm"
     },
     {
-      "position": {"x": 1400, "y": 800},
-      "size": {"x": 647, "y": 335},
+      "position": {"x": 1400, "y": 820},
+      "size": {"x": 500, "y": 500},
       "sourceImage": "Video/LevelSelect/레벨4_수 계산하기.webm"
     },
     {
-      "position": {"x": 1400, "y": 800},
-      "size": {"x": 647, "y": 335},
+      "position": {"x": 1400, "y": 820},
+      "size": {"x": 500, "y": 500},
       "sourceImage": "Video/LevelSelect/레벨5_수 계산하기.webm"
     }
   ],
   "numberSystemLevelImages": [
     {
-      "position": {"x": 1400, "y": 425},
-      "size": {"x": 372, "y": 335},
+      "position": {"x": 1400, "y": 365},
+      "size": {"x": 380, "y": 380},
       "sourceImage": "Video/LevelSelect/레벨1_수의 체계.webm"
     },
     {
-      "position": {"x": 1400, "y": 425},
-      "size": {"x": 372, "y": 335},
+      "position": {"x": 1400, "y": 365},
+      "size": {"x": 380, "y": 380},
       "sourceImage": "Video/LevelSelect/레벨2_수의 체계.webm"
     },
     {
-      "position": {"x": 1400, "y": 425},
-      "size": {"x": 372, "y": 335},
+      "position": {"x": 1400, "y": 365},
+      "size": {"x": 380, "y": 380},
       "sourceImage": "Video/LevelSelect/레벨3_수의 체계.webm"
     },
     {
-      "position": {"x": 1400, "y": 425},
-      "size": {"x": 372, "y": 335},
+      "position": {"x": 1400, "y": 365},
+      "size": {"x": 380, "y": 380},
       "sourceImage": "Video/LevelSelect/레벨4_수의 체계.webm"
     },
     {
-      "position": {"x": 1400, "y": 425},
-      "size": {"x": 372, "y": 335},
+      "position": {"x": 1400, "y": 365},
+      "size": {"x": 380, "y": 380},
       "sourceImage": "Video/LevelSelect/레벨5_수의 체계.webm"
     }
   ],
