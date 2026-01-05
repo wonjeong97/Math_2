@@ -9,6 +9,7 @@ using UnityEngine;
 using UnityEngine.AddressableAssets;
 using UnityEngine.ResourceManagement.AsyncOperations;
 using UnityEngine.UI;
+using UnityEngine.Video;
 using Object = UnityEngine.Object;
 
 /// <summary> JSON 설정 데이터를 기반으로 UI 오브젝트(Text, Image, Button)를 동적으로 설정하고 관리하는 매니저. </summary>
