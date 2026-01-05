@@ -21,31 +21,31 @@
       "position": {"x": 310, "y": 820},
       "size": {"x": 263, "y": 263},
       "scale": {"x": 1.2, "y": 1.2, "z": 1.2},
-      "buttonBackgroundImage": {"sourceImage": "Image/LevelSelect/레벨1(유아).png"}
+      "buttonBackgroundImage": {"sourceImage": "Video/LevelSelect/레벨1.webm"}
     },
     {
       "position": {"x": 685, "y": 820},
       "size": {"x": 263, "y": 263},
       "scale": {"x": 1.2, "y": 1.2, "z": 1.2},
-      "buttonBackgroundImage": {"sourceImage": "Image/LevelSelect/레벨2(초1-2).png"}
+      "buttonBackgroundImage": {"sourceImage": "Video/LevelSelect/레벨2.webm"}
     },
     {
       "position": {"x": 1260, "y": 820},
       "size": {"x": 263, "y": 263},
       "scale": {"x": 1.2, "y": 1.2, "z": 1.2},
-      "buttonBackgroundImage": {"sourceImage": "Image/LevelSelect/레벨3(초3-4).png"}
+      "buttonBackgroundImage": {"sourceImage": "Video/LevelSelect/레벨3.webm"}
     },
     {
       "position": {"x": 1620, "y": 820},
       "size": {"x": 263, "y": 263},
       "scale": {"x": 1.2, "y": 1.2, "z": 1.2},
-      "buttonBackgroundImage": {"sourceImage": "Image/LevelSelect/레벨4(초5-6).png"}
+      "buttonBackgroundImage": {"sourceImage": "Video/LevelSelect/레벨4.webm"}
     },
     {
       "position": {"x": 1440, "y": 502.5},
       "size": {"x": 263, "y": 263},
       "scale": {"x": 1.2, "y": 1.2, "z": 1.2},
-      "buttonBackgroundImage": {"sourceImage": "Image/LevelSelect/레벨5(중등).png"}
+      "buttonBackgroundImage": {"sourceImage": "Video/LevelSelect/레벨5.webm"}
     }
   ],
   "// 2페이지 안내 텍스트 설정": "",
