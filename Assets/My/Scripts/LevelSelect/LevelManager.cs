@@ -95,6 +95,8 @@ public sealed class LevelManager : BaseManager<LevelSetting>
             {
                 await fader.FadeIn(fadeImage, fadeTime, DestroyToken);
             }
+            
+            SoundManager.Instance?.PlayBGM("LevelSelect_BGM");
         }
         catch (OperationCanceledException)
         {
