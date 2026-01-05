@@ -17,11 +17,10 @@
 	"buttonText": { "fontSize": 180 }
   },
   "sounds": [
-	{ "key": "BGM1", "clipPath": "Sound/BGM1.wav", "volume": 1.0 },
-	{ "key": "BGM2", "clipPath": "Sound/BGM2.wav", "volume": 1.0 },
-	{ "key": "BGM3", "clipPath": "Sound/BGM3.wav", "volume": 1.0 },
-	{ "key": "Button", "clipPath": "Sound/Button.mp3", "volume": 1.0 },
-	{ "key": "Correct", "clipPath": "Sound/Correct.mp3", "volume": 1.0 },
-	{ "key": "Wrong", "clipPath": "Sound/Wrong.mp3", "volume": 1.0 }
+	  { "key": "LevelSelect_BGM", "clipPath": "Sound/LevelSelect/ArcadeGameBGM17.wav", "volume": 1.0 },
+	  { "key": "Button", "clipPath": "Sound/Button.wav", "volume": 1.0 },
+	  { "key": "GameStart", "clipPath": "Sound/Start.wav", "volume": 1.0 },
+	  { "key": "Correct", "clipPath": "Sound/Correct.mp3", "volume": 1.0 },
+	  { "key": "Wrong", "clipPath": "Sound/Wrong.mp3", "volume": 1.0 }
   ]
 }
