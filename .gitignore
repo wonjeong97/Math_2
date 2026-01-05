@@ -105,4 +105,5 @@ InitTestScene*.unity*
 
 # Unity Temporary Files
 ~UnityDirMonSyncFile~*
+Assets/StreamingAssets/build_info
 Assets/StreamingAssets/build_info.meta
