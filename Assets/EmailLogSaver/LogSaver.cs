@@ -58,7 +58,7 @@ public class LogSaver : MonoBehaviour
     private string _currentLogPath;
     private string _logFolder;
     
-    // 메인 스레드에서만 접근 가능한 Application.productName을 캐싱할 변수 [수정됨]
+    // 메인 스레드에서만 접근 가능한 Application.productName을 캐싱할 변수
     private string _productName;
 
     // 메일 발송 조건 충족 여부
@@ -78,7 +78,7 @@ public class LogSaver : MonoBehaviour
             return;
         }
         
-        // [수정됨] 메인 스레드에서 앱 이름 미리 캐싱
+        // 메인 스레드에서 앱 이름 미리 캐싱
         _productName = Application.productName;
 
         // PC 전용 경로 설정 로직
@@ -88,10 +88,6 @@ public class LogSaver : MonoBehaviour
         }
         else
         {
-            // Application.dataPath:
-            //   - 에디터: <Project>/Assets
-            //   - 빌드: <Build>/<AppName>_Data
-            // Path.GetDirectoryName(...)를 사용해 상위 폴더(실행 위치)를 가져옵니다.
             string basePath = Path.GetDirectoryName(Application.dataPath);
             _logFolder = Path.Combine(basePath, "Logs");
         }
@@ -117,10 +113,14 @@ public class LogSaver : MonoBehaviour
 
     private void Start()
     {
-        // 시작 시 이전에 전송 실패한 로그가 있다면 재전송 시도
+        // 에디터가 아닐 때만 이전에 실패한 로그 재전송 시도
         if (enableEmail)
         {
+#if !UNITY_EDITOR
             TrySendPendingLogsAsync().ConfigureAwait(false);
+#else
+            Debug.Log("[LogSaver] 에디터 모드: 메일 발송 로직(재전송)은 건너뜁니다.");
+#endif
         }
     }
 
@@ -129,33 +129,25 @@ public class LogSaver : MonoBehaviour
         Application.logMessageReceived -= HandleLog;
     }
 
-    // 로그 발생 시 호출되는 콜백
     private void HandleLog(string logString, string stackTrace, LogType type)
     {
-        // 1. 발송 조건 체크
         bool isTrigger = false;
         switch (triggerLevel)
         {
             case LogTriggerLevel.Everything:
                 isTrigger = true; 
                 break;
-            
             case LogTriggerLevel.WarningOrAbove:
                 if (type != LogType.Log) isTrigger = true;
                 break;
-            
             case LogTriggerLevel.ErrorOrAbove:
                 if (type == LogType.Error || type == LogType.Exception || type == LogType.Assert)
                     isTrigger = true;
                 break;
         }
 
-        if (isTrigger)
-        {
-            _shouldSendEmail = true;
-        }
+        if (isTrigger) _shouldSendEmail = true;
 
-        // 2. 로그 기록
         _logBuffer.AppendLine($"[{System.DateTime.Now:HH:mm:ss}] [{type}] {logString}");
         
         if (type == LogType.Error || type == LogType.Exception || type == LogType.Assert)
@@ -164,18 +156,18 @@ public class LogSaver : MonoBehaviour
         }
     }
 
-    // 어플리케이션 종료 시 호출
     private void OnApplicationQuit()
     {
-        // 조건이 충족되었을 때만 저장
         if (_shouldSendEmail)
         {
             SaveLogToFile();
 
-            // 메일 발송 옵션이 켜져있을 때만 전송 시도
+            // 에디터가 아닐 때만 메일 발송 시도
             if (enableEmail)
             {
-                TrySendSingleLog(_currentLogPath); 
+#if !UNITY_EDITOR
+                TrySendSingleLog(_currentLogPath);
+#endif
             }
         }
     }
@@ -196,7 +188,6 @@ public class LogSaver : MonoBehaviour
         }
     }
 
-    // 미전송 로그 일괄 발송 (비동기)
     private async Task TrySendPendingLogsAsync()
     {
         if (!Directory.Exists(_logFolder)) return;
@@ -211,13 +202,10 @@ public class LogSaver : MonoBehaviour
             if (filePath == _currentLogPath) continue;
 
             bool success = await Task.Run(() => TrySendSingleLog(filePath));
-            
-            // 하나라도 실패하면(인터넷 끊김 등) 중단
             if (!success) break; 
         }
     }
 
-    // 단일 로그 파일 전송 및 삭제
     private bool TrySendSingleLog(string filePath)
     {
         if (!File.Exists(filePath)) return false;
@@ -228,13 +216,9 @@ public class LogSaver : MonoBehaviour
             {
                 mail.From = new MailAddress(senderEmail);
                 mail.To.Add(recipientEmail);
-                
-                // Application.productName 대신 캐싱된 _productName 사용
                 mail.Subject = $"[{_productName}] Unity Log Report"; 
-                
                 mail.Body = $"발송 조건: {triggerLevel}\n로그 파일을 첨부합니다.\n파일명: {Path.GetFileName(filePath)}";
 
-                // Attachment를 별도의 using 블록으로 감싸서 사용 후 즉시 해제 보장
                 using (Attachment attachment = new Attachment(filePath))
                 {
                     mail.Attachments.Add(attachment);
@@ -252,12 +236,10 @@ public class LogSaver : MonoBehaviour
                         smtpClient.Send(mail);
                     }
                 } 
-                // 여기서 attachment.Dispose()가 호출되어 파일 잠금이 확실하게 풀림
             }
 
             Debug.Log($"[LogSaver] 전송 성공. 파일 삭제 시도: {filePath}");
             
-            // 전송 성공 시 파일 삭제 (메모리 관리)
             if (File.Exists(filePath))
             {
                 File.Delete(filePath);
@@ -268,7 +250,6 @@ public class LogSaver : MonoBehaviour
         }
         catch (System.Exception e)
         {
-            // 삭제 실패 원인 확인용 로그
             Debug.LogError($"[LogSaver] 처리 중 오류 발생: {e.Message}");
             return false;
         }
