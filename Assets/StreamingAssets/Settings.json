@@ -16,7 +16,7 @@
 	"buttonBackgroundImage": { "sourceImage": "Image/Button/Magic_Circle.png" },
 	"buttonText": { "fontSize": 180 }
   },
-  "sounds": [
+   "sounds": [
 	  { "key": "LevelSelect_BGM", "clipPath": "Sound/LevelSelect/ArcadeGameBGM17.wav", "volume": 1.0 },
 	  { "key": "Button", "clipPath": "Sound/Button.wav", "volume": 1.0 },
 	  { "key": "Start", "clipPath": "Sound/Start.wav", "volume": 1.0 },
