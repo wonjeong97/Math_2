@@ -1,26 +1,27 @@
 ﻿{
   "titleBackgroundImage": {
-	"position": { "x": 960, "y": 540 },
-	"size": { "x": 1920, "y": 1080 },
-	"sourceImage": "Video/배경.mp4"	
+    "position": {"x": 960, "y": 540},
+    "size": {"x": 1920, "y": 1080},
+    "sourceImage": "Video/배경.mp4"
   },
   "titleStartButton": {
-	"position": { "x": 475, "y": 760 },
-	"size": { "x": 488, "y": 205 },
-	"buttonBackgroundImage": { "sourceImage": "Video/Title/시작하기.webm" }
+    "position": {"x": 475, "y": 760},
+    "size": {"x": 1024, "y": 1024},
+    "scale": {"x": 0.5, "y": 0.5, "z": 0.5},
+    "buttonBackgroundImage": {"sourceImage": "Video/Title/시작하기.webm"}
   },
-  "titleText1":  {
-	"position": {"x": 535, "y": 125},
-	"text": "리듬 트레이닝:",
-	"fontName": "font1",
-	"fontSize": 90,
-	"fontColor": {"r": 0.827451, "g": 0.9882353, "b": 0.1686275, "a": 1}
+  "titleText1": {
+    "position": {"x": 535, "y": 125},
+    "text": "리듬 트레이닝:",
+    "fontName": "font1",
+    "fontSize": 90,
+    "fontColor": {"r": 0.827451, "g": 0.9882353, "b": 0.1686275, "a": 1}
   },
   "titleText2": {
-	"position": {"x": 1385, "y": 125},
-	"text": "매치 매쓰 댄스",
-	"fontName": "font1",
-	"fontSize": 90,
-	"fontColor": {"r": 0, "g": 0.8196079, "b": 0.9960784, "a": 1}
+    "position": {"x": 1385, "y": 125},
+    "text": "매치 매쓰 댄스",
+    "fontName": "font1",
+    "fontSize": 90,
+    "fontColor": {"r": 0, "g": 0.8196079, "b": 0.9960784, "a": 1}
   }
 }
