@@ -179,58 +179,74 @@ public sealed class LevelManager : BaseManager<LevelSetting>
 
     /// <summary> 레벨 버튼 클릭 핸들러 (1페이지 -> 2페이지) </summary>
     private async UniTaskVoid OnClickLevel(int level)
-    {   
-        SoundManager.Instance?.PlaySFX("Button");
-        _selectedLevel = level;
-        LevelSelectContext.SelectedLevel = level;
-
-        Debug.Log($"[LevelManager] Player Clicked Level: {level}");
-
-        // 1. Fade Out
-        if (fader != null && fadeImage != null)
+    {
+        try
         {
-            await fader.FadeOut(fadeImage, fadeTime * 0.5f, DestroyToken); 
-        }
+            SoundManager.Instance?.PlaySFX("Button");
+            _selectedLevel = level;
+            LevelSelectContext.SelectedLevel = level;
 
-        // 2. 페이지 전환
-        ShowPageType();
+            Debug.Log($"[LevelManager] Player Clicked Level: {level}");
 
-        // 3. UI 갱신 및 비디오 로드 대기
-        var t1 = ApplySelectedLevelImageAsync(level);
-        var t2 = ApplyGameTypeImagesAsync(level);
+            // 1. Fade Out
+            if (fader != null && fadeImage != null)
+            {
+                await fader.FadeOut(fadeImage, fadeTime * 0.5f, DestroyToken); 
+            }
+
+            // 2. 페이지 전환
+            ShowPageType();
+
+            // 3. UI 갱신 및 비디오 로드 대기
+            var t1 = ApplySelectedLevelImageAsync(level);
+            var t2 = ApplyGameTypeImagesAsync(level);
         
-        ApplyPage2TextGradient(level);
+            ApplyPage2TextGradient(level);
 
-        await UniTask.WhenAll(t1, t2);
+            await UniTask.WhenAll(t1, t2);
 
-        // 4. Fade In
-        if (fader != null && fadeImage != null)
+            // 4. Fade In
+            if (fader != null && fadeImage != null)
+            {
+                await fader.FadeIn(fadeImage, fadeTime * 0.5f, DestroyToken);
+            }
+        }
+        catch (OperationCanceledException) { }
+        catch (Exception e)
         {
-            await fader.FadeIn(fadeImage, fadeTime * 0.5f, DestroyToken);
+            Debug.LogError($"[LevelManager] OnClickLevel-> Exception: {e}");
         }
     }
 
     /// <summary> 뒤로가기 버튼 핸들러 (2페이지 -> 1페이지) </summary>
     private async UniTaskVoid OnClickBack()
-    {   
-        SoundManager.Instance?.PlaySFX("Button");
-
-        // 1. Fade Out
-        if (fader != null && fadeImage != null)
+    {
+        try
         {
-            await fader.FadeOut(fadeImage, fadeTime * 0.5f, DestroyToken);
+            SoundManager.Instance?.PlaySFX("Button");
+
+            // 1. Fade Out
+            if (fader != null && fadeImage != null)
+            {
+                await fader.FadeOut(fadeImage, fadeTime * 0.5f, DestroyToken);
+            }
+
+            // 2. 페이지 전환
+            ShowPageLevel();
+
+            // 3. 1페이지 버튼 비디오 다시 재생 대기
+            await SetupLevelButtonsUIAsync();
+
+            // 4. Fade In
+            if (fader != null && fadeImage != null)
+            {
+                await fader.FadeIn(fadeImage, fadeTime * 0.5f, DestroyToken);
+            }
         }
-
-        // 2. 페이지 전환
-        ShowPageLevel();
-
-        // 3. 1페이지 버튼 비디오 다시 재생 대기
-        await SetupLevelButtonsUIAsync();
-
-        // 4. Fade In
-        if (fader != null && fadeImage != null)
+        catch (OperationCanceledException) { }
+        catch (Exception e)
         {
-            await fader.FadeIn(fadeImage, fadeTime * 0.5f, DestroyToken);
+            Debug.LogError($"[LevelManager] OnClickBack-> Exception: {e}");
         }
     }
 
