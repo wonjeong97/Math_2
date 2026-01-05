@@ -72,7 +72,7 @@ public class UIManager : MonoBehaviour
         {
             string path = imageSetting.sourceImage;
             string ext = Path.GetExtension(path).ToLower();
-            bool isVideo = ext == ".webm" || ext == ".mp4";
+            bool isVideo = ext == ".webm" || ext == ".mp4" || ext == ".mov" || ext == ".avi";
 
             Image imgComp = imageObj.GetComponent<Image>();
             UIVideoPlayer videoPlayer = imageObj.GetComponent<UIVideoPlayer>();
@@ -81,7 +81,7 @@ public class UIManager : MonoBehaviour
             {
                 // [비디오 모드]
                 // Image 컴포넌트가 있다면 삭제
-                if (imgComp != null) DestroyImmediate(imgComp, true);
+                if (imgComp != null) DestroyImmediate(imgComp);
 
                 // UIVideoPlayer 추가 (RawImage, VideoPlayer 자동 생성)
                 if (videoPlayer == null) videoPlayer = GetOrAdd<UIVideoPlayer>(imageObj);
@@ -95,7 +95,14 @@ public class UIManager : MonoBehaviour
                 fullPath = "file://" + fullPath.Replace("\\", "/");
                 
                 videoPlayer.SetColor(imageSetting.color);
-                await videoPlayer.PlayVideoAsync(fullPath, token);
+                try
+                {
+                    await videoPlayer.PlayVideoAsync(fullPath, token);
+                }
+                catch (Exception ex)
+                {
+                    Debug.LogError($"[UIManager] Video playback failed: {ex.Message}");
+                }
             }
             else
             {
