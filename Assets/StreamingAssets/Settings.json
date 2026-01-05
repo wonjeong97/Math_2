@@ -13,7 +13,8 @@
   "questionButton": {
 	"size": { "x": 344, "y": 344 },
 	"scale": { "x": 0.7, "y": 0.7, "z": 0.7 },
-	"buttonBackgroundImage": { "sourceImage": "Image/Button/Magic_Circle.png" },
+	"--buttonBackgroundImage": { "sourceImage": "Image/Button/Magic_Circle.png" },
+	  "buttonBackgroundImage": { "sourceImage": "Video/Sample.webm" },
 	"buttonText": { "fontSize": 180 }
   },
   "sounds": [

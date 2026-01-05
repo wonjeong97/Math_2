@@ -377,17 +377,36 @@ public abstract class BaseGameManager<TSetting, TQuestion> : BaseManager<TSettin
         if (JsonLoader.Instance == null) return;
         LevelSetting levelSetting = JsonLoader.Instance.LoadJsonData<LevelSetting>("JSON/LevelSetting.json");
         if (levelSetting == null || levelSetting.levelGradients == null) return;
+        
         int index = level - 1;
         if (index < 0 || index >= levelSetting.levelGradients.Length) return;
+        
         GradientData data = levelSetting.levelGradients[index];
         if (questionTextObj) ApplyGradientToTarget(questionTextObj, data);
+        
         if (answerButtons != null) {
             foreach (var btnObj in answerButtons) {
                 if (!btnObj) continue;
+                
+                // 1. 텍스트 그라데이션
                 TextMeshProUGUI tmp = btnObj.GetComponentInChildren<TextMeshProUGUI>();
                 ApplyGradientToTarget(tmp, data);
+                
+                // 2. 배경 그라데이션 (Image 또는 RawImage)
                 Image btnImage = btnObj.GetComponent<Image>();
-                ApplyGradientToImage(btnImage, data);
+                if (btnImage != null)
+                {
+                    ApplyGradientToImage(btnImage, data);
+                }
+                else
+                {
+                    // 비디오 버튼인 경우 RawImage 확인
+                    RawImage btnRawImage = btnObj.GetComponent<RawImage>();
+                    if (btnRawImage != null)
+                    {
+                        ApplyGradientToRawImage(btnRawImage, data);
+                    }
+                }
             }
         }
     }
@@ -400,6 +419,26 @@ public abstract class BaseGameManager<TSetting, TQuestion> : BaseManager<TSettin
         ImageGlobalGradient gradient = UIManager.GetOrAdd<ImageGlobalGradient>(targetImage.gameObject);
         if (gradient) {
             Color[] colors = { data.topLeft, data.topRight, data.bottomRight, data.bottomLeft };
+            int offset = Random.Range(0, 4);
+            gradient.SetGradient(colors[(0 + offset) % 4], colors[(1 + offset) % 4], colors[(3 + offset) % 4], colors[(2 + offset) % 4]);
+            gradient.enabled = true;
+        }
+    }
+    
+    /// <summary> RawImage(비디오 버튼)에 그라데이션 적용. </summary>
+    private void ApplyGradientToRawImage(RawImage targetImage, GradientData data)
+    {
+        if (!targetImage || data == null) return;
+        
+        // 색상을 흰색으로 초기화 (그라데이션 색상이 제대로 먹히도록)
+        targetImage.color = Color.white;
+        
+        // RawImageGlobalGradient 컴포넌트 추가 또는 가져오기
+        RawImageGlobalGradient gradient = UIManager.GetOrAdd<RawImageGlobalGradient>(targetImage.gameObject);
+        
+        if (gradient) {
+            Color[] colors = { data.topLeft, data.topRight, data.bottomRight, data.bottomLeft };
+            // 랜덤 회전 적용
             int offset = Random.Range(0, 4);
             gradient.SetGradient(colors[(0 + offset) % 4], colors[(1 + offset) % 4], colors[(3 + offset) % 4], colors[(2 + offset) % 4]);
             gradient.enabled = true;
