@@ -80,7 +80,7 @@ public sealed class TitleManager : BaseManager<TitleSetting>
     /// <summary> 시작 버튼 클릭 핸들러 (비동기 래퍼). </summary>
     private void OnStartButtonClicked()
     {   
-        SoundManager.Instance?.PlaySFX("GameStart");
+        SoundManager.Instance?.PlaySFX("Start");
         HandleStartButtonAsync().Forget();
     }
     
