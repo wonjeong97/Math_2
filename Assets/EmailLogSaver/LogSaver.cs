@@ -118,8 +118,6 @@ public class LogSaver : MonoBehaviour
         {
 #if !UNITY_EDITOR
             TrySendPendingLogsAsync().ConfigureAwait(false);
-#else
-            Debug.Log("[LogSaver] 에디터 모드: 메일 발송 로직(재전송)은 건너뜁니다.");
 #endif
         }
     }
