@@ -1030,7 +1030,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   fadeImage: {fileID: 436884724}
-  backgroundObj: {fileID: 507162321}
   uiGameEndImage: {fileID: 81806117}
   uiMyScoreImage: {fileID: 1402104828}
   uiHomeButton: {fileID: 727211534}
