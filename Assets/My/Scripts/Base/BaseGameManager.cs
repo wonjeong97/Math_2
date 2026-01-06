@@ -387,11 +387,6 @@ public abstract class BaseGameManager<TSetting, TQuestion> : BaseManager<TSettin
     {
         Debug.Log($"[{SceneManager.GetActiveScene().name}] Game End");
         
-        if (SoundManager.Instance != null)
-        {
-            SoundManager.Instance.PlaySFX("Button");    
-        }
-        
         if (fader != null && fadeImage != null) await fader.FadeOut(fadeImage, fadeTime, DestroyToken);
         GameResultContext.CorrectCount = currentQuestionIndex;
         SceneManager.LoadScene("GameEnd");
