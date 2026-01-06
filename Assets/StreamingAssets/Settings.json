@@ -1,26 +1,57 @@
 ﻿{
   "closeSetting": {
-	"position": { "x": 1, "y": 1 },
-	"numToClose": 10,
-	"resetClickTime": 3,
-	"imageAlpha": 0.0
+    "position": {"x": 1, "y": 1},
+    "numToClose": 10,
+    "resetClickTime": 3,
+    "imageAlpha": 0.0
   },
   "inactivityTime": 45.0,
   "fadeTime": 0.5,
   "fontMap": {
-	"font1": "Fonts/TMPro/VITRO CORE OTF SDF.asset"
+    "font1": "Fonts/TMPro/VITRO CORE OTF SDF.asset"
   },
-  "questionButton": {
-	"size": { "x": 344, "y": 344 },
-	"scale": { "x": 0.7, "y": 0.7, "z": 0.7 },
-	"buttonBackgroundImage": { "sourceImage": "Image/Button/Magic_Circle.png" },
-	"buttonText": { "fontSize": 170 }
-  },
-   "sounds": [
-	  { "key": "LevelSelect_BGM", "clipPath": "Sound/LevelSelect/ArcadeGameBGM17.wav", "volume": 1.0 },
-	  { "key": "Button", "clipPath": "Sound/Button.wav", "volume": 1.0 },
-	  { "key": "Start", "clipPath": "Sound/Start.wav", "volume": 1.0 },
-	  { "key": "Correct", "clipPath": "Sound/Correct.mp3", "volume": 1.0 },
-	  { "key": "Wrong", "clipPath": "Sound/Wrong.mp3", "volume": 1.0 }
+  "questionButtons": [
+    {
+      "_comment": "Level 1 Button",
+      "size": {"x": 344, "y": 344},
+      "scale": {"x": 0.7, "y": 0.7, "z": 0.7},
+      "buttonBackgroundImage": {"sourceImage": "Video/Button/버튼_레벨1.webm"},
+      "buttonText": {"fontSize": 170}
+    },
+    {
+      "_comment": "Level 2 Button (Video Example)",
+      "size": {"x": 344, "y": 344},
+      "scale": {"x": 0.7, "y": 0.7, "z": 0.7},
+      "buttonBackgroundImage": {"sourceImage": "Video/Button/버튼_레벨2.webm"},
+      "buttonText": {"fontSize": 170}
+    },
+    {
+      "_comment": "Level 3 Button",
+      "size": {"x": 344, "y": 344},
+      "scale": {"x": 0.7, "y": 0.7, "z": 0.7},
+      "buttonBackgroundImage": {"sourceImage": "Video/Button/버튼_레벨3.webm"},
+      "buttonText": {"fontSize": 170}
+    },
+    {
+      "_comment": "Level 4 Button",
+      "size": {"x": 344, "y": 344},
+      "scale": {"x": 0.7, "y": 0.7, "z": 0.7},
+      "buttonBackgroundImage": {"sourceImage": "Video/Button/버튼_레벨4.webm"},
+      "buttonText": {"fontSize": 170}
+    },
+    {
+      "_comment": "Level 5 Button",
+      "size": {"x": 344, "y": 344},
+      "scale": {"x": 0.7, "y": 0.7, "z": 0.7},
+      "buttonBackgroundImage": {"sourceImage": "Video/Button/버튼_레벨5.webm"},
+      "buttonText": {"fontSize": 170}
+    }
+  ],
+  "sounds": [
+    {"key": "LevelSelect_BGM", "clipPath": "Sound/LevelSelect/ArcadeGameBGM17.wav", "volume": 1.0},
+    {"key": "Button", "clipPath": "Sound/Button.wav", "volume": 1.0},
+    {"key": "Start", "clipPath": "Sound/Start.wav", "volume": 1.0},
+    {"key": "Correct", "clipPath": "Sound/Correct.mp3", "volume": 1.0},
+    {"key": "Wrong", "clipPath": "Sound/Wrong.mp3", "volume": 1.0}
   ]
 }
