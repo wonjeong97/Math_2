@@ -243,8 +243,8 @@ public abstract class BaseGameManager<TSetting, TQuestion> : BaseManager<TSettin
         if (managerSetting == null || ui == null) return;
         this._buttonMargin = managerSetting.buttonMargin;
         if (backButton && managerSetting.backButton != null) ui.SetButtonObj(backButton.gameObject, managerSetting.backButton).Forget();
-        if (imageCorrect && managerSetting.correctImage != null) ui.SetImageObj(imageCorrect.gameObject, managerSetting.correctImage);
-        if (imageWrong && managerSetting.wrongImage != null) ui.SetImageObj(imageWrong.gameObject, managerSetting.wrongImage);
+        if (imageCorrect && managerSetting.correctImage != null) ui.SetImageObj(imageCorrect.gameObject, managerSetting.correctImage).Forget();
+        if (imageWrong && managerSetting.wrongImage != null) ui.SetImageObj(imageWrong.gameObject, managerSetting.wrongImage).Forget();
         if (buttonRetry && managerSetting.retryButton != null) ui.SetButtonObj(buttonRetry.gameObject, managerSetting.retryButton).Forget();
         if (buttonGameEnd && managerSetting.gameEndButton != null) ui.SetButtonObj(buttonGameEnd.gameObject, managerSetting.gameEndButton).Forget();
 
@@ -253,12 +253,12 @@ public abstract class BaseGameManager<TSetting, TQuestion> : BaseManager<TSettin
         {
             if (levelImage && managerSetting.levelImages != null && levelIndex < managerSetting.levelImages.Length)
             {
-                ui.SetImageObj(levelImage.gameObject, managerSetting.levelImages[levelIndex]);
+                ui.SetImageObj(levelImage.gameObject, managerSetting.levelImages[levelIndex]).Forget();
                 levelImage.gameObject.SetActive(true);
             }
             if (gameTypeImage && managerSetting.gameTypeImages != null && levelIndex < managerSetting.gameTypeImages.Length)
             {
-                ui.SetImageObj(gameTypeImage.gameObject, managerSetting.gameTypeImages[levelIndex]);
+                ui.SetImageObj(gameTypeImage.gameObject, managerSetting.gameTypeImages[levelIndex]).Forget();
                 gameTypeImage.gameObject.SetActive(true);
             }
         }
