@@ -3,7 +3,7 @@ using System.Linq;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.UI;
-using TMPro; 
+using TMPro;
 using Random = UnityEngine.Random;
 
 /// <summary>
@@ -12,49 +12,55 @@ using Random = UnityEngine.Random;
 /// </summary>
 public class GuessNumberManager : BaseGameManager<GuessNumberSetting, GuessNumberQuestion>
 {
-    [Header("--- GuessNumber Specific ---")]
-    [SerializeField] private GameObject backgroundObj;
-    [SerializeField] private Transform leftQuestionZone;    // 왼쪽 문제 배치 구역
-    [SerializeField] private Transform rightQuestionZone;   // 오른쪽 문제 배치 구역
+    [Header("--- GuessNumber Specific ---")] [SerializeField]
+    private GameObject backgroundObj;
 
-    private int _sequenceIndex;                             // 순서대로 누르기(Sequence) 문제용 인덱스
-    private List<string> _remainingCorrectAnswers;          // 다중 선택(MultipleChoice) 문제용 남은 정답 목록
+    [SerializeField] private Transform leftQuestionZone; // 왼쪽 문제 배치 구역
+    [SerializeField] private Transform rightQuestionZone; // 오른쪽 문제 배치 구역
+
+    private int _sequenceIndex; // 순서대로 누르기(Sequence) 문제용 인덱스
+    private List<string> _remainingCorrectAnswers; // 다중 선택(MultipleChoice) 문제용 남은 정답 목록
 
     // JSON 파일명 정의
     protected override string GetJsonFileName() => "GuessNumber.json";
+
     // 문제 레벨 반환
     protected override int GetQuestionLevel(GuessNumberQuestion question) => question.level;
-    
+
     // 버튼 텍스트 자동 줄바꿈 활성화
     protected override bool EnableButtonWordWrapping => true;
-    
+
     protected override void OnSetupChildComponents()
     {
         base.OnSetupChildComponents();
-        
+
         // 배경 이미지 설정
-        if (backgroundObj != null && managerSetting != null && managerSetting.backgroundImage != null && UIManager.Instance != null)
+        if (backgroundObj != null && managerSetting != null && managerSetting.backgroundImage != null &&
+            UIManager.Instance != null)
         {
-            UIManager.Instance.SetImageObj(backgroundObj, managerSetting.backgroundImage, this.GetCancellationTokenOnDestroy()).Forget();
+            UIManager.Instance
+                .SetImageObj(backgroundObj, managerSetting.backgroundImage, this.GetCancellationTokenOnDestroy())
+                .Forget();
         }
         else if (UIManager.Instance == null)
         {
             Debug.LogError("[GuessNumberManager] UIManager.Instance is null");
         }
     }
-    
+
     /// <summary>
     /// 게임 시작 로직.
     /// 선택된 레벨의 문제를 필터링하고 첫 번째 문제를 출제.
     /// </summary>
     protected override void StartGameLogic()
-    {   
+    {
         if (SoundManager.Instance != null)
         {
-            SoundManager.Instance.PlayBGM("BGM2");    
+            SoundManager.Instance.PlayBGM("BGM2");
         }
+
         int selectedLevel = LevelSelectContext.SelectedLevel > 0 ? LevelSelectContext.SelectedLevel : 1;
-        
+
         // BaseManager의 managerSetting 사용
         if (managerSetting?.questions != null)
         {
@@ -76,8 +82,8 @@ public class GuessNumberManager : BaseGameManager<GuessNumberSetting, GuessNumbe
     {
         // 상태 초기화
         _sequenceIndex = 0;
-        _remainingCorrectAnswers = new List<string>(q.correctAnswers); 
-        
+        _remainingCorrectAnswers = new List<string>(q.correctAnswers);
+
         // 진행도 업데이트
         UpdateProgressImage(q.level, currentQuestionIndex);
 
@@ -105,7 +111,9 @@ public class GuessNumberManager : BaseGameManager<GuessNumberSetting, GuessNumbe
 
             if (hasImage && UIManager.Instance != null)
             {
-                UIManager.Instance.SetImageObj(questionImageObj.gameObject, q.questionImage);
+                UIManager.Instance.SetImageObj(questionImageObj.gameObject, q.questionImage,
+                        this.GetCancellationTokenOnDestroy())
+                    .Forget(ex => Debug.LogError($"[GuessNumberManager] 문제 이미지 설정 실패: {ex.Message}"));
                 questionImageObj.gameObject.SetActive(true);
                 if (imageParent.gameObject != null) imageParent.gameObject.SetActive(true);
             }
@@ -144,14 +152,14 @@ public class GuessNumberManager : BaseGameManager<GuessNumberSetting, GuessNumbe
                 displayTexts = displayTexts.Take(totalSlots).ToList();
                 _remainingCorrectAnswers = new List<string>(displayTexts);
             }
-            
+
             int slotsLeft = totalSlots - displayTexts.Count;
             if (slotsLeft > 0 && q.wrongAnswers != null)
                 displayTexts.AddRange(q.wrongAnswers.OrderBy(x => Random.value).Take(slotsLeft));
         }
         else // SingleChoice
         {
-            if(q.correctAnswers.Length > 0) displayTexts.Add(q.correctAnswers[0]);
+            if (q.correctAnswers.Length > 0) displayTexts.Add(q.correctAnswers[0]);
             if (q.wrongAnswers != null)
                 displayTexts.AddRange(q.wrongAnswers.OrderBy(x => Random.value).Take(totalSlots - 1));
         }
@@ -159,7 +167,7 @@ public class GuessNumberManager : BaseGameManager<GuessNumberSetting, GuessNumbe
         // 2. 텍스트 및 버튼 셔플
         List<string> shuffledTexts = displayTexts.OrderBy(x => Random.value).ToList();
         List<GameObject> shuffledButtons = answerButtons.OrderBy(x => Random.value).ToList();
-        
+
         // 3. 버튼 배치 (좌우 균등 분할) - BaseGameManager 활용
         List<GameObject> leftButtons = new List<GameObject> { shuffledButtons[0], shuffledButtons[1] };
         List<GameObject> rightButtons = new List<GameObject> { shuffledButtons[2], shuffledButtons[3] };
@@ -172,13 +180,13 @@ public class GuessNumberManager : BaseGameManager<GuessNumberSetting, GuessNumbe
         {
             GameObject btnObj = shuffledButtons[i];
             string text = (i < shuffledTexts.Count) ? shuffledTexts[i] : "";
-            
+
             TextMeshProUGUI tmp = btnObj.GetComponentInChildren<TextMeshProUGUI>();
             if (tmp) tmp.text = text;
 
             Button btn = btnObj.GetComponent<Button>();
             Image btnImage = btnObj.GetComponent<Image>();
-            
+
             // 기본 스타일로 복구
             RestoreButtonDefault(btn, btnImage);
 
@@ -188,7 +196,7 @@ public class GuessNumberManager : BaseGameManager<GuessNumberSetting, GuessNumbe
             {
                 btn.onClick.AddListener(() => OnAnswerClicked(text, btnObj));
             }
-            
+
             btnObj.SetActive(!string.IsNullOrEmpty(text));
             btn.interactable = true;
         }
@@ -200,21 +208,22 @@ public class GuessNumberManager : BaseGameManager<GuessNumberSetting, GuessNumbe
         if (isProcessing) return;
         bool isCorrectAction = false;
         bool isLevelClear = false;
-        
+
         if (SoundManager.Instance != null)
         {
-            SoundManager.Instance.PlaySFX("Button");    
+            SoundManager.Instance.PlaySFX("Button");
         }
 
         switch (currentQuestion.type)
         {
             case QuestionType.SingleChoice:
                 // 단일 선택: 정답과 일치하면 클리어
-                if (currentQuestion.correctAnswers.Length > 0 && clickedText == currentQuestion.correctAnswers[0]) 
-                { 
-                    isCorrectAction = true; 
-                    isLevelClear = true; 
+                if (currentQuestion.correctAnswers.Length > 0 && clickedText == currentQuestion.correctAnswers[0])
+                {
+                    isCorrectAction = true;
+                    isLevelClear = true;
                 }
+
                 break;
 
             case QuestionType.MultipleChoice:
@@ -226,11 +235,12 @@ public class GuessNumberManager : BaseGameManager<GuessNumberSetting, GuessNumbe
                     btnObj.SetActive(false); // 맞춘 버튼 숨기기
                     if (_remainingCorrectAnswers.Count == 0) isLevelClear = true;
                 }
+
                 break;
 
             case QuestionType.Sequence:
                 // 순서 문제: 현재 순서와 일치하면 진행, 끝까지 가면 클리어
-                if (_sequenceIndex < currentQuestion.correctAnswers.Length && 
+                if (_sequenceIndex < currentQuestion.correctAnswers.Length &&
                     clickedText == currentQuestion.correctAnswers[_sequenceIndex])
                 {
                     isCorrectAction = true;
@@ -238,6 +248,7 @@ public class GuessNumberManager : BaseGameManager<GuessNumberSetting, GuessNumbe
                     btnObj.SetActive(false); // 맞춘 순서 숨기기
                     if (_sequenceIndex >= currentQuestion.correctAnswers.Length) isLevelClear = true;
                 }
+
                 break;
         }
 
