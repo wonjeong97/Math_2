@@ -51,7 +51,7 @@ public class GuessNumberManager : BaseGameManager<GuessNumberSetting, GuessNumbe
     {
         if (SoundManager.Instance != null)
         {
-            SoundManager.Instance.PlayBGM("BGM2");
+            SoundManager.Instance.PlayBGM("GuessNumber_BGM");
         }
 
         int selectedLevel = LevelSelectContext.SelectedLevel > 0 ? LevelSelectContext.SelectedLevel : 1;
