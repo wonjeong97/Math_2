@@ -1,45 +1,49 @@
 using System.Collections.Generic;
 using System.Linq;
+using Cysharp.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.Video;
 using TMPro;
 using Random = UnityEngine.Random;
 
-/// <summary>
-/// '수의 체계(NumberSystem)' 게임 관리 매니저.
-/// 문제 출제, 정답 이미지 매핑, 게임 진행 상태를 관리.
-/// </summary>
+/// <summary> '수의 체계(NumberSystem)' 게임 관리 매니저. </summary>
 public class NumberSystemManager : BaseGameManager<NumberSystemSetting, NumberSystemQuestion>
 {
     [Header("--- NumberSystem Specific ---")]
-    [SerializeField] private Transform leftQuestionZone;    // 왼쪽 문제 배치 구역
-    [SerializeField] private Transform rightQuestionZone;   // 오른쪽 문제 배치 구역
+    [SerializeField] private GameObject backgroundObj;
+    [SerializeField] private Transform leftQuestionZone;    
+    [SerializeField] private Transform rightQuestionZone;   
 
-    private int _currentSequenceIndex;          // 순서 문제용 현재 인덱스
-    private int _foundAnswerCount;              // 다중 선택 문제용 정답 카운트
-    private HashSet<string> _foundAnswersSet;   // 이미 찾은 정답 기록 (중복 방지)
+    private int _currentSequenceIndex;          
+    private int _foundAnswerCount;              
+    private HashSet<string> _foundAnswersSet;   
 
-    // JSON 파일명
     protected override string GetJsonFileName() => "NumberSystem.json";
-    // 문제 레벨
     protected override int GetQuestionLevel(NumberSystemQuestion q) => q.level;
+    
+    protected override void OnSetupChildComponents()
+    {
+        if (backgroundObj != null && managerSetting != null && managerSetting.backgroundImage != null && UIManager.Instance != null)
+        {
+            UIManager.Instance.SetImageObj(backgroundObj, managerSetting.backgroundImage, this.GetCancellationTokenOnDestroy()).Forget();
+        }
+        else if (UIManager.Instance == null)
+        {
+            Debug.LogError("[NumberSystemManager] UIManager.Instance is null");
+        }
+    }
 
-    /// <summary>
-    /// 게임 시작 로직.
-    /// 레벨에 맞는 문제를 로드하고 셔플하여 첫 번째 문제를 출제.
-    /// </summary>
     protected override void StartGameLogic()
     {
         int selectedLevel = LevelSelectContext.SelectedLevel > 0 ? LevelSelectContext.SelectedLevel : 1;
         
-        // BaseManager의 managerSetting 사용
         if (managerSetting?.questions != null)
         {
             var levelQuestions = managerSetting.questions.Where(q => q.level == selectedLevel).ToList();
             if (levelQuestions.Count > 0)
             {
                 int count = Mathf.Min(levelQuestions.Count, totalQuestions);
-                // 랜덤 셔플
                 currentLevelQuestions = levelQuestions.OrderBy(x => Random.value).Take(count).ToList();
                 totalQuestions = currentLevelQuestions.Count;
                 SetQuestionBase(0);
@@ -48,23 +52,18 @@ public class NumberSystemManager : BaseGameManager<NumberSystemSetting, NumberSy
         }
     }
 
-    /// <summary> 개별 문제 UI 설정 (텍스트, 이미지 배치). </summary>
     protected override void SetupSpecificQuestionUI(NumberSystemQuestion q)
     {
-        // 상태 초기화
         _currentSequenceIndex = 0;
         _foundAnswerCount = 0;
         _foundAnswersSet = new HashSet<string>();
 
-        // 진행도 업데이트
         UpdateProgressImage(q.level, currentQuestionIndex);
 
-        // 좌우 랜덤 배치
         bool isTextLeft = Random.Range(0, 2) == 0;
         Transform textParent = isTextLeft ? leftQuestionZone : rightQuestionZone;
         Transform contentParent = isTextLeft ? rightQuestionZone : leftQuestionZone;
 
-        // 텍스트 설정
         if (questionTextObj && textParent)
         {
             questionTextObj.transform.SetParent(textParent, false);
@@ -73,12 +72,11 @@ public class NumberSystemManager : BaseGameManager<NumberSystemSetting, NumberSy
             questionTextObj.gameObject.SetActive(hasText);
         }
 
-        // 이미지 설정
         bool hasImage = q.questionImage != null && !string.IsNullOrEmpty(q.questionImage.sourceImage);
         if (hasImage && questionImageObj)
         {
             questionImageObj.transform.SetParent(contentParent, false);
-            UIManager.Instance.SetImageObj(questionImageObj.gameObject, q.questionImage);
+            UIManager.Instance.SetImageObj(questionImageObj.gameObject, q.questionImage).Forget();
             questionImageObj.gameObject.SetActive(true);
         }
         else
@@ -87,10 +85,7 @@ public class NumberSystemManager : BaseGameManager<NumberSystemSetting, NumberSy
         }
     }
 
-    /// <summary>
-    /// 정답 버튼 설정 및 배치.
-    /// 텍스트에 대응하는 이미지가 있으면 교체(AnswerImagePair).
-    /// </summary>
+    /// <summary> 정답 버튼 설정 및 배치. </summary>
     protected override void SetupAnswerButtons(NumberSystemQuestion q)
     {
         List<string> options = new List<string>();
@@ -101,88 +96,98 @@ public class NumberSystemManager : BaseGameManager<NumberSystemSetting, NumberSy
             if (remaining > 0) options.AddRange(q.wrongAnswers.Take(remaining));
         }
 
-        // 셔플
         options = options.OrderBy(x => Random.value).ToList();
         List<GameObject> shuffledButtons = answerButtons.OrderBy(x => Random.value).ToList();
 
-        // 1. 버튼 데이터 매핑 및 크기 설정을 먼저 수행
+        // 1. 버튼 설정 (이미지 모드 vs 기본 모드)
         for (int i = 0; i < 4; i++)
         {
             GameObject btnObj = shuffledButtons[i];
             Button btn = btnObj.GetComponent<Button>();
-            Image btnImage = btnObj.GetComponent<Image>();
-            RectTransform btnRect = btnObj.GetComponent<RectTransform>();
             
             btn.interactable = true;
             btn.onClick.RemoveAllListeners();
 
-            // 기본 상태 및 크기 복구
-            RestoreButtonDefault(btn, btnImage, btnRect);
-
             if (i < options.Count)
             {
+                btnObj.SetActive(true);
+
                 string text = options[i];
                 TextMeshProUGUI tmp = btnObj.GetComponentInChildren<TextMeshProUGUI>();
                 
-                // 텍스트에 매핑된 이미지 확인
+                // 텍스트에 매핑된 이미지 정보 확인
                 AnswerImagePair pair = GetAnswerImagePair(q, text);
+                
                 if (pair != null && !string.IsNullOrEmpty(pair.imagePath))
                 {
-                    // 이미지 모드: 텍스트 지우고 이미지 적용
+                    // [이미지 모드]
                     if (tmp) tmp.text = "";
+
+                    CleanupVideoComponents(btnObj);
+                    
+                    Image btnImage = btnObj.GetComponent<Image>();
+                    if (btnImage == null) btnImage = btnObj.AddComponent<Image>();
+                    btnImage.enabled = true;
+                    if (btn) btn.targetGraphic = btnImage;
+
                     Sprite s = LoadSpriteFromStreamingAssets(pair.imagePath);
-                    if (s && btnImage)
+                    if (s)
                     {
                         btnImage.sprite = s;
                         btnImage.color = Color.white;
+                        btnImage.type = Image.Type.Simple;
                         
-                        // 이미지는 그라데이션 제거
                         var gradient = btnObj.GetComponent<ImageGlobalGradient>();
                         if(gradient) gradient.enabled = false;
                         
-                        // 설정된 크기 적용
+                        RectTransform btnRect = btnObj.GetComponent<RectTransform>();
                         if (pair.size != Vector2.zero && btnRect)
                         {
-                            // 안전장치: 버튼 크기가 너무 크면 화면 내로 스케일 조정 (예: 가로 900 제한)
-                            float maxWidth = 900f; // 화면 절반(1920/2)보다 약간 작게 설정
+                            float maxWidth = 900f; 
                             Vector2 finalSize = pair.size;
-
                             if (finalSize.x > maxWidth)
                             {
                                 float ratio = maxWidth / finalSize.x;
                                 finalSize.x *= ratio;
                                 finalSize.y *= ratio;
                             }
-                            
                             btnRect.sizeDelta = finalSize;
                         }
                     }
                 }
                 else
                 {
-                    // 텍스트 모드
+                    // [텍스트 모드] -> 기본 스타일 복구
+                    RevertToDefaultButtonStyle(btnObj);
+                    
                     if (tmp) tmp.text = text;
                 }
 
                 btn.onClick.AddListener(() => OnAnswerClicked(text, btnObj));
-                btnObj.SetActive(true);
             }
-            else btnObj.SetActive(false);
+            else 
+            {
+                btnObj.SetActive(false);
+            }
         }
 
-        // 2. 크기가 확정된 상태에서 배치 수행
+        // 2. 버튼 배치
         List<GameObject> activeBtns = shuffledButtons.Take(options.Count).ToList();
         int half = Mathf.CeilToInt(activeBtns.Count / 2f);
         PlaceButtonsInArea(activeBtns.Take(half).ToList(), leftAreaRect);
         PlaceButtonsInArea(activeBtns.Skip(half).ToList(), rightAreaRect);
     }
 
-    /// <summary> 정답 버튼 클릭 핸들러. </summary>
     private void OnAnswerClicked(string clickedText, GameObject btnObj)
     {
         if (isProcessing) return;
         bool isCorrect = false;
         bool isLevelClear = false;
+        
+        if (SoundManager.Instance != null)
+        {
+            SoundManager.Instance.PlaySFX("Button");    
+        }
 
         switch (currentQuestion.type)
         {
@@ -193,7 +198,6 @@ public class NumberSystemManager : BaseGameManager<NumberSystemSetting, NumberSy
             case QuestionType.MultipleChoice:
                 if (currentQuestion.correctAnswers.Contains(clickedText))
                 {
-                    // 중복 클릭 방지
                     if (!_foundAnswersSet.Contains(clickedText))
                     {
                         isCorrect = true;
@@ -227,10 +231,50 @@ public class NumberSystemManager : BaseGameManager<NumberSystemSetting, NumberSy
         else HandleWrongAnswer();
     }
 
-    /// <summary> 정답 텍스트에 대응하는 이미지 정보(AnswerImagePair) 조회. </summary>
     private AnswerImagePair GetAnswerImagePair(NumberSystemQuestion q, string text)
     {
         if (q.answerImages == null) return null;
         return q.answerImages.FirstOrDefault(x => x.answerText == text);
+    }
+
+    /// <summary> 버튼의 비디오 관련 컴포넌트를 제거하여 이미지 모드로 전환할 준비. </summary>
+    private void CleanupVideoComponents(GameObject btnObj)
+    {
+        if (btnObj.TryGetComponent(out UIVideoPlayer videoPlayer)) DestroyImmediate(videoPlayer);
+        if (btnObj.TryGetComponent(out VideoPlayer vp)) DestroyImmediate(vp);
+        if (btnObj.TryGetComponent(out RawImage rawImage)) DestroyImmediate(rawImage);
+    }
+
+    /// <summary> 버튼 스타일을 현재 레벨의 기본 설정(Settings.json)으로 완전 복구. </summary>
+    private void RevertToDefaultButtonStyle(GameObject btnObj)
+    {
+        if (JsonLoader.Instance == null || JsonLoader.Instance.settings == null) return;
+        
+        var globalSettings = JsonLoader.Instance.settings;
+        if (globalSettings.questionButtons != null && globalSettings.questionButtons.Length > 0)
+        {
+            int selectedLevel = LevelSelectContext.SelectedLevel > 0 ? LevelSelectContext.SelectedLevel : 1;
+            int levelIndex = Mathf.Clamp(selectedLevel - 1, 0, globalSettings.questionButtons.Length - 1);
+            
+            ButtonSetting defaultSetting = globalSettings.questionButtons[levelIndex];
+            
+            // 텍스트 설정을 제외하고 배경/크기 등만 복구
+            ButtonSetting bgOnlySetting = new ButtonSetting 
+            {
+                name = defaultSetting.name,
+                position = defaultSetting.position,
+                size = defaultSetting.size,
+                rotation = defaultSetting.rotation,
+                scale = defaultSetting.scale,
+                buttonBackgroundImage = defaultSetting.buttonBackgroundImage,
+                buttonSound = defaultSetting.buttonSound,
+                buttonText = null 
+            };
+            
+            if (UIManager.Instance != null)
+            {
+                UIManager.Instance.SetButtonObj(btnObj, bgOnlySetting).Forget();
+            }
+        }
     }
 }
