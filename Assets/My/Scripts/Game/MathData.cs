@@ -94,6 +94,7 @@ public class ButtonOverrideSetting
 [Serializable]
 public class CalculateNumberSetting : IGameCommonSetting // 인터페이스 구현
 {   
+    public ImageSetting backgroundImage;
     public CalculateNumberQuestion[] questions;
     
     public ImageSetting[] levelImages;
