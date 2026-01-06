@@ -116,7 +116,7 @@ public abstract class BaseGameManager<TSetting, TQuestion> : BaseManager<TSettin
         }
     }
     
-    /// <summary> 자식 클래스에서 컴포넌트 할당 등을 수행할 때 사용 (동기). </summary>
+    /// <summary> 자식 클래스에서 컴포넌트 할당 등을 수행할 때 사용. </summary>
     protected virtual void OnSetupChildComponents() { }
     
     /// <summary> 자식 클래스에서 추가적인 비동기 초기화가 필요할 때 사용. </summary>
