@@ -26,12 +26,12 @@
       "answerImages": [
         {
           "answerText": "A",
-          "imagePath": "Image/NumberSystem/레벨1_수의 체계2-2.png",
+          "imagePath": "Image/NumberSystem/레벨1_수의 체계2-1.png",
           "size": {"x": 424, "y": 336}
         },
         {
           "answerText": "B",
-          "imagePath": "Image/NumberSystem/레벨1_수의 체계2-1.png",
+          "imagePath": "Image/NumberSystem/레벨1_수의 체계2-2.png",
           "size": {"x": 384, "y": 179}
         }
       ]
