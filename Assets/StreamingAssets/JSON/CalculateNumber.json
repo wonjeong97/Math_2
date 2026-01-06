@@ -14,8 +14,9 @@
       "wrongAnswers": [],
       "buttonStyleOverride": {
         "useOverride": true,
-        "normalImageName": "Image/CalculateNumber/레벨1_수 계산하기1-5.png",
-        "pressedImageName": "Image/CalculateNumber/레벨1_수 계산하기1-3.png"
+        "normalImageName": "Image/CalculateNumber/레벨1_수 계산하기 StarOff.png",
+        "pressedImageName": "Image/CalculateNumber/레벨1_수 계산하기 StarOn.png",
+        "overrideSize": { "x": 280, "y": 280 }
       }
     },
     {

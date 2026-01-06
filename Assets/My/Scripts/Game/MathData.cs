@@ -89,6 +89,7 @@ public class ButtonOverrideSetting
     public string normalImageName;
     public string pressedImageName;
     public Color buttonColor = Color.white;
+    public Vector2 overrideSize;
 }
 
 [Serializable]
