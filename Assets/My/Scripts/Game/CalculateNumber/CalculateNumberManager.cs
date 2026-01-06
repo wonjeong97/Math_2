@@ -232,7 +232,7 @@ public class CalculateNumberManager : BaseGameManager<CalculateNumberSetting, Ca
             btnImage.type = Image.Type.Simple;
         }
         
-        // 3. [추가됨] 크기(Size) 적용
+        // 3. 크기(Size) 적용
         if (set.overrideSize != Vector2.zero)
         {
             RectTransform rt = btnObj.GetComponent<RectTransform>();
