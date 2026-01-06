@@ -13,6 +13,7 @@ public static class GameResultContext
 [Serializable]
 public class GameEndSetting
 {
+    public ImageSetting backgroundImage;
     public ImageSetting gameEndImage;
     public ImageSetting[] scoreResultImages;
     public ButtonSetting homeButton;
@@ -25,7 +26,8 @@ public class GameEndSetting
 public class GameEndManager : BaseManager<GameEndSetting>
 {
     [Header("UI Objects")]
-    [SerializeField] private Image uiGameEndImage;  // 배경/타이틀 이미지
+    [SerializeField] private GameObject backgroundObj; // 배경 오브젝트 (Inspector에서 연결 필요)
+    [SerializeField] private Image uiGameEndImage;  // 타이틀/안내 이미지
     [SerializeField] private Image uiMyScoreImage;  // 점수(별) 결과 이미지
     [SerializeField] private Button uiHomeButton;   // 홈(타이틀) 복귀 버튼
     
@@ -57,16 +59,22 @@ public class GameEndManager : BaseManager<GameEndSetting>
         // BaseManager의 ui (UIManager)와 managerSetting 사용
         if (ui == null || managerSetting == null) return;
 
+        // 0. 배경 이미지 설정
+        if (backgroundObj != null && managerSetting.backgroundImage != null)
+        {
+            ui.SetImageObj(backgroundObj, managerSetting.backgroundImage, DestroyToken).Forget();
+        }
+
         // 1. 기본 배경/타이틀 이미지 설정
         if (uiGameEndImage != null && managerSetting.gameEndImage != null)
         {
-            ui.SetImageObj(uiGameEndImage.gameObject, managerSetting.gameEndImage);
+            ui.SetImageObj(uiGameEndImage.gameObject, managerSetting.gameEndImage).Forget();
         }
 
         // 2. 홈 버튼 설정
         if (uiHomeButton != null && managerSetting.homeButton != null)
         {
-            ui.SetButtonObj(uiHomeButton.gameObject, managerSetting.homeButton).Forget();
+            ui.SetButtonObj(uiHomeButton.gameObject, managerSetting.homeButton, DestroyToken).Forget();
         }
 
         // 3. 점수(Score) 이미지 설정 (맞춘 개수에 따라 다르게 표시)
