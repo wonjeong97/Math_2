@@ -57,12 +57,12 @@
         },
         {
           "answerText": "4",
-          "imagePath": "Image/NumberSystem/레벨1_수의 체계4-1.png",
+          "imagePath": "Image/NumberSystem/레벨1_수의 체계4-3.png",
           "size": {"x": 807, "y": 204}
         },
         {
           "answerText": "3",
-          "imagePath": "Image/NumberSystem/레벨1_수의 체계4-3.png",
+          "imagePath": "Image/NumberSystem/레벨1_수의 체계4-1.png",
           "size": {"x": 524, "y": 204}
         }
       ]

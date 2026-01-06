@@ -6,7 +6,7 @@ using System.Threading;
 
 /// <summary>
 /// UI(RawImage)에 비디오를 재생하는 범용 클래스.
-/// 오브젝트가 활성화될 때마다 자동으로 비디오를 재생합니다.
+/// 오브젝트가 활성화될 때마다 자동으로 비디오를 재생.
 /// </summary>
 [RequireComponent(typeof(RawImage), typeof(VideoPlayer))]
 public class UIVideoPlayer : MonoBehaviour
@@ -14,9 +14,8 @@ public class UIVideoPlayer : MonoBehaviour
     private VideoPlayer _videoPlayer;
     private RawImage _rawImage;
     
-    // 원래 설정하려던 색상을 기억할 변수
     private Color _targetColor = Color.white;
-    private string _currentUrl; // 현재 설정된 비디오 경로 저장
+    private string _currentUrl; 
     private CancellationTokenSource _enableCts;
 
     private void Awake()
@@ -24,14 +23,12 @@ public class UIVideoPlayer : MonoBehaviour
         _videoPlayer = GetComponent<VideoPlayer>();
         _rawImage = GetComponent<RawImage>();
 
-        // 비디오 플레이어 기본 설정
         _videoPlayer.playOnAwake = false;
         _videoPlayer.isLooping = true;
         _videoPlayer.renderMode = VideoRenderMode.APIOnly; 
         _videoPlayer.audioOutputMode = VideoAudioOutputMode.None;
     }
 
-    /// <summary> 오브젝트가 켜질 때마다 비디오 재생 시도 </summary>
     private void OnEnable()
     {   
         _enableCts?.Cancel();
@@ -56,22 +53,22 @@ public class UIVideoPlayer : MonoBehaviour
 
     public async UniTask PlayVideoAsync(string url, CancellationToken token = default)
     {
+        // 1. 기본 유효성 검사
         if (string.IsNullOrEmpty(url)) return;
-        _currentUrl = url; // 경로 저장 (OnEnable에서 사용)
+        // 이미 파괴된 경우 중단
+        if (this == null || _videoPlayer == null || _rawImage == null) return;
 
-        // 오브젝트가 꺼져있으면 재생 로직을 중단하고, 나중에 OnEnable에서 실행되도록 함
+        _currentUrl = url; 
+
         if (!gameObject.activeInHierarchy) return;
 
-        // 이미 같은 URL로 재생 중이라면 준비 과정 건너뛰고 색상만 복구
         if (_videoPlayer.isPlaying && _videoPlayer.url == url)
         {
             _rawImage.color = _targetColor;
             return;
         }
 
-        // 1. 준비되는 동안 화면을 투명하게 숨김 (깜빡임 방지)
         _rawImage.color = Color.clear;
-
         _videoPlayer.source = VideoSource.Url;
         _videoPlayer.url = url;
 
@@ -82,48 +79,62 @@ public class UIVideoPlayer : MonoBehaviour
             float timeout = 10f;
             float elapsed = 0f;
 
-            // 2. 준비 대기
+            // 2. 준비 대기 루프
             while (!_videoPlayer.isPrepared)
             {
-                // 취소되거나 오브젝트가 꺼지면 중단
+                // 대기 도중 컴포넌트가 파괴되었는지 체크
+                if (this == null || _videoPlayer == null) return;
+
                 if (token.IsCancellationRequested || !gameObject.activeInHierarchy) return;
                 
                 elapsed += Time.deltaTime;
                 if (elapsed > timeout)
                 {
                     Debug.LogError($"[UIVideoPlayer] Video preparation timeout: {url}");
-                    _rawImage.color = _targetColor; // 색상 복구하여 투명 상태 방지
-                    _videoPlayer.Stop(); // 비디오 플레이어 정리
+                    // 타임아웃 시에도 살아있는지 체크 후 복구
+                    if (this != null && _rawImage != null) _rawImage.color = _targetColor; 
+                    if (this != null && _videoPlayer != null) _videoPlayer.Stop();
                     return;
                 }
+                
+                // 프레임 대기
                 await UniTask.Yield(PlayerLoopTiming.Update);
+                
+                //  await 직후 파괴 여부를 다시 체크
+                if (this == null || _videoPlayer == null || _rawImage == null) return;
             }
 
-            // 3. 준비 완료: 텍스처 연결 및 색상 복구
-            _rawImage.texture = _videoPlayer.texture;
-            _rawImage.color = _targetColor; 
-            
-            _videoPlayer.Play();
+            // 3. 준비 완료 후 적용 및 체크
+            if (this != null && _videoPlayer != null && _rawImage != null)
+            {
+                _rawImage.texture = _videoPlayer.texture;
+                _rawImage.color = _targetColor; 
+                _videoPlayer.Play();
+            }
         }
         catch (System.Exception e)
         {
-            Debug.LogError($"[UIVideoPlayer] Error playing video: {e.Message}");
-            _rawImage.color = _targetColor; 
+            // 로그는 남기되, 객체 파괴로 인한 에러(MissingReferenceException)는 무시해도 됨
+            if (this != null) // 살아있는데 에러가 난 경우만 로그 출력
+            {
+                Debug.LogError($"[UIVideoPlayer] Error playing video: {e.Message}");
+                if (_rawImage != null) _rawImage.color = _targetColor; 
+            }
         }
     }
 
     public void Stop()
     {
-        if (_videoPlayer.isPlaying) _videoPlayer.Stop();
-        if (_rawImage) _rawImage.enabled = false;
+        if (this == null) return;
+        if (_videoPlayer != null && _videoPlayer.isPlaying) _videoPlayer.Stop();
+        if (_rawImage != null) _rawImage.enabled = false;
     }
 
     public void SetColor(Color color)
     {
-        // 외부에서 색상을 설정하면 변수에 저장해둠
-        _targetColor = color;
+        if (this == null || _rawImage == null) return;
         
-        // 만약 이미 화면이 보이고 있다면 즉시 적용
+        _targetColor = color;
         if (_rawImage.color != Color.clear)
         {
             _rawImage.color = color;
