@@ -40,7 +40,7 @@ public class GameEndManager : BaseManager<GameEndSetting>
     {   
         if (SoundManager.Instance != null)
         {
-            SoundManager.Instance.PlayBGM("CalculateNumber_BGM");
+            SoundManager.Instance.PlayBGM("GameEnd_BGM");
         }
         
         // 1. UI 설정 적용

@@ -2,33 +2,33 @@
   "gameEndImage": {
 	"position": { "x": 450, "y": 500 },
 	"size": { "x": 667, "y": 667 },
-	"sourceImage": "Image/GameEnd/종료 화면.png" 
+	"sourceImage": "Image/GameEnd/게임 종료.png" 
   },
   "scoreResultImages":[
 	{
 	  "position": { "x": 1450, "y": 500 },
 	  "size": { "x": 667, "y": 667 },
-	  "sourceImage": "Image/GameEnd/점수 화면1.png"
+	  "sourceImage": "Image/GameEnd/점수0.png"
 	},
 	{
 	  "position": { "x": 1450, "y": 500 },
 	  "size": { "x": 667, "y": 667 },
-	  "sourceImage": "Image/GameEnd/점수 화면2.png"
+	  "sourceImage": "Image/GameEnd/점수25.png"
 	},
 	{
 	  "position": { "x": 1450, "y": 500 },
 	  "size": { "x": 667, "y": 667 },
-	  "sourceImage": "Image/GameEnd/점수화면3.png"
+	  "sourceImage": "Image/GameEnd/점수50.png"
 	},
 	{
 	  "position": { "x": 1450, "y": 500 },
 	  "size": { "x": 667, "y": 667 },
-	  "sourceImage": "Image/GameEnd/점수 화면4.png"
+	  "sourceImage": "Image/GameEnd/점수75.png"
 	},
 	{
 	  "position": { "x": 1450, "y": 500 },
 	  "size": { "x": 667, "y": 667 },
-	  "sourceImage": "Image/GameEnd/점수화면5.png"
+	  "sourceImage": "Image/GameEnd/점수100.png"
 	}
   ],
   "homeButton":  {
