@@ -269,20 +269,31 @@ public abstract class BaseGameManager<TSetting, TQuestion> : BaseManager<TSettin
     {
         if (JsonLoader.Instance == null || UIManager.Instance == null || answerButtons == null) return;
         Settings globalSettings = JsonLoader.Instance.settings;
-        if (globalSettings != null && globalSettings.questionButton != null)
+        
+        // 배열 체크 및 레벨별 가져오기
+        if (globalSettings != null && globalSettings.questionButtons != null)
         {
+            // 현재 레벨 인덱스 (0부터 시작하므로 -1)
+            int levelIndex = Mathf.Clamp(LevelSelectContext.SelectedLevel - 1, 0, globalSettings.questionButtons.Length - 1);
+            
+            // 해당 레벨의 버튼 설정 가져오기
+            ButtonSetting targetSetting = globalSettings.questionButtons[levelIndex];
+
             foreach (GameObject btn in answerButtons)
             {
                 if (btn == null) continue;
-                UIManager.Instance.SetButtonObj(btn, globalSettings.questionButton).Forget();
-                if (globalSettings.questionButton.buttonText != null)
+                
+                // 레벨별 설정 적용
+                UIManager.Instance.SetButtonObj(btn, targetSetting).Forget();
+                
+                if (targetSetting.buttonText != null)
                 {
                     var tmp = btn.GetComponentInChildren<TextMeshProUGUI>();
                     if (tmp)
                     {
                         tmp.enableAutoSizing = true;
-                        tmp.fontSizeMax = globalSettings.questionButton.buttonText.fontSize;
-                        tmp.fontSizeMin = globalSettings.questionButton.buttonText.fontSize * 0.4f;
+                        tmp.fontSizeMax = targetSetting.buttonText.fontSize;
+                        tmp.fontSizeMin = targetSetting.buttonText.fontSize * 0.4f;
                         tmp.enableWordWrapping = EnableButtonWordWrapping;
                     }
                 }
@@ -377,17 +388,25 @@ public abstract class BaseGameManager<TSetting, TQuestion> : BaseManager<TSettin
         if (JsonLoader.Instance == null) return;
         LevelSetting levelSetting = JsonLoader.Instance.LoadJsonData<LevelSetting>("JSON/LevelSetting.json");
         if (levelSetting == null || levelSetting.levelGradients == null) return;
+        
         int index = level - 1;
         if (index < 0 || index >= levelSetting.levelGradients.Length) return;
+        
         GradientData data = levelSetting.levelGradients[index];
+        
+        // 문제 텍스트 그라데이션
         if (questionTextObj) ApplyGradientToTarget(questionTextObj, data);
+        
         if (answerButtons != null) {
             foreach (var btnObj in answerButtons) {
                 if (!btnObj) continue;
+                
+                // 텍스트 그라데이션
                 TextMeshProUGUI tmp = btnObj.GetComponentInChildren<TextMeshProUGUI>();
                 ApplyGradientToTarget(tmp, data);
-                Image btnImage = btnObj.GetComponent<Image>();
-                ApplyGradientToImage(btnImage, data);
+                
+                var imgGradient = btnObj.GetComponent<ImageGlobalGradient>();
+                if (imgGradient) imgGradient.enabled = false;
             }
         }
     }
