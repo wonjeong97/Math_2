@@ -17,6 +17,7 @@ public class UIVideoPlayer : MonoBehaviour
     // 원래 설정하려던 색상을 기억할 변수
     private Color _targetColor = Color.white;
     private string _currentUrl; // 현재 설정된 비디오 경로 저장
+    private CancellationTokenSource _enableCts;
 
     private void Awake()
     {
@@ -32,11 +33,25 @@ public class UIVideoPlayer : MonoBehaviour
 
     /// <summary> 오브젝트가 켜질 때마다 비디오 재생 시도 </summary>
     private void OnEnable()
-    {
+    {   
+        _enableCts?.Cancel();
+        _enableCts = new CancellationTokenSource();
+        
         if (!string.IsNullOrEmpty(_currentUrl))
         {
-            PlayVideoAsync(_currentUrl).Forget();
+            PlayVideoAsync(_currentUrl, _enableCts.Token).Forget();
         }
+    }
+
+    private void OnDisable()
+    {
+        _enableCts?.Cancel();
+    }
+
+    private void OnDestroy()
+    {
+        _enableCts?.Cancel();
+        _enableCts?.Dispose();
     }
 
     public async UniTask PlayVideoAsync(string url, CancellationToken token = default)
@@ -77,6 +92,8 @@ public class UIVideoPlayer : MonoBehaviour
                 if (elapsed > timeout)
                 {
                     Debug.LogError($"[UIVideoPlayer] Video preparation timeout: {url}");
+                    _rawImage.color = _targetColor; // 색상 복구하여 투명 상태 방지
+                    _videoPlayer.Stop(); // 비디오 플레이어 정리
                     return;
                 }
                 await UniTask.Yield(PlayerLoopTiming.Update);
