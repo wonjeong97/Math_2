@@ -13,6 +13,7 @@ public static class GameResultContext
 [Serializable]
 public class GameEndSetting
 {
+    public ImageSetting backgroundImage;
     public ImageSetting gameEndImage;
     public ImageSetting[] scoreResultImages;
     public ButtonSetting homeButton;
@@ -25,6 +26,7 @@ public class GameEndSetting
 public class GameEndManager : BaseManager<GameEndSetting>
 {
     [Header("UI Objects")]
+    [SerializeField] private GameObject backgroundObj;
     [SerializeField] private Image uiGameEndImage;  // 배경/타이틀 이미지
     [SerializeField] private Image uiMyScoreImage;  // 점수(별) 결과 이미지
     [SerializeField] private Button uiHomeButton;   // 홈(타이틀) 복귀 버튼
@@ -41,6 +43,11 @@ public class GameEndManager : BaseManager<GameEndSetting>
         if (SoundManager.Instance != null)
         {
             SoundManager.Instance.PlayBGM("GameEnd_BGM");
+        }
+        
+        if (backgroundObj != null && managerSetting != null && managerSetting.backgroundImage != null && UIManager.Instance != null)
+        {
+            UIManager.Instance.SetImageObj(backgroundObj, managerSetting.backgroundImage, this.GetCancellationTokenOnDestroy()).Forget();
         }
         
         // 1. UI 설정 적용
@@ -65,13 +72,13 @@ public class GameEndManager : BaseManager<GameEndSetting>
         // 1. 기본 배경/타이틀 이미지 설정
         if (uiGameEndImage != null && managerSetting.gameEndImage != null)
         {
-            ui.SetImageObj(uiGameEndImage.gameObject, managerSetting.gameEndImage);
+            ui.SetImageObj(uiGameEndImage.gameObject, managerSetting.gameEndImage, this.GetCancellationTokenOnDestroy()).Forget();
         }
 
         // 2. 홈 버튼 설정
         if (uiHomeButton != null && managerSetting.homeButton != null)
         {
-            ui.SetButtonObj(uiHomeButton.gameObject, managerSetting.homeButton).Forget();
+            ui.SetButtonObj(uiHomeButton.gameObject, managerSetting.homeButton, this.GetCancellationTokenOnDestroy()).Forget();
         }
 
         // 3. 점수(Score) 이미지 설정 (맞춘 개수에 따라 다르게 표시)
@@ -84,7 +91,7 @@ public class GameEndManager : BaseManager<GameEndSetting>
                 ImageSetting scoreImgData = managerSetting.scoreResultImages[score];
                 if (scoreImgData != null)
                 {
-                    ui.SetImageObj(uiMyScoreImage.gameObject, scoreImgData);
+                    ui.SetImageObj(uiMyScoreImage.gameObject, scoreImgData, this.GetCancellationTokenOnDestroy()).Forget();
                 }
             }
             else
