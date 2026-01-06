@@ -12,9 +12,8 @@ using Random = UnityEngine.Random;
 /// </summary>
 public class GuessNumberManager : BaseGameManager<GuessNumberSetting, GuessNumberQuestion>
 {
-    [Header("--- GuessNumber Specific ---")] [SerializeField]
-    private GameObject backgroundObj;
-
+    [Header("--- GuessNumber Specific ---")] 
+    [SerializeField] private GameObject backgroundObj;
     [SerializeField] private Transform leftQuestionZone; // 왼쪽 문제 배치 구역
     [SerializeField] private Transform rightQuestionZone; // 오른쪽 문제 배치 구역
 
@@ -33,15 +32,10 @@ public class GuessNumberManager : BaseGameManager<GuessNumberSetting, GuessNumbe
 
     protected override void OnSetupChildComponents()
     {
-        base.OnSetupChildComponents();
-
         // 배경 이미지 설정
-        if (backgroundObj != null && managerSetting != null && managerSetting.backgroundImage != null &&
-            UIManager.Instance != null)
+        if (backgroundObj != null && managerSetting != null && managerSetting.backgroundImage != null && UIManager.Instance != null)
         {
-            UIManager.Instance
-                .SetImageObj(backgroundObj, managerSetting.backgroundImage, this.GetCancellationTokenOnDestroy())
-                .Forget();
+            UIManager.Instance.SetImageObj(backgroundObj, managerSetting.backgroundImage, this.GetCancellationTokenOnDestroy()).Forget();
         }
         else if (UIManager.Instance == null)
         {

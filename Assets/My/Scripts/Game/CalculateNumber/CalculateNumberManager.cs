@@ -13,6 +13,7 @@ using Random = UnityEngine.Random;
 public class CalculateNumberManager : BaseGameManager<CalculateNumberSetting, CalculateNumberQuestion>
 {
     [Header("--- Calculate Specific ---")]
+    [SerializeField] private GameObject backgroundObj;
     [SerializeField] private RectTransform questionImageRoot;   // 문제 이미지들이 생성될 부모 Transform
     [SerializeField] private GameObject questionImagePrefab;    // 문제 이미지 프리팹
     [SerializeField] private Transform leftQuestionZone;        // 왼쪽 문제 배치 구역
@@ -30,7 +31,17 @@ public class CalculateNumberManager : BaseGameManager<CalculateNumberSetting, Ca
     /// 이미지 루트 하위 오브젝트 정리.
     /// </summary>
     protected override void OnSetupChildComponents()
-    {
+    {   
+        // 배경 이미지 설정
+        if (backgroundObj != null && managerSetting != null && managerSetting.backgroundImage != null && UIManager.Instance != null)
+        {
+            UIManager.Instance.SetImageObj(backgroundObj, managerSetting.backgroundImage, this.GetCancellationTokenOnDestroy()).Forget();
+        }
+        else if (UIManager.Instance == null)
+        {
+            Debug.LogError("[CalculateNumberManager] UIManager.Instance is null");
+        }
+        
         if (questionImageRoot != null)
         {
             foreach (Transform child in questionImageRoot) Destroy(child.gameObject);
@@ -100,6 +111,13 @@ public class CalculateNumberManager : BaseGameManager<CalculateNumberSetting, Ca
             if (questionImageRoot && questionImagePrefab && contentParent)
             {
                 questionImageRoot.SetParent(contentParent, false);
+                
+                // 앵커를 Stretch / Stretch로 변경하고 여백을 0으로 설정
+                questionImageRoot.anchorMin = Vector2.zero; // (0, 0)
+                questionImageRoot.anchorMax = Vector2.one;  // (1, 1)
+                questionImageRoot.offsetMin = Vector2.zero; // Left, Bottom = 0
+                questionImageRoot.offsetMax = Vector2.zero; // Right, Top = 0
+                
                 questionImageRoot.gameObject.SetActive(true);
 
                 foreach (var imgSetting in q.questionImages)

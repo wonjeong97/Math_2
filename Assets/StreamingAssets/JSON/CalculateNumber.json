@@ -1,465 +1,471 @@
 ﻿{
+  "backgroundImage": {
+    "position": {"x": 960, "y": 540},
+    "size": {"x": 1920, "y": 1080},
+    "sourceImage": "Video/배경.mp4",
+    "color": {"r": 1, "g": 1, "b": 1, "a": 1}
+  },
   "questions": [
-	{
-	  "level": 1,
-	  "type": 1,
-	  "questionText": "별을 눌러 불을 켜보고,\n모두 몇 개인지 세어보세요!",
-	  "correctAnswers": [ "", "", "", "" ],
-	  "wrongAnswers": [ ],
-	  "buttonStyleOverride": {
-		"useOverride": true,
-		"normalImageName": "Image/CalculateNumber/레벨1_수 계산하기1-5.png",
-		"pressedImageName": "Image/CalculateNumber/레벨1_수 계산하기1-3.png"
-	  }
-	},
-	{
-	  "level": 1,
-	  "type": 0,
-	  "questionText": "사과 2개가 있었는데\n친구가 하나를 더 주었어요.\n모두 몇 개일까요?",
-	  "correctAnswers": [ "3" ],
-	  "wrongAnswers": [ "2", "4", "5" ],
-	  "questionImages": [
-		{
-		  "size": { "x": 578, "y": 164 },
-		  "sourceImage": "Image/CalculateNumber/레벨1_수 계산하기2-1.png"
-		}
-	  ]
-	},
-	{
-	  "level": 1,
-	  "type": 0,
-	  "questionText": "토끼 4마리 중에,\n2마리가 뛰어나갔아요.\n몇 마리가 남았을까요?",
-	  "correctAnswers": [ "2" ],
-	  "wrongAnswers": [ "6", "3", "4" ],
-	  "questionImages": [
-		{
-		  "position": {"x": -225, "y": 0, "z": 0},
-		  "size": { "x": 1504, "y": 1405 },
-		  "scale": { "x": 0.1, "y": 0.1, "z": 0.1 },
-		  "sourceImage": "Image/CalculateNumber/레벨1_수 계산하기3-5.png"
-		},
-		{
-		  "position": {"x": -75, "y": 0, "z": 0},
-		  "size": { "x": 1504, "y": 1405 },
-		  "scale": { "x": 0.1, "y": 0.1, "z": 0.1 },
-		  "sourceImage": "Image/CalculateNumber/레벨1_수 계산하기3-5.png"
-		},
-		{
-		  "position": {"x": 75, "y": 0, "z": 0},
-		  "size": { "x": 1504, "y": 1405 },
-		  "scale": { "x": 0.1, "y": 0.1, "z": 0.1 },
-		  "sourceImage": "Image/CalculateNumber/레벨1_수 계산하기3-5.png",
-		  "useFade": true,
-		  "fadeDuration": 1.5,
-		  "isFadeOut": true,
-		  "loop": true
-		},
-		{
-		  "position": {"x": 225, "y": 0, "z": 0},
-		  "size": { "x": 1504, "y": 1405 },
-		  "scale": { "x": 0.1, "y": 0.1, "z": 0.1 },
-		  "sourceImage": "Image/CalculateNumber/레벨1_수 계산하기3-5.png",
-		  "useFade": true,
-		  "fadeDuration": 1.5,
-		  "isFadeOut": true,
-		  "loop": true
-		}
-	  ]
-	},
-	{
-	  "level": 1,
-	  "type": 0,
-	  "questionText": "풍선이 몇 개 더 생겼을까요?",
-	  "correctAnswers": [ "3" ],
-	  "wrongAnswers": [ "1", "4", "5" ],
-	  "questionImages": [
-		{
-		  "position": {"x": -250, "y": 0, "z": 0},
-		  "size": { "x": 127, "y": 236 },
-		  "sourceImage": "Image/CalculateNumber/레벨1_수 계산하기4-1.png"
-		},
-		{
-		  "position": {"x": 150, "y": 0, "z": 0},
-		  "size": { "x": 396, "y": 235 },
-		  "sourceImage": "Image/CalculateNumber/레벨1_수 계산하기4-2.png",
-		  "useFade": true,
-		  "fadeDuration": 1.5,
-		  "isFadeOut": false,
-		  "loop": true
-		}
-	  ]
-	},
-	{
-	  "level": 1,
-	  "type": 0,
-	  "questionText": "1 + 2는 무엇일까요?",
-	  "correctAnswers": [ "3" ],
-	  "wrongAnswers": [ "2", "4", "5" ]
-	},
-	{
-	  "level": 2,
-	  "type": 0,
-	  "questionText": "5 + 6은 무엇일까요?",
-	  "correctAnswers": [ "11" ],
-	  "wrongAnswers": [ "10", "12", "13" ]
-	},
-	{
-	  "level": 2,
-	  "type": 0,
-	  "questionText": "3 x 4는 무엇일까요?",
-	  "correctAnswers": [ "12" ],
-	  "wrongAnswers": [ "9", "15", "16" ]
-	},
-	{
-	  "level": 2,
-	  "type": 0,
-	  "questionText": "4 + 3은 무엇일까요?",
-	  "correctAnswers": [ "7" ],
-	  "wrongAnswers": [ "6", "8", "9" ]
-	},
-	{
-	  "level": 2,
-	  "type": 0,
-	  "questionText": "7 + 4는 무엇일까요?",
-	  "correctAnswers": [ "11" ],
-	  "wrongAnswers": [ "10", "12", "13" ]
-	},
-	{
-	  "level": 2,
-	  "type": 0,
-	  "questionText": "2 x 5는 무엇일까요?",
-	  "correctAnswers": [ "10" ],
-	  "wrongAnswers": [ "7", "12", "15" ]
-	},
-	{
-	  "level": 2,
-	  "type": 0,
-	  "questionText": "9 - 4는 무엇일까요?",
-	  "correctAnswers": [ "5" ],
-	  "wrongAnswers": [ "4", "6", "3" ]
-	},
-	{
-	  "level": 3,
-	  "type": 0,
-	  "questionText": "11 + 5는 무엇일까요?",
-	  "correctAnswers": [ "16" ],
-	  "wrongAnswers": [ "15", "17", "18" ]
-	},
-	{
-	  "level": 3,
-	  "type": 0,
-	  "questionText": "13 + 21은 무엇일까요?",
-	  "correctAnswers": [ "34" ],
-	  "wrongAnswers": [ "33", "35", "44" ]
-	},
-	{
-	  "level": 3,
-	  "type": 0,
-	  "questionText": "16 ÷ 4는 무엇일까요?",
-	  "correctAnswers": [ "4" ],
-	  "wrongAnswers": [ "3", "5", "6" ]
-	},
-	{
-	  "level": 3,
-	  "type": 0,
-	  "questionText": "11 x 2는 무엇일까요?",
-	  "correctAnswers": [ "22" ],
-	  "wrongAnswers": [ "21", "23", "12" ]
-	},
-	{
-	  "level": 3,
-	  "type": 0,
-	  "questionText": "30 - 12는 무엇일까요?",
-	  "correctAnswers": [ "18" ],
-	  "wrongAnswers": [ "28", "12", "22" ]
-	},
-	{
-	  "level": 3,
-	  "type": 0,
-	  "questionText": "21 ÷ 3은 무엇일까요?",
-	  "correctAnswers": [ "7" ],
-	  "wrongAnswers": [ "6", "8", "9" ]
-	},
-	{
-	  "level": 4,
-	  "type": 0,
-	  "questionText": "3 + 3.5는 무엇일까요?",
-	  "correctAnswers": [ "6.5" ],
-	  "wrongAnswers": [ "6.0", "7.0", "6.8" ]
-	},
-	{
-	  "level": 4,
-	  "type": 0,
-	  "questionText": "4 + 3/6은 무엇일까요?",
-	  "correctAnswers": [ "4.5" ],
-	  "wrongAnswers": [ "4.3", "5.0", "4.8" ]
-	},
-	{
-	  "level": 4,
-	  "type": 0,
-	  "questionText": "0.4 + 4.5는 무엇일까요?",
-	  "correctAnswers": [ "4.9" ],
-	  "wrongAnswers": [ "4.8", "5.0", "4.0" ]
-	},
-	{
-	  "level": 4,
-	  "type": 0,
-	  "questionText": "(6 ÷ 2) + 4는 무엇일까요?",
-	  "correctAnswers": [ "7" ],
-	  "wrongAnswers": [ "6", "8", "5" ]
-	},
-	{
-	  "level": 4,
-	  "type": 0,
-	  "questionText": "5 + (2 x 3)은 무엇일까요?",
-	  "correctAnswers": [ "11" ],
-	  "wrongAnswers": [ "21", "10", "13" ]
-	},
-	{
-	  "level": 4,
-	  "type": 0,
-	  "questionText": "0.5 x 4는 무엇일까요?",
-	  "correctAnswers": [ "2" ],
-	  "wrongAnswers": [ "2.5", "0.9", "4.5" ]
-	},
-	{
-	  "level": 5,
-	  "type": 0,
-	  "questionText": "4/3 x 2/3은 무엇일까요?",
-	  "correctAnswers": [ "8/9" ],
-	  "wrongAnswers": [ "6/9", "8/6", "1" ]
-	},
-	{
-	  "level": 5,
-	  "type": 0,
-	  "questionText": "2⁴ (2의 4승)은 무엇일까요?",
-	  "correctAnswers": [ "16" ],
-	  "wrongAnswers": [ "8", "12", "32" ]
-	},
-	{
-	  "level": 5,
-	  "type": 0,
-	  "questionText": "-4.5 + 1.5는 무엇일까요?",
-	  "correctAnswers": [ "-3" ],
-	  "wrongAnswers": [ "-3.5", "-6", "3" ]
-	},
-	{
-	  "level": 5,
-	  "type": 0,
-	  "questionText": "(3/4 - 1/2) ÷ 1/6은 무엇일까요?",
-	  "correctAnswers": [ "1.5" ],
-	  "wrongAnswers": [ "1.25", "2.0", "0.5" ]
-	},
-	{
-	  "level": 5,
-	  "type": 0,
-	  "questionText": "3³ (3의 3승)은 무엇일까요?",
-	  "correctAnswers": [ "27" ],
-	  "wrongAnswers": [ "9", "18", "33" ]
-	},
-	{
-	  "level": 5,
-	  "type": 0,
-	  "questionText": "-10 ÷ 2는 무엇일까요?",
-	  "correctAnswers": [ "-5" ],
-	  "wrongAnswers": [ "5", "-2", "-8" ]
-	}
+    {
+      "level": 1,
+      "type": 1,
+      "questionText": "별을 눌러 불을 켜보고,\n모두 몇 개인지 세어보세요!",
+      "correctAnswers": ["", "", "", ""],
+      "wrongAnswers": [],
+      "buttonStyleOverride": {
+        "useOverride": true,
+        "normalImageName": "Image/CalculateNumber/레벨1_수 계산하기1-5.png",
+        "pressedImageName": "Image/CalculateNumber/레벨1_수 계산하기1-3.png"
+      }
+    },
+    {
+      "level": 1,
+      "type": 0,
+      "questionText": "사과 2개가 있었는데\n친구가 하나를 더 주었어요.\n모두 몇 개일까요?",
+      "correctAnswers": ["3"],
+      "wrongAnswers": ["2", "4", "5"],
+      "questionImages": [
+        {
+          "size": {"x": 578, "y": 164},
+          "sourceImage": "Image/CalculateNumber/레벨1_수 계산하기2-1.png"
+        }
+      ]
+    },
+    {
+      "level": 1,
+      "type": 0,
+      "questionText": "토끼 4마리 중에,\n2마리가 뛰어나갔아요.\n몇 마리가 남았을까요?",
+      "correctAnswers": ["2"],
+      "wrongAnswers": ["6", "3", "4"],
+      "questionImages": [
+        {
+          "position": {"x": -225, "y": 0, "z": 0},
+          "size": {"x": 1504, "y": 1405},
+          "scale": {"x": 0.1, "y": 0.1, "z": 0.1},
+          "sourceImage": "Image/CalculateNumber/레벨1_수 계산하기3-5.png"
+        },
+        {
+          "position": {"x": -75, "y": 0, "z": 0},
+          "size": {"x": 1504, "y": 1405},
+          "scale": {"x": 0.1, "y": 0.1, "z": 0.1},
+          "sourceImage": "Image/CalculateNumber/레벨1_수 계산하기3-5.png"
+        },
+        {
+          "position": {"x": 75, "y": 0, "z": 0},
+          "size": {"x": 1504, "y": 1405},
+          "scale": {"x": 0.1, "y": 0.1, "z": 0.1},
+          "sourceImage": "Image/CalculateNumber/레벨1_수 계산하기3-5.png",
+          "useFade": true,
+          "fadeDuration": 1.5,
+          "isFadeOut": true,
+          "loop": true
+        },
+        {
+          "position": {"x": 225, "y": 0, "z": 0},
+          "size": {"x": 1504, "y": 1405},
+          "scale": {"x": 0.1, "y": 0.1, "z": 0.1},
+          "sourceImage": "Image/CalculateNumber/레벨1_수 계산하기3-5.png",
+          "useFade": true,
+          "fadeDuration": 1.5,
+          "isFadeOut": true,
+          "loop": true
+        }
+      ]
+    },
+    {
+      "level": 1,
+      "type": 0,
+      "questionText": "풍선이 몇 개 더 생겼을까요?",
+      "correctAnswers": ["3"],
+      "wrongAnswers": ["1", "4", "5"],
+      "questionImages": [
+        {
+          "position": {"x": -250, "y": 0, "z": 0},
+          "size": {"x": 127, "y": 236},
+          "sourceImage": "Image/CalculateNumber/레벨1_수 계산하기4-1.png"
+        },
+        {
+          "position": {"x": 150, "y": 0, "z": 0},
+          "size": {"x": 396, "y": 235},
+          "sourceImage": "Image/CalculateNumber/레벨1_수 계산하기4-2.png",
+          "useFade": true,
+          "fadeDuration": 1.5,
+          "isFadeOut": false,
+          "loop": true
+        }
+      ]
+    },
+    {
+      "level": 1,
+      "type": 0,
+      "questionText": "1 + 2는 무엇일까요?",
+      "correctAnswers": ["3"],
+      "wrongAnswers": ["2", "4", "5"]
+    },
+    {
+      "level": 2,
+      "type": 0,
+      "questionText": "5 + 6은 무엇일까요?",
+      "correctAnswers": ["11"],
+      "wrongAnswers": ["10", "12", "13"]
+    },
+    {
+      "level": 2,
+      "type": 0,
+      "questionText": "3 x 4는 무엇일까요?",
+      "correctAnswers": ["12"],
+      "wrongAnswers": ["9", "15", "16"]
+    },
+    {
+      "level": 2,
+      "type": 0,
+      "questionText": "4 + 3은 무엇일까요?",
+      "correctAnswers": ["7"],
+      "wrongAnswers": ["6", "8", "9"]
+    },
+    {
+      "level": 2,
+      "type": 0,
+      "questionText": "7 + 4는 무엇일까요?",
+      "correctAnswers": ["11"],
+      "wrongAnswers": ["10", "12", "13"]
+    },
+    {
+      "level": 2,
+      "type": 0,
+      "questionText": "2 x 5는 무엇일까요?",
+      "correctAnswers": ["10"],
+      "wrongAnswers": ["7", "12", "15"]
+    },
+    {
+      "level": 2,
+      "type": 0,
+      "questionText": "9 - 4는 무엇일까요?",
+      "correctAnswers": ["5"],
+      "wrongAnswers": ["4", "6", "3"]
+    },
+    {
+      "level": 3,
+      "type": 0,
+      "questionText": "11 + 5는 무엇일까요?",
+      "correctAnswers": ["16"],
+      "wrongAnswers": ["15", "17", "18"]
+    },
+    {
+      "level": 3,
+      "type": 0,
+      "questionText": "13 + 21은 무엇일까요?",
+      "correctAnswers": ["34"],
+      "wrongAnswers": ["33", "35", "44"]
+    },
+    {
+      "level": 3,
+      "type": 0,
+      "questionText": "16 ÷ 4는 무엇일까요?",
+      "correctAnswers": ["4"],
+      "wrongAnswers": ["3", "5", "6"]
+    },
+    {
+      "level": 3,
+      "type": 0,
+      "questionText": "11 x 2는 무엇일까요?",
+      "correctAnswers": ["22"],
+      "wrongAnswers": ["21", "23", "12"]
+    },
+    {
+      "level": 3,
+      "type": 0,
+      "questionText": "30 - 12는 무엇일까요?",
+      "correctAnswers": ["18"],
+      "wrongAnswers": ["28", "12", "22"]
+    },
+    {
+      "level": 3,
+      "type": 0,
+      "questionText": "21 ÷ 3은 무엇일까요?",
+      "correctAnswers": ["7"],
+      "wrongAnswers": ["6", "8", "9"]
+    },
+    {
+      "level": 4,
+      "type": 0,
+      "questionText": "3 + 3.5는 무엇일까요?",
+      "correctAnswers": ["6.5"],
+      "wrongAnswers": ["6.0", "7.0", "6.8"]
+    },
+    {
+      "level": 4,
+      "type": 0,
+      "questionText": "4 + 3/6은 무엇일까요?",
+      "correctAnswers": ["4.5"],
+      "wrongAnswers": ["4.3", "5.0", "4.8"]
+    },
+    {
+      "level": 4,
+      "type": 0,
+      "questionText": "0.4 + 4.5는 무엇일까요?",
+      "correctAnswers": ["4.9"],
+      "wrongAnswers": ["4.8", "5.0", "4.0"]
+    },
+    {
+      "level": 4,
+      "type": 0,
+      "questionText": "(6 ÷ 2) + 4는 무엇일까요?",
+      "correctAnswers": ["7"],
+      "wrongAnswers": ["6", "8", "5"]
+    },
+    {
+      "level": 4,
+      "type": 0,
+      "questionText": "5 + (2 x 3)은 무엇일까요?",
+      "correctAnswers": ["11"],
+      "wrongAnswers": ["21", "10", "13"]
+    },
+    {
+      "level": 4,
+      "type": 0,
+      "questionText": "0.5 x 4는 무엇일까요?",
+      "correctAnswers": ["2"],
+      "wrongAnswers": ["2.5", "0.9", "4.5"]
+    },
+    {
+      "level": 5,
+      "type": 0,
+      "questionText": "4/3 x 2/3은 무엇일까요?",
+      "correctAnswers": ["8/9"],
+      "wrongAnswers": ["6/9", "8/6", "1"]
+    },
+    {
+      "level": 5,
+      "type": 0,
+      "questionText": "2⁴ (2의 4승)은 무엇일까요?",
+      "correctAnswers": ["16"],
+      "wrongAnswers": ["8", "12", "32"]
+    },
+    {
+      "level": 5,
+      "type": 0,
+      "questionText": "-4.5 + 1.5는 무엇일까요?",
+      "correctAnswers": ["-3"],
+      "wrongAnswers": ["-3.5", "-6", "3"]
+    },
+    {
+      "level": 5,
+      "type": 0,
+      "questionText": "(3/4 - 1/2) ÷ 1/6은 무엇일까요?",
+      "correctAnswers": ["1.5"],
+      "wrongAnswers": ["1.25", "2.0", "0.5"]
+    },
+    {
+      "level": 5,
+      "type": 0,
+      "questionText": "3³ (3의 3승)은 무엇일까요?",
+      "correctAnswers": ["27"],
+      "wrongAnswers": ["9", "18", "33"]
+    },
+    {
+      "level": 5,
+      "type": 0,
+      "questionText": "-10 ÷ 2는 무엇일까요?",
+      "correctAnswers": ["-5"],
+      "wrongAnswers": ["5", "-2", "-8"]
+    }
   ],
   "levelImages": [
-	{
-	  "position": { "x": 200, "y": 100 },
-	  "size": { "x": 200, "y": 90 },
-	  "sourceImage": "Image/LevelSelect/좌측 상단 레벨1.png"
-	},
-	{
-	  "position": { "x": 200, "y": 100 },
-	  "size": { "x": 200, "y": 90 },
-	  "sourceImage": "Image/LevelSelect/좌측 상단 레벨2.png"
-	},
-	{
-	  "position": { "x": 200, "y": 100 },
-	  "size": { "x": 200, "y": 90 },
-	  "sourceImage": "Image/LevelSelect/좌측 상단 레벨3.png"
-	},
-	{
-	  "position": { "x": 200, "y": 100 },
-	  "size": { "x": 200, "y": 90 },
-	  "sourceImage": "Image/LevelSelect/좌측 상단 레벨4.png"
-	},
-	{
-	  "position": { "x": 200, "y": 100 },
-	  "size": { "x": 200, "y": 90 },
-	  "sourceImage": "Image/LevelSelect/좌측 상단 레벨5.png"
-	}
+    {
+      "position": {"x": 200, "y": 100},
+      "size": {"x": 200, "y": 90},
+      "sourceImage": "Image/LevelSelect/레벨1.png"
+    },
+    {
+      "position": {"x": 200, "y": 100},
+      "size": {"x": 200, "y": 90},
+      "sourceImage": "Image/LevelSelect/레벨2.png"
+    },
+    {
+      "position": {"x": 200, "y": 100},
+      "size": {"x": 200, "y": 90},
+      "sourceImage": "Image/LevelSelect/레벨3.png"
+    },
+    {
+      "position": {"x": 200, "y": 100},
+      "size": {"x": 200, "y": 90},
+      "sourceImage": "Image/LevelSelect/레벨4.png"
+    },
+    {
+      "position": {"x": 200, "y": 100},
+      "size": {"x": 200, "y": 90},
+      "sourceImage": "Image/LevelSelect/레벨5.png"
+    }
   ],
   "gameTypeImages": [
-	{
-	  "position": { "x": 440, "y": 100 },
-	  "size": { "x": 268, "y": 90 },
-	  "sourceImage": "Image/CalculateNumber/좌측 상단 종목(레벨1-수 계산하기).png"
-	},
-	{
-	  "position": { "x": 440, "y": 100 },
-	  "size": { "x": 268, "y": 90 },
-	  "sourceImage": "Image/CalculateNumber/좌측 상단 종목(레벨2-수 계산하기).png"
-	},
-	{
-	  "position": { "x": 440, "y": 100 },
-	  "size": { "x": 268, "y": 90 },
-	  "sourceImage": "Image/CalculateNumber/좌측 상단 종목(레벨3-수 계산하기).png"
-	},
-	{
-	  "position": { "x": 440, "y": 100 },
-	  "size": { "x": 268, "y": 90 },
-	  "sourceImage": "Image/CalculateNumber/좌측 상단 종목(레벨4-수 계산하기).png"
-	},
-	{
-	  "position": { "x": 440, "y": 100 },
-	  "size": { "x": 268, "y": 90 },
-	  "sourceImage": "Image/CalculateNumber/좌측 상단 종목(레벨5-수 계산하기).png"
-	}
+    {
+      "position": {"x": 440, "y": 100},
+      "size": {"x": 268, "y": 90},
+      "sourceImage": "Image/CalculateNumber/레벨1_수 계산하기.png"
+    },
+    {
+      "position": {"x": 440, "y": 100},
+      "size": {"x": 268, "y": 90},
+      "sourceImage": "Image/CalculateNumber/레벨2_수 계산하기.png"
+    },
+    {
+      "position": {"x": 440, "y": 100},
+      "size": {"x": 268, "y": 90},
+      "sourceImage": "Image/CalculateNumber/레벨3_수 계산하기.png"
+    },
+    {
+      "position": {"x": 440, "y": 100},
+      "size": {"x": 268, "y": 90},
+      "sourceImage": "Image/CalculateNumber/레벨4_수 계산하기.png"
+    },
+    {
+      "position": {"x": 440, "y": 100},
+      "size": {"x": 268, "y": 90},
+      "sourceImage": "Image/CalculateNumber/레벨5_수 계산하기.png"
+    }
   ],
   "levelProgresses": [
-	{
-	  "steps": [
-		{
-		  "sourceImage": "Image/Progress/우측 상단 개수(레벨1-1).png",
-		  "position": { "x": 650, "y": 100 },
-		  "size": { "x": 203, "y": 90 }
-		},
-		{
-		  "sourceImage": "Image/Progress/우측 상단 개수(레벨1-2).png",
-		  "position": { "x": 650, "y": 100 },
-		  "size": { "x": 203, "y": 90 }
-		},
-		{
-		  "sourceImage": "Image/Progress/우측 상단 개수(레벨1-3).png",
-		  "position": { "x": 650, "y": 100 },
-		  "size": { "x": 203, "y": 90 }
-		},
-		{
-		  "sourceImage": "Image/Progress/우측 상단 개수(레벨1-4).png",
-		  "position": { "x": 650, "y": 100 },
-		  "size": { "x": 203, "y": 90 }
-		}
-	  ]
-	},
-	{
-	  "steps": [
-		{
-		  "sourceImage": "Image/Progress/우측 상단 개수(레벨2-1).png",
-		  "position": { "x": 650, "y": 100 },
-		  "size": { "x": 203, "y": 90 }
-		},
-		{
-		  "sourceImage": "Image/Progress/우측 상단 개수(레벨2-2).png",
-		  "position": { "x": 650, "y": 100 },
-		  "size": { "x": 203, "y": 90 }
-		},
-		{
-		  "sourceImage": "Image/Progress/우측 상단 개수(레벨2-3).png",
-		  "position": { "x": 650, "y": 100 },
-		  "size": { "x": 203, "y": 90 }
-		},
-		{
-		  "sourceImage": "Image/Progress/우측 상단 개수(레벨2-4).png",
-		  "position": { "x": 650, "y": 100 },
-		  "size": { "x": 203, "y": 90 }
-		}
-	  ]
-	},
-	{
-	  "steps": [
-		{
-		  "sourceImage": "Image/Progress/우측 상단 개수(레벨3-1).png",
-		  "position": { "x": 650, "y": 100 },
-		  "size": { "x": 203, "y": 90 }
-		},
-		{
-		  "sourceImage": "Image/Progress/우측 상단 개수(레벨3-2).png",
-		  "position": { "x": 650, "y": 100 },
-		  "size": { "x": 203, "y": 90 }
-		},
-		{
-		  "sourceImage": "Image/Progress/우측 상단 개수(레벨3-3).png",
-		  "position": { "x": 650, "y": 100 },
-		  "size": { "x": 203, "y": 90 }
-		},
-		{
-		  "sourceImage": "Image/Progress/우측 상단 개수(레벨3-4).png",
-		  "position": { "x": 650, "y": 100 },
-		  "size": { "x": 203, "y": 90 }
-		}
-	  ]
-	},
-	{
-	  "steps": [
-		{
-		  "sourceImage": "Image/Progress/우측 상단 개수(레벨4-1).png",
-		  "position": { "x": 650, "y": 100 },
-		  "size": { "x": 203, "y": 90 }
-		},
-		{
-		  "sourceImage": "Image/Progress/우측 상단 개수(레벨4-2).png",
-		  "position": { "x": 650, "y": 100 },
-		  "size": { "x": 203, "y": 90 }
-		},
-		{
-		  "sourceImage": "Image/Progress/우측 상단 개수(레벨4-3).png",
-		  "position": { "x": 650, "y": 100 },
-		  "size": { "x": 203, "y": 90 }
-		},
-		{
-		  "sourceImage": "Image/Progress/우측 상단 개수(레벨4-4).png",
-		  "position": { "x": 650, "y": 100 },
-		  "size": { "x": 203, "y": 90 }
-		}
-	  ]
-	},
-	{
-	  "steps": [
-		{
-		  "sourceImage": "Image/Progress/우측 상단 개수(레벨5-1).png",
-		  "position": { "x": 650, "y": 100 },
-		  "size": { "x": 203, "y": 90 }
-		},
-		{
-		  "sourceImage": "Image/Progress/우측 상단 개수(레벨5-2).png",
-		  "position": { "x": 650, "y": 100 },
-		  "size": { "x": 203, "y": 90 }
-		},
-		{
-		  "sourceImage": "Image/Progress/우측 상단 개수(레벨5-3).png",
-		  "position": { "x": 650, "y": 100 },
-		  "size": { "x": 203, "y": 90 }
-		},
-		{
-		  "sourceImage": "Image/Progress/우측 상단 개수(레벨5-4).png",
-		  "position": { "x": 650, "y": 100 },
-		  "size": { "x": 203, "y": 90 }
-		}
-	  ]
-	}
+    {
+      "steps": [
+        {
+          "sourceImage": "Image/Progress/레벨1_1_4.png",
+          "position": {"x": 650, "y": 100},
+          "size": {"x": 203, "y": 90}
+        },
+        {
+          "sourceImage": "Image/Progress/레벨1_2_4.png",
+          "position": {"x": 650, "y": 100},
+          "size": {"x": 203, "y": 90}
+        },
+        {
+          "sourceImage": "Image/Progress/레벨1_3_4.png",
+          "position": {"x": 650, "y": 100},
+          "size": {"x": 203, "y": 90}
+        },
+        {
+          "sourceImage": "Image/Progress/레벨1_4_4.png",
+          "position": {"x": 650, "y": 100},
+          "size": {"x": 203, "y": 90}
+        }
+      ]
+    },
+    {
+      "steps": [
+        {
+          "sourceImage": "Image/Progress/레벨2_1_4.png",
+          "position": {"x": 650, "y": 100},
+          "size": {"x": 203, "y": 90}
+        },
+        {
+          "sourceImage": "Image/Progress/레벨2_2_4.png",
+          "position": {"x": 650, "y": 100},
+          "size": {"x": 203, "y": 90}
+        },
+        {
+          "sourceImage": "Image/Progress/레벨2_3_4.png",
+          "position": {"x": 650, "y": 100},
+          "size": {"x": 203, "y": 90}
+        },
+        {
+          "sourceImage": "Image/Progress/레벨2_4_4.png",
+          "position": {"x": 650, "y": 100},
+          "size": {"x": 203, "y": 90}
+        }
+      ]
+    },
+    {
+      "steps": [
+        {
+          "sourceImage": "Image/Progress/레벨3_1_4.png",
+          "position": {"x": 650, "y": 100},
+          "size": {"x": 203, "y": 90}
+        },
+        {
+          "sourceImage": "Image/Progress/레벨3_2_4.png",
+          "position": {"x": 650, "y": 100},
+          "size": {"x": 203, "y": 90}
+        },
+        {
+          "sourceImage": "Image/Progress/레벨3_3_4.png",
+          "position": {"x": 650, "y": 100},
+          "size": {"x": 203, "y": 90}
+        },
+        {
+          "sourceImage": "Image/Progress/레벨3_4_4.png",
+          "position": {"x": 650, "y": 100},
+          "size": {"x": 203, "y": 90}
+        }
+      ]
+    },
+    {
+      "steps": [
+        {
+          "sourceImage": "Image/Progress/레벨4_1_4.png",
+          "position": {"x": 650, "y": 100},
+          "size": {"x": 203, "y": 90}
+        },
+        {
+          "sourceImage": "Image/Progress/레벨4_2_4.png",
+          "position": {"x": 650, "y": 100},
+          "size": {"x": 203, "y": 90}
+        },
+        {
+          "sourceImage": "Image/Progress/레벨4_3_4.png",
+          "position": {"x": 650, "y": 100},
+          "size": {"x": 203, "y": 90}
+        },
+        {
+          "sourceImage": "Image/Progress/레벨4_4_4.png",
+          "position": {"x": 650, "y": 100},
+          "size": {"x": 203, "y": 90}
+        }
+      ]
+    },
+    {
+      "steps": [
+        {
+          "sourceImage": "Image/Progress/레벨5_1_4.png",
+          "position": {"x": 650, "y": 100},
+          "size": {"x": 203, "y": 90}
+        },
+        {
+          "sourceImage": "Image/Progress/레벨5_2_4.png",
+          "position": {"x": 650, "y": 100},
+          "size": {"x": 203, "y": 90}
+        },
+        {
+          "sourceImage": "Image/Progress/레벨5_3_4.png",
+          "position": {"x": 650, "y": 100},
+          "size": {"x": 203, "y": 90}
+        },
+        {
+          "sourceImage": "Image/Progress/레벨5_4_4.png",
+          "position": {"x": 650, "y": 100},
+          "size": {"x": 203, "y": 90}
+        }
+      ]
+    }
   ],
   "buttonMargin": 30.0,
   "correctImage": {
-	"position": { "x": 400, "y": 500 },
-	"size": { "x": 682, "y": 682 },
-	"sourceImage": "Image/Result/정답.png"
+    "position": {"x": 480, "y": 500},
+    "size": {"x": 900, "y": 900},
+    "sourceImage": "Video/Result/정답.webm"
   },
   "wrongImage": {
-	"position": { "x": 1520, "y": 500 },
-	"size": { "x": 682, "y": 682 },
-	"sourceImage": "Image/Result/오답.png"
+    "position": {"x": 1440, "y": 500},
+    "size": {"x": 900, "y": 900},
+    "sourceImage": "Video/Result/오답.webm"
   },
   "retryButton": {
-	"size": { "x": 356, "y": 123 },
-	"position": { "x": 400, "y": 980 },
-	"buttonBackgroundImage": { "sourceImage": "Image/Button/다시 도전.png" }
+    "size": {"x": 356, "y": 123},
+    "position": {"x": 480, "y": 980},
+    "buttonBackgroundImage": {"sourceImage": "Image/Button/다시 도전.png"}
   },
   "gameEndButton": {
-	"size": { "x": 356, "y": 123 },
-	"position": { "x": 1520, "y": 980 },
-	"buttonBackgroundImage": { "sourceImage": "Image/Button/게임 종료.png" }
+    "size": {"x": 356, "y": 123},
+    "position": {"x": 1440, "y": 980},
+    "buttonBackgroundImage": {"sourceImage": "Image/Button/게임 종료.png"}
   }
 }
