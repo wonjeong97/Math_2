@@ -58,6 +58,8 @@
     {"key": "NumberSystem_BGM", "clipPath": "Sound/NumberSystem/NumberSystem.mp3", "volume": 1.0},
     {"key": "GameEnd_BGM", "clipPath": "Sound/GameEnd/GameEnd.mp3", "volume": 1.0},
     {"key": "Button", "clipPath": "Sound/Button.wav", "volume": 1.0},
+    {"key": "Wrong", "clipPath": "Sound/wrong.mp3", "volume": 1.0},
+    {"key": "Correct", "clipPath": "Sound/correct.mp3", "volume": 1.0},
     {"key": "Start", "clipPath": "Sound/Start.wav", "volume": 1.0}    
   ]
 }
