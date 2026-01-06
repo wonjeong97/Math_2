@@ -395,23 +395,23 @@
   ],
   "buttonMargin": 30.0,
   "correctImage": {
-    "position": {"x": 400, "y": 500},
-    "size": {"x": 682, "y": 682},
-    "sourceImage": "Image/Result/정답.png"
+    "position": {"x": 480, "y": 500},
+    "size": {"x": 900, "y": 900},
+    "sourceImage": "Video/Result/정답.webm"
   },
   "wrongImage": {
-    "position": {"x": 1520, "y": 500},
-    "size": {"x": 682, "y": 682},
-    "sourceImage": "Image/Result/오답.png"
+    "position": {"x": 1440, "y": 500},
+    "size": {"x": 900, "y": 900},
+    "sourceImage": "Video/Result/오답.webm"
   },
   "retryButton": {
     "size": {"x": 356, "y": 123},
-    "position": {"x": 400, "y": 980},
+    "position": {"x": 480, "y": 980},
     "buttonBackgroundImage": {"sourceImage": "Image/Button/다시 도전.png"}
   },
   "gameEndButton": {
     "size": {"x": 356, "y": 123},
-    "position": {"x": 1520, "y": 980},
+    "position": {"x": 1440, "y": 980},
     "buttonBackgroundImage": {"sourceImage": "Image/Button/게임 종료.png"}
   }
 }
