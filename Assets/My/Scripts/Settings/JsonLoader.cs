@@ -181,6 +181,7 @@ public class Settings
     public CloseSetting closeSetting;
     public FontMaps fontMap;
     public ButtonSetting[] questionButtons;
+    public TextSetting gameQuestionText;
     public SoundSetting[] sounds;
 }
 

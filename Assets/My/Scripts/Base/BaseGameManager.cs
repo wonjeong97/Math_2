@@ -262,6 +262,21 @@ public abstract class BaseGameManager<TSetting, TQuestion> : BaseManager<TSettin
                 gameTypeImage.gameObject.SetActive(true);
             }
         }
+        
+        // 전역 설정(Settings.json)의 폰트 설정을 문제 텍스트에 적용
+        if (JsonLoader.Instance != null && JsonLoader.Instance.settings != null)
+        {
+            // Settings에서 gameQuestionText 설정 가져오기
+            TextSetting qTextSetting = JsonLoader.Instance.settings.gameQuestionText;
+            
+            // questionTextObj가 있고 설정도 있다면 적용
+            if (questionTextObj != null && qTextSetting != null)
+            {
+                // UIManager가 qTextSetting.fontName("font1")을 보고 
+                // FontMap에서 실제 폰트를 찾아 적용.
+                ui.SetTextObj(questionTextObj.gameObject, qTextSetting).Forget();
+            }
+        }
     }
     
     /// <summary> 전역 설정(Settings.json)을 통한 버튼 스타일 적용. </summary>

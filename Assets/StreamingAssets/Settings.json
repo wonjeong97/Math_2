@@ -14,39 +14,43 @@
     {
       "_comment": "Level 1 Button",
       "size": {"x": 344, "y": 344},
-      "scale": {"x": 0.7, "y": 0.7, "z": 0.7},
+      "scale": {"x": 0.9, "y": 0.9, "z": 0.9},
       "buttonBackgroundImage": {"sourceImage": "Video/Button/버튼_레벨1.webm"},
       "buttonText": {"fontSize": 170}
     },
     {
-      "_comment": "Level 2 Button (Video Example)",
+      "_comment": "Level 2 Button",
       "size": {"x": 344, "y": 344},
-      "scale": {"x": 0.7, "y": 0.7, "z": 0.7},
+      "scale": {"x": 0.9, "y": 0.9, "z": 0.9},
       "buttonBackgroundImage": {"sourceImage": "Video/Button/버튼_레벨2.webm"},
       "buttonText": {"fontSize": 170}
     },
     {
       "_comment": "Level 3 Button",
       "size": {"x": 344, "y": 344},
-      "scale": {"x": 0.7, "y": 0.7, "z": 0.7},
+      "scale": {"x": 0.9, "y": 0.9, "z": 0.9},
       "buttonBackgroundImage": {"sourceImage": "Video/Button/버튼_레벨3.webm"},
       "buttonText": {"fontSize": 170}
     },
     {
       "_comment": "Level 4 Button",
       "size": {"x": 344, "y": 344},
-      "scale": {"x": 0.7, "y": 0.7, "z": 0.7},
+      "scale": {"x": 0.9, "y": 0.9, "z": 0.9},
       "buttonBackgroundImage": {"sourceImage": "Video/Button/버튼_레벨4.webm"},
       "buttonText": {"fontSize": 170}
     },
     {
       "_comment": "Level 5 Button",
       "size": {"x": 344, "y": 344},
-      "scale": {"x": 0.7, "y": 0.7, "z": 0.7},
+      "scale": {"x": 0.9, "y": 0.9, "z": 0.9},
       "buttonBackgroundImage": {"sourceImage": "Video/Button/버튼_레벨5.webm"},
       "buttonText": {"fontSize": 170}
     }
   ],
+  "gameQuestionText": {
+    "fontName": "font1",
+    "fontSize": 70
+  },
   "sounds": [
     {"key": "LevelSelect_BGM", "clipPath": "Sound/LevelSelect/ArcadeGameBGM17.wav", "volume": 1.0},
     {"key": "Button", "clipPath": "Sound/Button.wav", "volume": 1.0},

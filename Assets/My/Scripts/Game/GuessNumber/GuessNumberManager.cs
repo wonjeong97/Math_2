@@ -20,7 +20,8 @@ public class GuessNumberManager : BaseGameManager<GuessNumberSetting, GuessNumbe
 
     private int _sequenceIndex; // 순서대로 누르기(Sequence) 문제용 인덱스
     private List<string> _remainingCorrectAnswers; // 다중 선택(MultipleChoice) 문제용 남은 정답 목록
-
+    
+    
     // JSON 파일명 정의
     protected override string GetJsonFileName() => "GuessNumber.json";
 
@@ -28,7 +29,7 @@ public class GuessNumberManager : BaseGameManager<GuessNumberSetting, GuessNumbe
     protected override int GetQuestionLevel(GuessNumberQuestion question) => question.level;
 
     // 버튼 텍스트 자동 줄바꿈 활성화
-    protected override bool EnableButtonWordWrapping => true;
+    protected override bool EnableButtonWordWrapping => false;
 
     protected override void OnSetupChildComponents()
     {
