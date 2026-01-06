@@ -35,7 +35,12 @@ public class NumberSystemManager : BaseGameManager<NumberSystemSetting, NumberSy
     }
 
     protected override void StartGameLogic()
-    {
+    {   
+        if (SoundManager.Instance != null)
+        {
+            SoundManager.Instance.PlayBGM("NumberSystem_BGM");
+        }
+        
         int selectedLevel = LevelSelectContext.SelectedLevel > 0 ? LevelSelectContext.SelectedLevel : 1;
         
         if (managerSetting?.questions != null)

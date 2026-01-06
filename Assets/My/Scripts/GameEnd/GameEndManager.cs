@@ -37,7 +37,12 @@ public class GameEndManager : BaseManager<GameEndSetting>
     /// UI 설정, 버튼 이벤트 연결, 화면 페이드 인 실행.
     /// </summary>
     protected override async UniTask Initialize()
-    {
+    {   
+        if (SoundManager.Instance != null)
+        {
+            SoundManager.Instance.PlayBGM("GameEnd_BGM");
+        }
+        
         // 1. UI 설정 적용
         ApplyUISettings();
         
