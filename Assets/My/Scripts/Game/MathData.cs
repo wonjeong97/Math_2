@@ -42,7 +42,8 @@ public class GuessNumberQuestion
 
 [Serializable]
 public class GuessNumberSetting : IGameCommonSetting // 인터페이스 구현
-{
+{   
+    public ImageSetting backgroundImage;
     public GuessNumberQuestion[] questions;
     
     // IGameCommonSetting 구현 필드들
@@ -92,7 +93,7 @@ public class ButtonOverrideSetting
 
 [Serializable]
 public class CalculateNumberSetting : IGameCommonSetting // 인터페이스 구현
-{
+{   
     public CalculateNumberQuestion[] questions;
     
     public ImageSetting[] levelImages;

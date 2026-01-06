@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using Cysharp.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro; 
@@ -12,6 +13,7 @@ using Random = UnityEngine.Random;
 public class GuessNumberManager : BaseGameManager<GuessNumberSetting, GuessNumberQuestion>
 {
     [Header("--- GuessNumber Specific ---")]
+    [SerializeField] private GameObject backgroundObj;
     [SerializeField] private Transform leftQuestionZone;    // 왼쪽 문제 배치 구역
     [SerializeField] private Transform rightQuestionZone;   // 오른쪽 문제 배치 구역
 
@@ -25,7 +27,18 @@ public class GuessNumberManager : BaseGameManager<GuessNumberSetting, GuessNumbe
     
     // 버튼 텍스트 자동 줄바꿈 활성화
     protected override bool EnableButtonWordWrapping => true;
-
+    
+    protected override void OnSetupChildComponents()
+    {
+        base.OnSetupChildComponents();
+        
+        // 배경 이미지 설정
+        if (backgroundObj != null && managerSetting != null && managerSetting.backgroundImage != null)
+        {
+            UIManager.Instance.SetImageObj(backgroundObj, managerSetting.backgroundImage).Forget();
+        }
+    }
+    
     /// <summary>
     /// 게임 시작 로직.
     /// 선택된 레벨의 문제를 필터링하고 첫 번째 문제를 출제.
