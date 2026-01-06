@@ -33,9 +33,13 @@ public class GuessNumberManager : BaseGameManager<GuessNumberSetting, GuessNumbe
         base.OnSetupChildComponents();
         
         // 배경 이미지 설정
-        if (backgroundObj != null && managerSetting != null && managerSetting.backgroundImage != null)
+        if (backgroundObj != null && managerSetting != null && managerSetting.backgroundImage != null && UIManager.Instance != null)
         {
-            UIManager.Instance.SetImageObj(backgroundObj, managerSetting.backgroundImage).Forget();
+            UIManager.Instance.SetImageObj(backgroundObj, managerSetting.backgroundImage, this.GetCancellationTokenOnDestroy()).Forget();
+        }
+        else if (UIManager.Instance == null)
+        {
+            Debug.LogError("[GuessNumberManager] UIManager.Instance is null");
         }
     }
     
