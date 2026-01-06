@@ -12,35 +12,35 @@
   },
   "questionButtons": [
     {
-      "//": "Level 1 Button",
+      "_comment": "Level 1 Button",
       "size": {"x": 344, "y": 344},
       "scale": {"x": 0.7, "y": 0.7, "z": 0.7},
       "buttonBackgroundImage": {"sourceImage": "Video/Button/버튼_레벨1.webm"},
       "buttonText": {"fontSize": 170}
     },
     {
-      "//": "Level 2 Button (Video Example)",
+      "_comment": "Level 2 Button (Video Example)",
       "size": {"x": 344, "y": 344},
       "scale": {"x": 0.7, "y": 0.7, "z": 0.7},
       "buttonBackgroundImage": {"sourceImage": "Video/Button/버튼_레벨2.webm"},
       "buttonText": {"fontSize": 170}
     },
     {
-      "//": "Level 3 Button",
+      "_comment": "Level 3 Button",
       "size": {"x": 344, "y": 344},
       "scale": {"x": 0.7, "y": 0.7, "z": 0.7},
       "buttonBackgroundImage": {"sourceImage": "Video/Button/버튼_레벨3.webm"},
       "buttonText": {"fontSize": 170}
     },
     {
-      "//": "Level 4 Button",
+      "_comment": "Level 4 Button",
       "size": {"x": 344, "y": 344},
       "scale": {"x": 0.7, "y": 0.7, "z": 0.7},
       "buttonBackgroundImage": {"sourceImage": "Video/Button/버튼_레벨4.webm"},
       "buttonText": {"fontSize": 170}
     },
     {
-      "//": "Level 5 Button",
+      "_comment": "Level 5 Button",
       "size": {"x": 344, "y": 344},
       "scale": {"x": 0.7, "y": 0.7, "z": 0.7},
       "buttonBackgroundImage": {"sourceImage": "Video/Button/버튼_레벨5.webm"},

@@ -30,7 +30,7 @@ public abstract class BaseGameManager<TSetting, TQuestion> : BaseManager<TSettin
     [SerializeField] protected GameObject[] answerButtons;      // 정답 버튼 배열 (4개)
     [SerializeField] protected RectTransform leftAreaRect;      // 왼쪽 버튼 배치 영역
     [SerializeField] protected RectTransform rightAreaRect;     // 오른쪽 버튼 배치 영역
-    private float buttonMargin = 20f;                           // 버튼 간 간격
+    private float _buttonMargin = 20f;                           // 버튼 간 간격
 
     [Header("--- Base Result UI ---")]
     [SerializeField] protected GameObject pageCorrect;  // 정답 페이지
@@ -48,9 +48,9 @@ public abstract class BaseGameManager<TSetting, TQuestion> : BaseManager<TSettin
     protected bool isProcessing;                        // 중복 입력 방지 플래그
 
     // 버튼 복구용 캐싱 데이터
-    private Sprite defaultButtonSprite;
-    private Color defaultButtonColor;
-    private Vector2 defaultButtonSize;
+    private Sprite _defaultButtonSprite;
+    private Color _defaultButtonColor;
+    private Vector2 _defaultButtonSize;
 
     // --- Abstract Methods ---
     /// <summary> JSON 파일 이름 반환. </summary>
@@ -146,16 +146,16 @@ public abstract class BaseGameManager<TSetting, TQuestion> : BaseManager<TSettin
     protected void RestoreButtonDefault(Button btn, Image btnImage, RectTransform btnRect = null)
     {
         // 1. 이미지 및 색상
-        if (btnImage && defaultButtonSprite) 
+        if (btnImage && _defaultButtonSprite) 
         { 
-            btnImage.sprite = defaultButtonSprite; 
-            btnImage.color = defaultButtonColor; 
+            btnImage.sprite = _defaultButtonSprite; 
+            btnImage.color = _defaultButtonColor; 
         }
         
         // 2. 사이즈
-        if (btnRect != null && defaultButtonSize != Vector2.zero)
+        if (btnRect != null && _defaultButtonSize != Vector2.zero)
         {
-            btnRect.sizeDelta = defaultButtonSize;
+            btnRect.sizeDelta = _defaultButtonSize;
         }
 
         // 3. 그라데이션
@@ -180,7 +180,7 @@ public abstract class BaseGameManager<TSetting, TQuestion> : BaseManager<TSettin
             var steps = managerSetting.levelProgresses[lvIdx].steps;
             if (index >= 0 && index < steps.Length)
             {
-                UIManager.Instance.SetImageObj(progressImage.gameObject, steps[index]);
+                UIManager.Instance.SetImageObj(progressImage.gameObject, steps[index], this.GetCancellationTokenOnDestroy()).Forget();
                 progressImage.gameObject.SetActive(true);
             }
         }
@@ -232,8 +232,8 @@ public abstract class BaseGameManager<TSetting, TQuestion> : BaseManager<TSettin
         {
             Image img = answerButtons[0].GetComponent<Image>();
             RectTransform rt = answerButtons[0].GetComponent<RectTransform>();
-            if (img) { defaultButtonSprite = img.sprite; defaultButtonColor = img.color; }
-            if (rt) defaultButtonSize = rt.sizeDelta;
+            if (img) { _defaultButtonSprite = img.sprite; _defaultButtonColor = img.color; }
+            if (rt) _defaultButtonSize = rt.sizeDelta;
         }
     }
     
@@ -241,7 +241,7 @@ public abstract class BaseGameManager<TSetting, TQuestion> : BaseManager<TSettin
     private void ApplyCommonUISettings()
     {
         if (managerSetting == null || ui == null) return;
-        this.buttonMargin = managerSetting.buttonMargin;
+        this._buttonMargin = managerSetting.buttonMargin;
         if (backButton && managerSetting.backButton != null) ui.SetButtonObj(backButton.gameObject, managerSetting.backButton).Forget();
         if (imageCorrect && managerSetting.correctImage != null) ui.SetImageObj(imageCorrect.gameObject, managerSetting.correctImage);
         if (imageWrong && managerSetting.wrongImage != null) ui.SetImageObj(imageWrong.gameObject, managerSetting.wrongImage);
@@ -271,7 +271,7 @@ public abstract class BaseGameManager<TSetting, TQuestion> : BaseManager<TSettin
         Settings globalSettings = JsonLoader.Instance.settings;
         
         // 배열 체크 및 레벨별 가져오기
-        if (globalSettings != null && globalSettings.questionButtons != null)
+        if (globalSettings != null && globalSettings.questionButtons != null && globalSettings.questionButtons.Length > 0)
         {
             // 현재 레벨 인덱스 (0부터 시작하므로 -1)
             int levelIndex = Mathf.Clamp(LevelSelectContext.SelectedLevel - 1, 0, globalSettings.questionButtons.Length - 1);
@@ -484,8 +484,8 @@ public abstract class BaseGameManager<TSetting, TQuestion> : BaseManager<TSettin
             
             // Jitter 여유공간 계산
             // 그리드 크기에서 버튼 크기를 빼고, buttonMargin까지 뺀 남은 공간의 절반
-            float jitterX = Mathf.Max(0f, (cellWidth - w) * 0.5f - buttonMargin);
-            float jitterY = Mathf.Max(0f, (cellHeight - h) * 0.5f - buttonMargin);
+            float jitterX = Mathf.Max(0f, (cellWidth - w) * 0.5f - _buttonMargin);
+            float jitterY = Mathf.Max(0f, (cellHeight - h) * 0.5f - _buttonMargin);
             
             Vector2 basePos = slots[i]; // 섞어둔 슬롯의 중심 좌표
             
