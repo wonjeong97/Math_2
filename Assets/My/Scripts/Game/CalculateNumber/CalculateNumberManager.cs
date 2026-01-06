@@ -43,8 +43,9 @@ public class CalculateNumberManager : BaseGameManager<CalculateNumberSetting, Ca
     {   
         if (SoundManager.Instance != null)
         {
-            SoundManager.Instance.PlayBGM("BGM1");    
+            SoundManager.Instance.PlayBGM("CalculateNumber_BGM");
         }
+        
         int selectedLevel = LevelSelectContext.SelectedLevel > 0 ? LevelSelectContext.SelectedLevel : 1;
         
         if (managerSetting?.questions != null)
