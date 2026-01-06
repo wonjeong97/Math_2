@@ -144,6 +144,7 @@ public class AnswerImagePair
 [Serializable]
 public class NumberSystemSetting : IGameCommonSetting // 인터페이스 구현
 {
+    public ImageSetting backgroundImage;
     public NumberSystemQuestion[] questions;
     
     public ImageSetting[] levelImages;       

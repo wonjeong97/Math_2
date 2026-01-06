@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using Cysharp.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
@@ -12,6 +13,7 @@ using Random = UnityEngine.Random;
 public class NumberSystemManager : BaseGameManager<NumberSystemSetting, NumberSystemQuestion>
 {
     [Header("--- NumberSystem Specific ---")]
+    [SerializeField] private GameObject backgroundObj;
     [SerializeField] private Transform leftQuestionZone;    // 왼쪽 문제 배치 구역
     [SerializeField] private Transform rightQuestionZone;   // 오른쪽 문제 배치 구역
 
@@ -23,6 +25,19 @@ public class NumberSystemManager : BaseGameManager<NumberSystemSetting, NumberSy
     protected override string GetJsonFileName() => "NumberSystem.json";
     // 문제 레벨
     protected override int GetQuestionLevel(NumberSystemQuestion q) => q.level;
+    
+    protected override void OnSetupChildComponents()
+    {
+        // 배경 이미지 설정
+        if (backgroundObj != null && managerSetting != null && managerSetting.backgroundImage != null && UIManager.Instance != null)
+        {
+            UIManager.Instance.SetImageObj(backgroundObj, managerSetting.backgroundImage, this.GetCancellationTokenOnDestroy()).Forget();
+        }
+        else if (UIManager.Instance == null)
+        {
+            Debug.LogError("[NumberSystemManager] UIManager.Instance is null");
+        }
+    }
 
     /// <summary>
     /// 게임 시작 로직.

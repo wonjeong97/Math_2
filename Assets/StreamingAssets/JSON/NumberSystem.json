@@ -1,424 +1,450 @@
 ﻿{
+  "backgroundImage": {
+    "position": {"x": 960, "y": 540},
+    "size": {"x": 1920, "y": 1080},
+    "sourceImage": "Video/배경.mp4",
+    "color": {"r": 1, "g": 1, "b": 1, "a": 1}
+  },
   "questions": [
-	{
-	  "level": 1,
-	  "type": 0,
-	  "questionText": "사탕이 둘 있어요.\n'둘'은 몇 개를 말할까요?",
-	  "questionImage": {
-		"size": { "x": 394, "y": 216 },
-		"sourceImage": "Image/NumberSystem/레벨1_수의 체계1-1.png"
-	  },
-	  "correctAnswers": [ "2" ],
-	  "wrongAnswers": [ "1", "3", "4" ]
-	},
-	{
-	  "level": 1,
-	  "type": 0,
-	  "questionText": "어느 쪽이 더 많을까요?",
-	  "correctAnswers": [ "A" ],
-	  "wrongAnswers": [ "B" ],
-	  "answerImages": [
-		{ 
-		  "answerText": "A",
-		  "imagePath": "Image/NumberSystem/레벨1_수의 체계2-2.png",
-		  "size": { "x": 424, "y": 336 }
-		},
-		{
-		  "answerText": "B",
-		  "imagePath": "Image/NumberSystem/레벨1_수의 체계2-1.png",
-		  "size": { "x": 384, "y": 179 }
-		}
-	  ]
-	},
-	{
-	  "level": 1,
-	  "type": 0,
-	  "questionText": "엘리베이터에서 3층 버튼을 눌러야해요.\n3을 찾아 터치하세요!",
-	  "correctAnswers": [ "3" ],
-	  "wrongAnswers": [ "5", "0", "4" ]
-	},
-	{
-	  "level": 1,
-	  "type": 0,
-	  "questionText": "5개 묶음을 찾아보세요.",
-	  "correctAnswers": [ "5" ],
-	  "wrongAnswers": [ "3", "4" ],
-	  "answerImages": [
-		{
-		  "answerText": "5",
-		  "imagePath": "Image/NumberSystem/레벨1_수의 체계4-2.png",
-		  "size": { "x": 831, "y": 204 }
-		},
-		{
-		  "answerText": "4",
-		  "imagePath": "Image/NumberSystem/레벨1_수의 체계4-1.png",
-		  "size": { "x": 807, "y": 204 }
-		},
-		{
-		  "answerText": "3",
-		  "imagePath": "Image/NumberSystem/레벨1_수의 체계4-3.png",
-		  "size": { "x": 524, "y": 204 }
-		}
-	  ]
-	},
-	{
-	  "level": 1,
-	  "type": 0,
-	  "questionText": "다음 중 숫자 '오'는\n무엇일까요?",
-	  "correctAnswers": [ "5" ],
-	  "wrongAnswers": [ "1", "2", "3" ]
-	},
-	{
-	  "level": 1,
-	  "type": 0,
-	  "questionText": "가장 작은 숫자를\n터치하세요!",
-	  "correctAnswers": [ "1" ],
-	  "wrongAnswers": [ "9", "5", "3" ]
-	},
-	{
-	  "level": 2,
-	  "type": 0,
-	  "questionText": "9 ? 7 = 16 일 때,\n?에 들어갈 기호를 고르세요.",
-	  "correctAnswers": [ "+" ],
-	  "wrongAnswers": [ "-", "x", "÷" ]
-	},
-	{
-	  "level": 2,
-	  "type": 0,
-	  "questionText": "2 ? 3 = 6 일 때,\n?에 들어갈 기호를 고르세요.",
-	  "correctAnswers": [ "x" ],
-	  "wrongAnswers": [ "+", "-", "÷" ]
-	},
-	{
-	  "level": 2,
-	  "type": 0,
-	  "questionText": "30은 다른 말로 무엇일까요?",
-	  "correctAnswers": [ "서른" ],
-	  "wrongAnswers": [ "스물", "마흔", "쉰" ]
-	},
-	{
-	  "level": 2,
-	  "type": 0,
-	  "questionText": "40은 다른 말로 무엇일까요?",
-	  "correctAnswers": [ "마흔" ],
-	  "wrongAnswers": [ "서른", "쉰", "예순" ]
-	},
-	{
-	  "level": 2,
-	  "type": 0,
-	  "questionText": "8 ? 2 = 6 일 때,\n?에 들어갈 기호를 고르세요.",
-	  "correctAnswers": [ "-" ],
-	  "wrongAnswers": [ "+", "x", "÷" ]
-	},
-	{
-	  "level": 2,
-	  "type": 0,
-	  "questionText": "20은 다른 말로 무엇일까요?",
-	  "correctAnswers": [ "스물" ],
-	  "wrongAnswers": [ "열", "서른", "마흔" ]
-	},
-	{
-	  "level": 3,
-	  "type": 0,
-	  "questionText": "10 ? 2 = 5 일 때,\n?에 들어갈 기호를 고르세요.",
-	  "correctAnswers": [ "÷" ],
-	  "wrongAnswers": [ "+", "-", "x" ]
-	},
-	{
-	  "level": 3,
-	  "type": 0,
-	  "questionText": "6 ? 3 = 2 일 때,\n?에 들어갈 기호를 고르세요.",
-	  "correctAnswers": [ "÷" ],
-	  "wrongAnswers": [ "+", "-", "x" ]
-	},
-	{
-	  "level": 3,
-	  "type": 1,
-	  "questionText": "자연수를 모두 고르세요.",
-	  "correctAnswers": [ "1", "100" ],
-	  "wrongAnswers": [ "0", "-1", "0.5" ]
-	},
-	{
-	  "level": 3,
-	  "type": 0,
-	  "questionText": "가장 큰 수는 무엇일까요?",
-	  "correctAnswers": [ "10" ],
-	  "wrongAnswers": [ "-5", "0", "1" ]
-	},
-	{
-	  "level": 3,
-	  "type": 0,
-	  "questionText": "다음 중 음의 정수(음수)는\n무엇일까요?",
-	  "correctAnswers": [ "-5" ],
-	  "wrongAnswers": [ "0", "5", "10" ]
-	},
-	{
-	  "level": 3,
-	  "type": 0,
-	  "questionText": "자연수가 아닌 수를\n골라보세요.",
-	  "correctAnswers": [ "0" ],
-	  "wrongAnswers": [ "1", "2", "100" ]
-	},
-	{
-	  "level": 4,
-	  "type": 0,
-	  "questionText": "3/10을 소수로 나타내면 무엇일까요?",
-	  "correctAnswers": [ "0.3" ],
-	  "wrongAnswers": [ "0.03", "3.0", "0.13" ]
-	},
-	{
-	  "level": 4,
-	  "type": 0,
-	  "questionText": "0.4를 분수로 나타내려 할 때,\n틀린 것을 고르세요.",
-	  "correctAnswers": [ "1/4" ],
-	  "wrongAnswers": [ "4/10", "2/5", "40/100" ]
-	},
-	{
-	  "level": 4,
-	  "type": 0,
-	  "questionText": "25%를 소수로 나타내면 무엇일까요?",
-	  "correctAnswers": [ "0.25" ],
-	  "wrongAnswers": [ "2.5", "0.025", "25.0" ]
-	},
-	{
-	  "level": 4,
-	  "type": 0,
-	  "questionText": "10%를 분수로 나타내면 무엇일까요?",
-	  "correctAnswers": [ "1/10" ],
-	  "wrongAnswers": [ "1/100", "10/1", "1/2" ]
-	},
-	{
-	  "level": 4,
-	  "type": 0,
-	  "questionText": "1/2을 소수로 나타내면\n무엇일까요?",
-	  "correctAnswers": [ "0.5" ],
-	  "wrongAnswers": [ "0.2", "0.1", "5.0" ]
-	},
-	{
-	  "level": 4,
-	  "type": 0,
-	  "questionText": "75%를 분수로 나타내면\n무엇일까요?",
-	  "correctAnswers": [ "3/4" ],
-	  "wrongAnswers": [ "1/4", "1/2", "2/5" ]
-	},
-	{
-	  "level": 5,
-	  "type": 1,
-	  "questionText": "정수를 모두 고르세요.",
-	  "correctAnswers": [ "-3", "0", "5" ],
-	  "wrongAnswers": [ "1.5", "1/2", "3.14" ]
-	},
-	{
-	  "level": 5,
-	  "type": 0,
-	  "questionText": "정수가 아닌 유리수를 고르세요.",
-	  "correctAnswers": [ "-3/5" ],
-	  "wrongAnswers": [ "-3", "√4", "4" ]
-	},
-	{
-	  "level": 5,
-	  "type": 0,
-	  "questionText": "다음 중 무리수는 무엇일까요?",
-	  "correctAnswers": [ "√3" ],
-	  "wrongAnswers": [ "√16", "0.25", "2/7" ]
-	},
-	{
-	  "level": 5,
-	  "type": 0,
-	  "questionText": "유리수가 아닌 것은 무엇일까요?",
-	  "correctAnswers": [ "√7" ],
-	  "wrongAnswers": [ "0.333..", "22/7", "-10" ]
-	},
-	{
-	  "level": 5,
-	  "type": 0,
-	  "questionText": "순환하지 않는 무한소수를\n무엇이라고 부를까요?",
-	  "correctAnswers": [ "무리수" ],
-	  "wrongAnswers": [ "유리수", "정수", "자연수" ]
-	},
-	{
-	  "level": 5,
-	  "type": 0,
-	  "questionText": "실수 중에서 유리수가 아닌 수를\n무엇이라고 부를까요?",
-	  "correctAnswers": [ "무리수" ],
-	  "wrongAnswers": [ "정수", "자연수", "유한소수" ]
-	}
+    {
+      "level": 1,
+      "type": 0,
+      "questionText": "사탕이 둘 있어요.\n'둘'은 몇 개를 말할까요?",
+      "questionImage": {
+        "size": {"x": 394, "y": 216},
+        "sourceImage": "Image/NumberSystem/레벨1_수의 체계1-1.png"
+      },
+      "correctAnswers": ["2"],
+      "wrongAnswers": ["1", "3", "4"]
+    },
+    {
+      "level": 1,
+      "type": 0,
+      "questionText": "어느 쪽이 더 많을까요?",
+      "correctAnswers": ["A"],
+      "wrongAnswers": ["B"],
+      "answerImages": [
+        {
+          "answerText": "A",
+          "imagePath": "Image/NumberSystem/레벨1_수의 체계2-2.png",
+          "size": {"x": 424, "y": 336}
+        },
+        {
+          "answerText": "B",
+          "imagePath": "Image/NumberSystem/레벨1_수의 체계2-1.png",
+          "size": {"x": 384, "y": 179}
+        }
+      ]
+    },
+    {
+      "level": 1,
+      "type": 0,
+      "questionText": "엘리베이터에서 3층 버튼을 눌러야해요.\n3을 찾아 터치하세요!",
+      "correctAnswers": ["3"],
+      "wrongAnswers": ["5", "0", "4"]
+    },
+    {
+      "level": 1,
+      "type": 0,
+      "questionText": "5개 묶음을 찾아보세요.",
+      "correctAnswers": ["5"],
+      "wrongAnswers": ["3", "4"],
+      "answerImages": [
+        {
+          "answerText": "5",
+          "imagePath": "Image/NumberSystem/레벨1_수의 체계4-2.png",
+          "size": {"x": 831, "y": 204}
+        },
+        {
+          "answerText": "4",
+          "imagePath": "Image/NumberSystem/레벨1_수의 체계4-1.png",
+          "size": {"x": 807, "y": 204}
+        },
+        {
+          "answerText": "3",
+          "imagePath": "Image/NumberSystem/레벨1_수의 체계4-3.png",
+          "size": {"x": 524, "y": 204}
+        }
+      ]
+    },
+    {
+      "level": 1,
+      "type": 0,
+      "questionText": "다음 중 숫자 '오'는\n무엇일까요?",
+      "correctAnswers": ["5"],
+      "wrongAnswers": ["1", "2", "3"]
+    },
+    {
+      "level": 1,
+      "type": 0,
+      "questionText": "가장 작은 숫자를\n터치하세요!",
+      "correctAnswers": ["1"],
+      "wrongAnswers": ["9", "5", "3"]
+    },
+    {
+      "level": 2,
+      "type": 0,
+      "questionText": "9 ? 7 = 16 일 때,\n?에 들어갈 기호를 고르세요.",
+      "correctAnswers": ["+"],
+      "wrongAnswers": ["-", "x", "÷"]
+    },
+    {
+      "level": 2,
+      "type": 0,
+      "questionText": "2 ? 3 = 6 일 때,\n?에 들어갈 기호를 고르세요.",
+      "correctAnswers": ["x"],
+      "wrongAnswers": ["+", "-", "÷"]
+    },
+    {
+      "level": 2,
+      "type": 0,
+      "questionText": "30은 다른 말로 무엇일까요?",
+      "correctAnswers": ["서른"],
+      "wrongAnswers": ["스물", "마흔", "쉰"]
+    },
+    {
+      "level": 2,
+      "type": 0,
+      "questionText": "40은 다른 말로 무엇일까요?",
+      "correctAnswers": ["마흔"],
+      "wrongAnswers": ["서른", "쉰", "예순"]
+    },
+    {
+      "level": 2,
+      "type": 0,
+      "questionText": "8 ? 2 = 6 일 때,\n?에 들어갈 기호를 고르세요.",
+      "correctAnswers": ["-"],
+      "wrongAnswers": ["+", "x", "÷"]
+    },
+    {
+      "level": 2,
+      "type": 0,
+      "questionText": "20은 다른 말로 무엇일까요?",
+      "correctAnswers": ["스물"],
+      "wrongAnswers": ["열", "서른", "마흔"]
+    },
+    {
+      "level": 3,
+      "type": 0,
+      "questionText": "10 ? 2 = 5 일 때,\n?에 들어갈 기호를 고르세요.",
+      "correctAnswers": ["÷"],
+      "wrongAnswers": ["+", "-", "x"]
+    },
+    {
+      "level": 3,
+      "type": 0,
+      "questionText": "6 ? 3 = 2 일 때,\n?에 들어갈 기호를 고르세요.",
+      "correctAnswers": ["÷"],
+      "wrongAnswers": ["+", "-", "x"]
+    },
+    {
+      "level": 3,
+      "type": 1,
+      "questionText": "자연수를 모두 고르세요.",
+      "correctAnswers": ["1", "100"],
+      "wrongAnswers": ["0", "-1", "0.5"]
+    },
+    {
+      "level": 3,
+      "type": 0,
+      "questionText": "가장 큰 수는 무엇일까요?",
+      "correctAnswers": ["10"],
+      "wrongAnswers": ["-5", "0", "1"]
+    },
+    {
+      "level": 3,
+      "type": 0,
+      "questionText": "다음 중 음의 정수(음수)는\n무엇일까요?",
+      "correctAnswers": ["-5"],
+      "wrongAnswers": ["0", "5", "10"]
+    },
+    {
+      "level": 3,
+      "type": 0,
+      "questionText": "자연수가 아닌 수를\n골라보세요.",
+      "correctAnswers": ["0"],
+      "wrongAnswers": ["1", "2", "100"]
+    },
+    {
+      "level": 4,
+      "type": 0,
+      "questionText": "3/10을 소수로 나타내면 무엇일까요?",
+      "correctAnswers": ["0.3"],
+      "wrongAnswers": ["0.03", "3.0", "0.13"]
+    },
+    {
+      "level": 4,
+      "type": 0,
+      "questionText": "0.4를 분수로 나타내려 할 때,\n틀린 것을 고르세요.",
+      "correctAnswers": ["1/4"],
+      "wrongAnswers": ["4/10", "2/5", "40/100"]
+    },
+    {
+      "level": 4,
+      "type": 0,
+      "questionText": "25%를 소수로 나타내면 무엇일까요?",
+      "correctAnswers": ["0.25"],
+      "wrongAnswers": ["2.5", "0.025", "25.0"]
+    },
+    {
+      "level": 4,
+      "type": 0,
+      "questionText": "10%를 분수로 나타내면 무엇일까요?",
+      "correctAnswers": ["1/10"],
+      "wrongAnswers": ["1/100", "10/1", "1/2"]
+    },
+    {
+      "level": 4,
+      "type": 0,
+      "questionText": "1/2을 소수로 나타내면\n무엇일까요?",
+      "correctAnswers": ["0.5"],
+      "wrongAnswers": ["0.2", "0.1", "5.0"]
+    },
+    {
+      "level": 4,
+      "type": 0,
+      "questionText": "75%를 분수로 나타내면\n무엇일까요?",
+      "correctAnswers": ["3/4"],
+      "wrongAnswers": ["1/4", "1/2", "2/5"]
+    },
+    {
+      "level": 5,
+      "type": 1,
+      "questionText": "정수를 모두 고르세요.",
+      "correctAnswers": ["-3", "0", "5"],
+      "wrongAnswers": ["1.5", "1/2", "3.14"]
+    },
+    {
+      "level": 5,
+      "type": 0,
+      "questionText": "정수가 아닌 유리수를 고르세요.",
+      "correctAnswers": ["-3/5"],
+      "wrongAnswers": ["-3", "√4", "4"]
+    },
+    {
+      "level": 5,
+      "type": 0,
+      "questionText": "다음 중 무리수는 무엇일까요?",
+      "correctAnswers": ["√3"],
+      "wrongAnswers": ["√16", "0.25", "2/7"]
+    },
+    {
+      "level": 5,
+      "type": 0,
+      "questionText": "유리수가 아닌 것은 무엇일까요?",
+      "correctAnswers": ["√7"],
+      "wrongAnswers": ["0.333..", "22/7", "-10"]
+    },
+    {
+      "level": 5,
+      "type": 0,
+      "questionText": "순환하지 않는 무한소수를\n무엇이라고 부를까요?",
+      "correctAnswers": ["무리수"],
+      "wrongAnswers": ["유리수", "정수", "자연수"]
+    },
+    {
+      "level": 5,
+      "type": 0,
+      "questionText": "실수 중에서 유리수가 아닌 수를\n무엇이라고 부를까요?",
+      "correctAnswers": ["무리수"],
+      "wrongAnswers": ["정수", "자연수", "유한소수"]
+    }
   ],
   "levelImages": [
-	{
-	  "position": { "x": 200, "y": 100 },
-	  "size": { "x": 200, "y": 90 },
-	  "sourceImage": "Image/LevelSelect/좌측 상단 레벨1.png"
-	},
-	{
-	  "position": { "x": 200, "y": 100 },
-	  "size": { "x": 200, "y": 90 },
-	  "sourceImage": "Image/LevelSelect/좌측 상단 레벨2.png"
-	},
-	{
-	  "position": { "x": 200, "y": 100 },
-	  "size": { "x": 200, "y": 90 },
-	  "sourceImage": "Image/LevelSelect/좌측 상단 레벨3.png"
-	},
-	{
-	  "position": { "x": 200, "y": 100 },
-	  "size": { "x": 200, "y": 90 },
-	  "sourceImage": "Image/LevelSelect/좌측 상단 레벨4.png"
-	},
-	{
-	  "position": { "x": 200, "y": 100 },
-	  "size": { "x": 200, "y": 90 },
-	  "sourceImage": "Image/LevelSelect/좌측 상단 레벨5.png"
-	}
+    {
+      "position": {"x": 200, "y": 100},
+      "size": {"x": 200, "y": 90},
+      "sourceImage": "Image/LevelSelect/레벨1.png"
+    },
+    {
+      "position": {"x": 200, "y": 100},
+      "size": {"x": 200, "y": 90},
+      "sourceImage": "Image/LevelSelect/레벨2.png"
+    },
+    {
+      "position": {"x": 200, "y": 100},
+      "size": {"x": 200, "y": 90},
+      "sourceImage": "Image/LevelSelect/레벨3.png"
+    },
+    {
+      "position": {"x": 200, "y": 100},
+      "size": {"x": 200, "y": 90},
+      "sourceImage": "Image/LevelSelect/레벨4.png"
+    },
+    {
+      "position": {"x": 200, "y": 100},
+      "size": {"x": 200, "y": 90},
+      "sourceImage": "Image/LevelSelect/레벨5.png"
+    }
   ],
   "gameTypeImages": [
-	{
-	  "position": { "x": 440, "y": 100 },
-	  "size": { "x": 268, "y": 90 },
-	  "sourceImage": "Image/NumberSystem/좌측 상단 종목(레벨1-수의 체계).png"
-	},
-	{
-	  "position": { "x": 440, "y": 100 },
-	  "size": { "x": 268, "y": 90 },
-	  "sourceImage": "Image/NumberSystem/좌측 상단 종목(레벨2-수의 체계).png"
-	},
-	{
-	  "position": { "x": 440, "y": 100 },
-	  "size": { "x": 268, "y": 90 },
-	  "sourceImage": "Image/NumberSystem/좌측 상단 종목(레벨3-수의 체계).png"
-	},
-	{
-	  "position": { "x": 440, "y": 100 },
-	  "size": { "x": 268, "y": 90 },
-	  "sourceImage": "Image/NumberSystem/좌측 상단 종목(레벨4-수의 체계).png"
-	},
-	{
-	  "position": { "x": 440, "y": 100 },
-	  "size": { "x": 268, "y": 90 },
-	  "sourceImage": "Image/NumberSystem/좌측 상단 종목(레벨5-수의 체계).png"
-	}
+    {
+      "position": {"x": 440, "y": 100},
+      "size": {"x": 268, "y": 90},
+      "sourceImage": "Image/NumberSystem/레벨1_수의 체계.png"
+    },
+    {
+      "position": {"x": 440, "y": 100},
+      "size": {"x": 268, "y": 90},
+      "sourceImage": "Image/NumberSystem/레벨2_수의 체계.png"
+    },
+    {
+      "position": {"x": 440, "y": 100},
+      "size": {"x": 268, "y": 90},
+      "sourceImage": "Image/NumberSystem/레벨3_수의 체계.png"
+    },
+    {
+      "position": {"x": 440, "y": 100},
+      "size": {"x": 268, "y": 90},
+      "sourceImage": "Image/NumberSystem/레벨4_수의 체계.png"
+    },
+    {
+      "position": {"x": 440, "y": 100},
+      "size": {"x": 268, "y": 90},
+      "sourceImage": "Image/NumberSystem/레벨5_수의 체계.png"
+    }
   ],
   "levelProgresses": [
-	{
-	  "steps": [
-		{
-		  "sourceImage": "Image/Progress/우측 상단 개수(레벨1-1).png", "position": { "x": 650, "y": 100 },
-		  "size": { "x": 203, "y": 90 }
-		},
-		{
-		  "sourceImage": "Image/Progress/우측 상단 개수(레벨1-2).png", "position": { "x": 650, "y": 100 },
-		  "size": { "x": 203, "y": 90 }
-		},
-		{
-		  "sourceImage": "Image/Progress/우측 상단 개수(레벨1-3).png", "position": { "x": 650, "y": 100 },
-		  "size": { "x": 203, "y": 90 }
-		},
-		{
-		  "sourceImage": "Image/Progress/우측 상단 개수(레벨1-4).png", "position": { "x": 650, "y": 100 },
-		  "size": { "x": 203, "y": 90 }
-		}
-	  ]
-	},
-	{
-	  "steps": [
-		{
-		  "sourceImage": "Image/Progress/우측 상단 개수(레벨2-1).png", "position": { "x": 650, "y": 100 },
-		  "size": { "x": 203, "y": 90 }
-		},
-		{
-		  "sourceImage": "Image/Progress/우측 상단 개수(레벨2-2).png", "position": { "x": 650, "y": 100 },
-		  "size": { "x": 203, "y": 90 }
-		},
-		{
-		  "sourceImage": "Image/Progress/우측 상단 개수(레벨2-3).png", "position": { "x": 650, "y": 100 },
-		  "size": { "x": 203, "y": 90 }
-		},
-		{
-		  "sourceImage": "Image/Progress/우측 상단 개수(레벨2-4).png", "position": { "x": 650, "y": 100 },
-		  "size": { "x": 203, "y": 90 }
-		}
-	  ]
-	},
-	{
-	  "steps": [
-		{
-		  "sourceImage": "Image/Progress/우측 상단 개수(레벨3-1).png", "position": { "x": 650, "y": 100 },
-		  "size": { "x": 203, "y": 90 }
-		},
-		{
-		  "sourceImage": "Image/Progress/우측 상단 개수(레벨3-2).png", "position": { "x": 650, "y": 100 },
-		  "size": { "x": 203, "y": 90 }
-		},
-		{
-		  "sourceImage": "Image/Progress/우측 상단 개수(레벨3-3).png", "position": { "x": 650, "y": 100 },
-		  "size": { "x": 203, "y": 90 }
-		},
-		{
-		  "sourceImage": "Image/Progress/우측 상단 개수(레벨3-4).png", "position": { "x": 650, "y": 100 },
-		  "size": { "x": 203, "y": 90 }
-		}
-	  ]
-	},
-	{
-	  "steps": [
-		{
-		  "sourceImage": "Image/Progress/우측 상단 개수(레벨4-1).png", "position": { "x": 650, "y": 100 },
-		  "size": { "x": 203, "y": 90 }
-		},
-		{
-		  "sourceImage": "Image/Progress/우측 상단 개수(레벨4-2).png", "position": { "x": 650, "y": 100 },
-		  "size": { "x": 203, "y": 90 }
-		},
-		{
-		  "sourceImage": "Image/Progress/우측 상단 개수(레벨4-3).png", "position": { "x": 650, "y": 100 },
-		  "size": { "x": 203, "y": 90 }
-		},
-		{
-		  "sourceImage": "Image/Progress/우측 상단 개수(레벨4-4).png", "position": { "x": 650, "y": 100 },
-		  "size": { "x": 203, "y": 90 }
-		}
-	  ]
-	},
-	{
-	  "steps": [
-		{
-		  "sourceImage": "Image/Progress/우측 상단 개수(레벨5-1).png", "position": { "x": 650, "y": 100 },
-		  "size": { "x": 203, "y": 90 }
-		},
-		{
-		  "sourceImage": "Image/Progress/우측 상단 개수(레벨5-2).png", "position": { "x": 650, "y": 100 },
-		  "size": { "x": 203, "y": 90 }
-		},
-		{
-		  "sourceImage": "Image/Progress/우측 상단 개수(레벨5-3).png", "position": { "x": 650, "y": 100 },
-		  "size": { "x": 203, "y": 90 }
-		},
-		{
-		  "sourceImage": "Image/Progress/우측 상단 개수(레벨5-4).png", "position": { "x": 650, "y": 100 },
-		  "size": { "x": 203, "y": 90 }
-		}
-	  ]
-	}
+    {
+      "steps": [
+        {
+          "sourceImage": "Image/Progress/레벨1_1_4.png",
+          "position": {"x": 650, "y": 100},
+          "size": {"x": 203, "y": 90}
+        },
+        {
+          "sourceImage": "Image/Progress/레벨1_2_4.png",
+          "position": {"x": 650, "y": 100},
+          "size": {"x": 203, "y": 90}
+        },
+        {
+          "sourceImage": "Image/Progress/레벨1_3_4.png",
+          "position": {"x": 650, "y": 100},
+          "size": {"x": 203, "y": 90}
+        },
+        {
+          "sourceImage": "Image/Progress/레벨1_4_4.png",
+          "position": {"x": 650, "y": 100},
+          "size": {"x": 203, "y": 90}
+        }
+      ]
+    },
+    {
+      "steps": [
+        {
+          "sourceImage": "Image/Progress/레벨2_1_4.png",
+          "position": {"x": 650, "y": 100},
+          "size": {"x": 203, "y": 90}
+        },
+        {
+          "sourceImage": "Image/Progress/레벨2_2_4.png",
+          "position": {"x": 650, "y": 100},
+          "size": {"x": 203, "y": 90}
+        },
+        {
+          "sourceImage": "Image/Progress/레벨2_3_4.png",
+          "position": {"x": 650, "y": 100},
+          "size": {"x": 203, "y": 90}
+        },
+        {
+          "sourceImage": "Image/Progress/레벨2_4_4.png",
+          "position": {"x": 650, "y": 100},
+          "size": {"x": 203, "y": 90}
+        }
+      ]
+    },
+    {
+      "steps": [
+        {
+          "sourceImage": "Image/Progress/레벨3_1_4.png",
+          "position": {"x": 650, "y": 100},
+          "size": {"x": 203, "y": 90}
+        },
+        {
+          "sourceImage": "Image/Progress/레벨3_2_4.png",
+          "position": {"x": 650, "y": 100},
+          "size": {"x": 203, "y": 90}
+        },
+        {
+          "sourceImage": "Image/Progress/레벨3_3_4.png",
+          "position": {"x": 650, "y": 100},
+          "size": {"x": 203, "y": 90}
+        },
+        {
+          "sourceImage": "Image/Progress/레벨3_4_4.png",
+          "position": {"x": 650, "y": 100},
+          "size": {"x": 203, "y": 90}
+        }
+      ]
+    },
+    {
+      "steps": [
+        {
+          "sourceImage": "Image/Progress/레벨4_1_4.png",
+          "position": {"x": 650, "y": 100},
+          "size": {"x": 203, "y": 90}
+        },
+        {
+          "sourceImage": "Image/Progress/레벨4_2_4.png",
+          "position": {"x": 650, "y": 100},
+          "size": {"x": 203, "y": 90}
+        },
+        {
+          "sourceImage": "Image/Progress/레벨4_3_4.png",
+          "position": {"x": 650, "y": 100},
+          "size": {"x": 203, "y": 90}
+        },
+        {
+          "sourceImage": "Image/Progress/레벨4_4_4.png",
+          "position": {"x": 650, "y": 100},
+          "size": {"x": 203, "y": 90}
+        }
+      ]
+    },
+    {
+      "steps": [
+        {
+          "sourceImage": "Image/Progress/레벨5_1_4.png",
+          "position": {"x": 650, "y": 100},
+          "size": {"x": 203, "y": 90}
+        },
+        {
+          "sourceImage": "Image/Progress/레벨5_2_4.png",
+          "position": {"x": 650, "y": 100},
+          "size": {"x": 203, "y": 90}
+        },
+        {
+          "sourceImage": "Image/Progress/레벨5_3_4.png",
+          "position": {"x": 650, "y": 100},
+          "size": {"x": 203, "y": 90}
+        },
+        {
+          "sourceImage": "Image/Progress/레벨5_4_4.png",
+          "position": {"x": 650, "y": 100},
+          "size": {"x": 203, "y": 90}
+        }
+      ]
+    }
   ],
   "buttonMargin": 30.0,
   "correctImage": {
-	"position": { "x": 400, "y": 500 },
-	"size": { "x": 682, "y": 682 },
-	"sourceImage": "Image/Result/정답.png"
+    "position": {"x": 480, "y": 500},
+    "size": {"x": 900, "y": 900},
+    "sourceImage": "Video/Result/정답.webm"
   },
   "wrongImage": {
-	"position": { "x": 1520, "y": 500 },
-	"size": { "x": 682, "y": 682 },
-	"sourceImage": "Image/Result/오답.png"
+    "position": {"x": 1440, "y": 500},
+    "size": {"x": 900, "y": 900},
+    "sourceImage": "Video/Result/오답.webm"
   },
   "retryButton": {
-	"size": { "x": 356, "y": 123 },
-	"position": { "x": 400, "y": 980 },
-	"buttonBackgroundImage": { "sourceImage": "Image/Button/다시 도전.png" }
+    "size": {"x": 356, "y": 123},
+    "position": {"x": 480, "y": 980},
+    "buttonBackgroundImage": {"sourceImage": "Image/Button/다시 도전.png"}
   },
   "gameEndButton": {
-	"size": { "x": 356, "y": 123 },
-	"position": { "x": 1520, "y": 980 },
-	"buttonBackgroundImage": { "sourceImage": "Image/Button/게임 종료.png" }
+    "size": {"x": 356, "y": 123},
+    "position": {"x": 1440, "y": 980},
+    "buttonBackgroundImage": {"sourceImage": "Image/Button/게임 종료.png"}
   }
 }
