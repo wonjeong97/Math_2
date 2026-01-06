@@ -212,9 +212,9 @@ public class CalculateNumberManager : BaseGameManager<CalculateNumberSetting, Ca
         if (btnObj == null) return;
 
         // 1. 비디오 관련 컴포넌트 정리 & Image 컴포넌트 확보
-        if (btnObj.TryGetComponent(out UIVideoPlayer videoPlayer)) DestroyImmediate(videoPlayer);
-        if (btnObj.TryGetComponent(out VideoPlayer vp)) DestroyImmediate(vp);
-        if (btnObj.TryGetComponent(out RawImage rawImage)) DestroyImmediate(rawImage);
+        if (btnObj.TryGetComponent(out UIVideoPlayer videoPlayer)) Destroy(videoPlayer);
+        if (btnObj.TryGetComponent(out VideoPlayer vp)) Destroy(vp);
+        if (btnObj.TryGetComponent(out RawImage rawImage)) Destroy(rawImage);
 
         Image btnImage = btnObj.GetComponent<Image>();
         if (btnImage == null) btnImage = btnObj.AddComponent<Image>();
