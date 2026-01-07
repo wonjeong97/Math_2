@@ -136,7 +136,7 @@ public class GameEndManager : BaseManager<GameEndSetting>
             Debug.Log("[GameEnd] Player Clicked Home");
 
             // 2. 타이틀 씬으로 이동
-            SceneManager.LoadScene("Title");
+            SceneManager.LoadScene(GameConstants.Scene.Title);
         }
         catch (OperationCanceledException)
         {
