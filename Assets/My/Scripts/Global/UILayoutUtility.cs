@@ -6,15 +6,11 @@ public static class UILayoutUtility
 {
     /// <summary>
     /// 지정된 영역(areaRect) 내에 오브젝트들을 그리드 형태로 나누고, 
-    /// 각 셀 내부에서 랜덤한 위치(Jitter)를 적용하여 배치.
+    /// 각 셀 내부에서 랜덤한 위치(Jitter)를 적용하여 배치함.
     /// </summary>
-    /// <param name="objectsToPlace">배치할 오브젝트 리스트</param>
-    /// <param name="areaRect">배치될 부모 영역</param>
-    /// <param name="margin">버튼 간 여백 (GameSetting의 buttonMargin)</param>
-    /// <param name="rows">행 개수 (기본 2)</param>
-    /// <param name="columns">열 개수 (기본 1)</param>
     public static void PlaceObjectsRandomlyInGrid(List<GameObject> objectsToPlace, RectTransform areaRect, float margin = 20f, int rows = 2, int columns = 1)
     {
+        // 입력 유효성 검사
         if (!areaRect || objectsToPlace == null || objectsToPlace.Count == 0 || rows <= 0 || columns <= 0) return;
 
         Rect rect = areaRect.rect;
@@ -29,14 +25,13 @@ public static class UILayoutUtility
         {
             for (int col = 0; col < columns; col++)
             {
-                // 좌표 계산: 중심점 기준
                 float posX = -halfAreaSize.x + cellWidth * (col + 0.5f);
                 float posY = halfAreaSize.y - cellHeight * (row + 0.5f);
                 slots.Add(new Vector2(posX, posY));
             }
         }
 
-        // 2. 슬롯 랜덤 섞기 (Fisher-Yates Shuffle)
+        // 2. 슬롯 랜덤 섞기
         for (int i = slots.Count - 1; i > 0; i--)
         {
             int j = Random.Range(0, i + 1);
@@ -53,7 +48,6 @@ public static class UILayoutUtility
             RectTransform rt = obj.GetComponent<RectTransform>();
             if (rt == null) continue;
             
-            // 현재 스케일을 고려한 실제 크기 계산
             Vector3 scale = rt.localScale;
             float w = rt.sizeDelta.x * scale.x;
             float h = rt.sizeDelta.y * scale.y;

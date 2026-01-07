@@ -5,23 +5,19 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
-/// <summary> 레벨 선택 씬(LevelSelect)의 설정 데이터 클래스. </summary>
+/// <summary> 레벨 선택 씬의 설정 데이터를 정의함. </summary>
 [Serializable]
 public class LevelSetting
 {   
-    // --- 공통 배경 설정 ---
     public ImageSetting commonBackground;       
     
-    // --- 1페이지 (레벨 선택) 설정 ---
     public TextSetting infoText;                
     public ButtonSetting[] levelButtons;        
 
-    // --- 2페이지 (게임 타입 선택) 설정 ---
     public ImageSetting[] gameLevelImages;      
     public TextSetting page2InfoText;           
     public GradientData[] levelGradients;       
 
-    // 게임 타입 버튼 설정
     public ButtonSetting buttonTypeGuessNumber;
     public ButtonSetting buttonTypeCalculateNumber;
     public ButtonSetting buttonTypeNumberSystem;
@@ -33,6 +29,7 @@ public class LevelSetting
     public ButtonSetting buttonBack;            
 }
 
+/// <summary> 레벨 선택 화면을 관리함. </summary>
 public sealed class LevelManager : BaseManager<LevelSetting>
 {
     [Header("Pages")]
@@ -99,7 +96,7 @@ public sealed class LevelManager : BaseManager<LevelSetting>
         }
     }
 
-    /// <summary> 1페이지 버튼 설정 </summary>
+    /// <summary> 1페이지 버튼을 설정함. </summary>
     private async UniTask SetupLevelButtonsUIAsync()
     {
         if (ui == null || managerSetting == null || managerSetting.levelButtons == null) return;
@@ -117,7 +114,7 @@ public sealed class LevelManager : BaseManager<LevelSetting>
         await UniTask.WhenAll(tasks);
     }
 
-    /// <summary> 2페이지 버튼 설정</summary>
+    /// <summary> 2페이지 버튼을 설정함. </summary>
     private async UniTask SetupTypeButtonsUIAsync()
     {
         if (ui == null || managerSetting == null) return;
@@ -173,11 +170,7 @@ public sealed class LevelManager : BaseManager<LevelSetting>
         if (pageType != null) pageType.SetActive(true);
     }
 
-    // =================================================================================
-    // 페이지 전환 로직
-    // =================================================================================
-
-    /// <summary> 레벨 버튼 클릭 핸들러 (1페이지 -> 2페이지) </summary>
+    /// <summary> 레벨 버튼 클릭을 처리함 (1페이지 -> 2페이지). </summary>
     private async UniTaskVoid OnClickLevel(int level)
     {
         try
@@ -188,16 +181,13 @@ public sealed class LevelManager : BaseManager<LevelSetting>
 
             Debug.Log($"[LevelManager] Player Clicked Level: {level}");
 
-            // 1. Fade Out
             if (fader != null && fadeImage != null)
             {
                 await fader.FadeOut(fadeImage, fadeTime * 0.5f, DestroyToken); 
             }
 
-            // 2. 페이지 전환
             ShowPageType();
 
-            // 3. UI 갱신 및 비디오 로드 대기
             var t1 = ApplySelectedLevelImageAsync(level);
             var t2 = ApplyGameTypeImagesAsync(level);
         
@@ -205,7 +195,6 @@ public sealed class LevelManager : BaseManager<LevelSetting>
 
             await UniTask.WhenAll(t1, t2);
 
-            // 4. Fade In
             if (fader != null && fadeImage != null)
             {
                 await fader.FadeIn(fadeImage, fadeTime * 0.5f, DestroyToken);
@@ -218,26 +207,22 @@ public sealed class LevelManager : BaseManager<LevelSetting>
         }
     }
 
-    /// <summary> 뒤로가기 버튼 핸들러 (2페이지 -> 1페이지) </summary>
+    /// <summary> 뒤로가기 버튼 클릭을 처리함 (2페이지 -> 1페이지). </summary>
     private async UniTaskVoid OnClickBack()
     {
         try
         {
             SoundManager.Instance?.PlaySFX(GameConstants.Sound.ButtonClick);
 
-            // 1. Fade Out
             if (fader != null && fadeImage != null)
             {
                 await fader.FadeOut(fadeImage, fadeTime * 0.5f, DestroyToken);
             }
 
-            // 2. 페이지 전환
             ShowPageLevel();
 
-            // 3. 1페이지 버튼 비디오 다시 재생 대기
             await SetupLevelButtonsUIAsync();
 
-            // 4. Fade In
             if (fader != null && fadeImage != null)
             {
                 await fader.FadeIn(fadeImage, fadeTime * 0.5f, DestroyToken);
@@ -249,10 +234,6 @@ public sealed class LevelManager : BaseManager<LevelSetting>
             Debug.LogError($"[LevelManager] OnClickBack-> Exception: {e}");
         }
     }
-
-    // =================================================================================
-    // 비동기 이미지 교체 헬퍼 메서드
-    // =================================================================================
 
     private async UniTask ApplySelectedLevelImageAsync(int level)
     {
@@ -284,7 +265,6 @@ public sealed class LevelManager : BaseManager<LevelSetting>
         ImageSetting imgSetting = settings[index];
         if (imgSetting != null)
         {
-            // 비디오 로딩을 위해 await 사용
             await ui.SetImageObj(targetObj, imgSetting, DestroyToken);
         }
     }

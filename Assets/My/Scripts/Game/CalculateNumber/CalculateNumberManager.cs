@@ -61,6 +61,7 @@ public class CalculateNumberManager : BaseGameManager<CalculateNumberSetting, Ca
         }
     }
     
+    /// <summary> 개별 문제 UI를 설정함 (텍스트, 이미지 배치). </summary>
     protected override void SetupSpecificQuestionUI(CalculateNumberQuestion q)
     {
         _foundAnswerCount = 0;
@@ -114,7 +115,8 @@ public class CalculateNumberManager : BaseGameManager<CalculateNumberSetting, Ca
         }
     }
     
-   protected override void SetupAnswerButtons(CalculateNumberQuestion q)
+    /// <summary> 정답 버튼을 설정하고 배치함. </summary>
+    protected override void SetupAnswerButtons(CalculateNumberQuestion q)
     {
         List<string> options = new List<string>();
         if (q.correctAnswers != null) options.AddRange(q.correctAnswers);
@@ -131,7 +133,6 @@ public class CalculateNumberManager : BaseGameManager<CalculateNumberSetting, Ca
         if (q.buttonStyleOverride != null && q.buttonStyleOverride.useOverride)
             overridePressed = LoadSpriteFromStreamingAssets(q.buttonStyleOverride.pressedImageName);
         
-        // 스타일 적용을 먼저 수행
         for (int i = 0; i < 4; i++)
         {
             GameObject btnObj = shuffledBtns[i];
@@ -142,21 +143,19 @@ public class CalculateNumberManager : BaseGameManager<CalculateNumberSetting, Ca
 
             if (i < options.Count)
             {
-                // 버튼을 먼저 활성화해야 UIVideoPlayer가 비디오를 로드할 수 있음
+                // 비디오 로딩을 위해 버튼 활성화를 먼저 수행
                 btnObj.SetActive(true); 
 
                 string text = options[i];
                 TextMeshProUGUI tmp = btnObj.GetComponentInChildren<TextMeshProUGUI>();
                 if (tmp) tmp.text = text;
 
-                // 스타일 오버라이드 적용 또는 기본 상태 복구
                 if (q.buttonStyleOverride != null && q.buttonStyleOverride.useOverride)
                 {
                     ApplyButtonOverride(btnObj, q.buttonStyleOverride);
                 }
                 else
                 {
-                    // 기본값 복구
                     RevertToDefaultButtonStyle(btnObj);
                 }
 
@@ -175,6 +174,7 @@ public class CalculateNumberManager : BaseGameManager<CalculateNumberSetting, Ca
         UILayoutUtility.PlaceObjectsRandomlyInGrid(activeBtns.Skip(half).ToList(), rightAreaRect, managerSetting.buttonMargin);
     }
     
+    /// <summary> 정답 버튼 클릭을 처리함. </summary>
     private void OnAnswerClicked(string text, GameObject btnObj, Sprite pressedSprite)
     {
         if (isProcessing) return;
@@ -183,7 +183,7 @@ public class CalculateNumberManager : BaseGameManager<CalculateNumberSetting, Ca
         
         if (SoundManager.Instance != null)
         {
-            SoundManager.Instance.PlaySFX(GameConstants.Sound.ButtonClick);
+            SoundManager.Instance.PlaySFX(GameConstants.Sound.ButtonClick);    
         }
 
         switch (currentQuestion.type)
@@ -211,19 +211,17 @@ public class CalculateNumberManager : BaseGameManager<CalculateNumberSetting, Ca
         else HandleWrongAnswer();
     }
     
-    /// <summary> 버튼 스타일 오버라이드 적용. </summary>
+    /// <summary> 버튼 스타일 오버라이드를 적용함. </summary>
     private void ApplyButtonOverride(GameObject btnObj, ButtonOverrideSetting set)
     {
         if (btnObj == null) return;
 
-        // UIManager에게 이미지 모드 전환 요청
         if (UIManager.Instance != null)
         {
             Image btnImage = UIManager.Instance.SwitchToImageMode(btnObj);
             
             if (btnImage != null)
             {
-                // 이미지 및 색상 적용
                 Sprite normal = LoadSpriteFromStreamingAssets(set.normalImageName);
                 if (normal)
                 {
@@ -232,7 +230,6 @@ public class CalculateNumberManager : BaseGameManager<CalculateNumberSetting, Ca
                     btnImage.type = Image.Type.Simple;
 
                     Button btn = btnObj.GetComponent<Button>();
-                    // 눌림 상태 스프라이트 설정
                     if (btn && !string.IsNullOrEmpty(set.pressedImageName))
                     {
                         Sprite pressed = LoadSpriteFromStreamingAssets(set.pressedImageName);
@@ -253,18 +250,17 @@ public class CalculateNumberManager : BaseGameManager<CalculateNumberSetting, Ca
             }
         }
         
-        // 크기(Size) 적용
         if (set.overrideSize != Vector2.zero)
         {
             RectTransform rt = btnObj.GetComponent<RectTransform>();
             if (rt) rt.sizeDelta = set.overrideSize;
         }
 
-        // 그라데이션 끄기
         ImageGlobalGradient gradient = btnObj.GetComponent<ImageGlobalGradient>();
         if (gradient) gradient.enabled = false;
     }
 
+    /// <summary> 버튼 스타일을 기본값으로 복구함. </summary>
     private void RevertToDefaultButtonStyle(GameObject btnObj)
     {
         if (JsonLoader.Instance == null || JsonLoader.Instance.settings == null) return;

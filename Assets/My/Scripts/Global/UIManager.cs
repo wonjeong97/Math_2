@@ -12,10 +12,10 @@ using UnityEngine.UI;
 using UnityEngine.Video;
 using Object = UnityEngine.Object;
 
-/// <summary> JSON 설정 데이터를 기반으로 UI 오브젝트(Text, Image, Button)를 동적으로 설정하고 관리하는 매니저. </summary>
+/// <summary> JSON 설정을 기반으로 UI 오브젝트를 동적으로 설정하고 관리함. </summary>
 public class UIManager : MonoBehaviour
 {
-    public static UIManager Instance; // 싱글톤
+    public static UIManager Instance;
 
     private void Awake()
     {
@@ -30,7 +30,7 @@ public class UIManager : MonoBehaviour
         }
     }
 
-    /// <summary>  텍스트 오브젝트 설정 (폰트, 내용, 색상, 위치 등). </summary>
+    /// <summary> 텍스트 오브젝트를 설정함 (폰트, 내용, 색상, 위치 등). </summary>
     public async UniTask SetTextObj(GameObject textObj, TextSetting textSetting, string overrideText = null, CancellationToken token = default)
     {
         if (!textObj || textSetting == null)
@@ -42,14 +42,12 @@ public class UIManager : MonoBehaviour
         if (textObj.TryGetComponent(out TextMeshProUGUI tmp) && textObj.TryGetComponent(out RectTransform rt))
         {
             string text = string.IsNullOrEmpty(overrideText) ? textSetting.text : overrideText;
-
-            // 폰트 로드 및 그라데이션 적용
             await ApplyFontAsync(tmp, textSetting, text, token);
             ApplyRect(rt, size: null, anchoredPos: new Vector2(textSetting.position.x, -textSetting.position.y), rotation: textSetting.rotation);
         }
     }
 
-   /// <summary> 이미지 오브젝트 설정 (이미지 또는 동영상). </summary>
+   /// <summary> 이미지 오브젝트를 설정함 (이미지 또는 동영상). </summary>
     public async UniTask SetImageObj(GameObject imageObj, ImageSetting imageSetting, CancellationToken token = default)
     {
         if (!imageObj || imageSetting == null)
@@ -64,10 +62,8 @@ public class UIManager : MonoBehaviour
              return;
         }
 
-        // 1. 위치/크기/회전/스케일 설정
         ApplyRect(rt, size: imageSetting.size, anchoredPos: new Vector2(imageSetting.position.x, -imageSetting.position.y), rotation: imageSetting.rotation, scale: imageSetting.scale);
 
-        // 2. 소스 파일 확인 (이미지 vs 비디오)
         if (!string.IsNullOrEmpty(imageSetting.sourceImage))
         {
             string path = imageSetting.sourceImage;
@@ -79,18 +75,12 @@ public class UIManager : MonoBehaviour
 
             if (isVideo)
             {
-                // [비디오 모드]
-                // Image 컴포넌트가 있다면 삭제
                 if (imgComp != null) DestroyImmediate(imgComp);
-
-                // UIVideoPlayer 추가 (RawImage, VideoPlayer 자동 생성)
                 if (videoPlayer == null) videoPlayer = GetOrAdd<UIVideoPlayer>(imageObj);
 
-                // RawImage 활성화
                 RawImage rawImage = imageObj.GetComponent<RawImage>();
                 if (rawImage) rawImage.enabled = true;
 
-                // 비디오 재생
                 string fullPath = Path.Combine(Application.streamingAssetsPath, path);
                 fullPath = "file://" + fullPath.Replace("\\", "/");
                 
@@ -106,17 +96,13 @@ public class UIManager : MonoBehaviour
             }
             else
             {
-                // [이미지 모드]
-                // 비디오 관련 컴포넌트 삭제
                 if (videoPlayer != null) DestroyImmediate(videoPlayer, true);
                 if (imageObj.TryGetComponent(out VideoPlayer vp)) DestroyImmediate(vp, true);
                 if (imageObj.TryGetComponent(out RawImage raw)) DestroyImmediate(raw, true);
 
-                // Image 컴포넌트 추가
                 if (imgComp == null) imgComp = imageObj.AddComponent<Image>();
                 imgComp.enabled = true;
 
-                // 텍스처 로드 및 스프라이트 적용
                 Texture2D tex = LoadTextureFromStreamingAssets(path);
                 if (tex != null)
                 {
@@ -129,7 +115,7 @@ public class UIManager : MonoBehaviour
         }
     }
 
-    /// <summary> 버튼 오브젝트 설정 (배경 이미지/비디오, 텍스트, 위치 등). </summary>
+    /// <summary> 버튼 오브젝트를 설정함 (배경, 텍스트, 위치 등). </summary>
     public async UniTask SetButtonObj(GameObject buttonObj, ButtonSetting buttonSetting, CancellationToken token = default, string overrideText = null)
     {
         if (!buttonObj || buttonSetting == null)
@@ -144,35 +130,26 @@ public class UIManager : MonoBehaviour
             return;
         }
 
-        // 1. 버튼 위치/크기/회전/스케일 설정
         ApplyRect(buttonRt, size: buttonSetting.size, anchoredPos: new Vector2(buttonSetting.position.x, -buttonSetting.position.y), rotation: buttonSetting.rotation, scale: buttonSetting.scale);
 
-        // 2. 버튼 배경 (이미지 vs 비디오) 설정
         if (buttonSetting.buttonBackgroundImage != null && !string.IsNullOrEmpty(buttonSetting.buttonBackgroundImage.sourceImage))
         {
             string path = buttonSetting.buttonBackgroundImage.sourceImage;
             string ext = Path.GetExtension(path).ToLower();
             bool isVideo = ext == ".webm" || ext == ".mp4" || ext == ".mov" || ext == ".avi";
 
-            // 기존 컴포넌트 가져오기
             Image bgImage = buttonObj.GetComponent<Image>();
             Button btnComp = buttonObj.GetComponent<Button>();
             UIVideoPlayer videoPlayer = buttonObj.GetComponent<UIVideoPlayer>();
 
             if (isVideo)
             {
-                // [비디오 모드]
-                // 1) 기존 Image 컴포넌트 삭제 (충돌 방지)
                 if (bgImage != null) DestroyImmediate(bgImage, true);
-
-                // 2) UIVideoPlayer 추가 (RawImage 자동 생성됨)
                 if (videoPlayer == null) videoPlayer = GetOrAdd<UIVideoPlayer>(buttonObj);
 
-                // 3) RawImage 활성화
                 RawImage rawImage = buttonObj.GetComponent<RawImage>();
                 if (rawImage) rawImage.enabled = true;
 
-                // 4) 비디오 재생
                 string fullPath = Path.Combine(Application.streamingAssetsPath, path);
                 fullPath = "file://" + fullPath.Replace("\\", "/");
 
@@ -187,22 +164,17 @@ public class UIManager : MonoBehaviour
                     Debug.LogError($"[UIManager] Button video playback failed: {ex.Message}");
                 }
 
-                // 5) 버튼의 타겟 그래픽을 RawImage로 변경해야 클릭 반응이 정상 작동함
                 if (btnComp && rawImage) btnComp.targetGraphic = rawImage;
             }
             else
             {
-                // [이미지 모드]
-                // 1) 비디오 관련 컴포넌트 삭제
                 if (videoPlayer != null) DestroyImmediate(videoPlayer, true);
                 if (buttonObj.TryGetComponent(out VideoPlayer vp)) DestroyImmediate(vp, true);
                 if (buttonObj.TryGetComponent(out RawImage raw)) DestroyImmediate(raw, true);
 
-                // 2) Image 컴포넌트 추가
                 if (bgImage == null) bgImage = buttonObj.AddComponent<Image>();
                 bgImage.enabled = true;
 
-                // 3) 이미지 로드
                 Texture2D tex = LoadTextureFromStreamingAssets(path);
                 if (tex != null)
                 {
@@ -213,12 +185,10 @@ public class UIManager : MonoBehaviour
                 bgImage.color = buttonSetting.buttonBackgroundImage.color;
                 bgImage.type = (Image.Type)buttonSetting.buttonBackgroundImage.type;
 
-                // 4) 버튼 타겟 그래픽을 Image로 복구
                 if (btnComp) btnComp.targetGraphic = bgImage;
             }
         }
 
-        // 3. 버튼 텍스트 설정
         if (buttonSetting.buttonText != null)
         {
             TextMeshProUGUI tmp = buttonObj.GetComponentInChildren<TextMeshProUGUI>(true);
@@ -226,35 +196,32 @@ public class UIManager : MonoBehaviour
         }
     }
     
-    /// <summary> 대상 오브젝트의 비디오 관련 컴포넌트를 안전하게 정리하고, Image 모드로 전환 </summary>
+    /// <summary> 대상 오브젝트의 비디오 컴포넌트를 정리하고 Image 모드로 전환함. </summary>
     public Image SwitchToImageMode(GameObject targetObj)
     {
         if (targetObj == null) return null;
 
-        // 1. 비디오 관련 컴포넌트 정리 (즉시 삭제)
         if (targetObj.TryGetComponent(out UIVideoPlayer uvp)) DestroyImmediate(uvp, true);
         if (targetObj.TryGetComponent(out VideoPlayer vp)) DestroyImmediate(vp, true);
         if (targetObj.TryGetComponent(out RawImage raw)) DestroyImmediate(raw, true);
 
-        // 2. Image 컴포넌트 확보
         Image imgComp = targetObj.GetComponent<Image>();
         if (imgComp == null) imgComp = targetObj.AddComponent<Image>();
         
         imgComp.enabled = true;
 
-        // 3. 버튼 컴포넌트가 있다면 TargetGraphic 연결 복구
         Button btn = targetObj.GetComponent<Button>();
         if (btn != null) btn.targetGraphic = imgComp;
       
         return imgComp;
     }
 
-    #region UICreator (내부 로직)
+    #region UICreator (Internal Logic)
 
     private readonly List<GameObject> _instances = new List<GameObject>();
     private readonly Dictionary<string, AsyncOperationHandle> _assetCache = new Dictionary<string, AsyncOperationHandle>();
 
-    /// <summary>Addressables 에셋 로드를 캐시해 중복 로드 방지.</summary>
+    /// <summary> Addressables 에셋 로드를 캐싱하여 중복 로드를 방지함. </summary>
     private async UniTask<T> LoadAssetWithCacheAsync<T>(string key, CancellationToken token) where T : Object
     {
         if (string.IsNullOrEmpty(key)) return null;
@@ -272,7 +239,7 @@ public class UIManager : MonoBehaviour
         return asset;
     }
 
-    /// <summary>폰트 키를 FontMap 기준으로 해석해 실제 Addressable 키 반환.</summary>
+    /// <summary> 폰트 키를 FontMap 기준으로 해석해 실제 Addressable 키를 반환함. </summary>
     private static string ResolveFontKey(string key)
     {
         Settings settings = JsonLoader.Instance != null ? JsonLoader.Instance.settings : null;
@@ -289,7 +256,7 @@ public class UIManager : MonoBehaviour
         return key;
     }
 
-    /// <summary> 폰트 로드 및 텍스트 속성(그라데이션 포함) 적용. </summary>
+    /// <summary> 폰트 로드 및 텍스트 속성(그라데이션 포함)을 적용함. </summary>
     private async UniTask ApplyFontAsync(TextMeshProUGUI uiText, TextSetting setting, string textValue, CancellationToken token)
     {
         if (!uiText || setting == null) return;
@@ -306,7 +273,6 @@ public class UIManager : MonoBehaviour
 
         if (setting.useGlobalGradient)
         {
-            // 전체 그라데이션 컴포넌트 사용
             var gradientEffect = GetOrAdd<TextGlobalGradient>(uiText.gameObject);
             gradientEffect.SetGradient(
                 setting.gradientTopLeft, 
@@ -326,7 +292,6 @@ public class UIManager : MonoBehaviour
                 effect.enabled = false;
             }
 
-            // 기본 TMP 그라데이션 사용
             if (setting.useGradient)
             {
                 uiText.enableVertexGradient = true;
@@ -348,7 +313,7 @@ public class UIManager : MonoBehaviour
 
     #region UIUtility
     
-    /// <summary> 외부에서 경로만으로 스프라이트 로드. </summary>
+    /// <summary> 외부에서 경로만으로 스프라이트를 로드함. </summary>
     public Sprite LoadSprite(string relativePath)
     {
         Texture2D tex = LoadTextureFromStreamingAssets(relativePath);
@@ -359,7 +324,7 @@ public class UIManager : MonoBehaviour
         return null;
     }
 
-    /// <summary> Addressables 핸들을 취소 토큰과 함께 대기. </summary>
+    /// <summary> Addressables 핸들을 취소 토큰과 함께 대기함. </summary>
     private static async UniTask<T> AwaitWithCancellation<T>(AsyncOperationHandle<T> handle, CancellationToken token)
     {
         await UniTask.WaitUntil(() => handle.IsDone, cancellationToken: token);
@@ -373,7 +338,7 @@ public class UIManager : MonoBehaviour
         return handle.Result;
     }
 
-    /// <summary> StreamingAssets 폴더에서 텍스처 동기 로드. </summary>
+    /// <summary> StreamingAssets 폴더에서 텍스처를 동기 로드함. </summary>
     private static Texture2D LoadTextureFromStreamingAssets(string relativePath)
     {
         if (string.IsNullOrEmpty(relativePath)) return null;
@@ -395,7 +360,7 @@ public class UIManager : MonoBehaviour
         return null;
     }
 
-    /// <summary> 컴포넌트가 없으면 추가해서 반환. </summary>
+    /// <summary> 컴포넌트가 없으면 추가해서 반환함. </summary>
     public static T GetOrAdd<T>(GameObject go) where T : Component
     {
         if (!go) return null;
@@ -405,7 +370,7 @@ public class UIManager : MonoBehaviour
         return component;
     }
 
-    /// <summary> RectTransform 속성(크기, 위치, 회전, 스케일) 일괄 적용. </summary>
+    /// <summary> RectTransform 속성(크기, 위치, 회전, 스케일)을 일괄 적용함. </summary>
     private static void ApplyRect(RectTransform rt, Vector2? size = null, Vector2? anchoredPos = null, Vector3? rotation = null, Vector3? scale = null)
     {
         if (!rt) return;

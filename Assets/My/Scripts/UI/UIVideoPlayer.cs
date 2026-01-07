@@ -4,10 +4,7 @@ using UnityEngine.Video;
 using Cysharp.Threading.Tasks;
 using System.Threading;
 
-/// <summary>
-/// UI(RawImage)에 비디오를 재생하는 범용 클래스.
-/// 오브젝트가 활성화될 때마다 자동으로 비디오를 재생.
-/// </summary>
+/// <summary> UI(RawImage)에 비디오를 재생함. </summary>
 [RequireComponent(typeof(RawImage), typeof(VideoPlayer))]
 public class UIVideoPlayer : MonoBehaviour
 {
@@ -51,11 +48,10 @@ public class UIVideoPlayer : MonoBehaviour
         _enableCts?.Dispose();
     }
 
+    /// <summary> 비디오를 로드하고 재생함. (비동기) </summary>
     public async UniTask PlayVideoAsync(string url, CancellationToken token = default)
     {
-        // 1. 기본 유효성 검사
         if (string.IsNullOrEmpty(url)) return;
-        // 이미 파괴된 경우 중단
         if (this == null || _videoPlayer == null || _rawImage == null) return;
 
         _currentUrl = url; 
@@ -79,10 +75,9 @@ public class UIVideoPlayer : MonoBehaviour
             float timeout = 10f;
             float elapsed = 0f;
 
-            // 2. 준비 대기 루프
+            // 준비 대기
             while (!_videoPlayer.isPrepared)
             {
-                // 대기 도중 컴포넌트가 파괴되었는지 체크
                 if (this == null || _videoPlayer == null) return;
 
                 if (token.IsCancellationRequested || !gameObject.activeInHierarchy) return;
@@ -91,20 +86,17 @@ public class UIVideoPlayer : MonoBehaviour
                 if (elapsed > timeout)
                 {
                     Debug.LogError($"[UIVideoPlayer] Video preparation timeout: {url}");
-                    // 타임아웃 시에도 살아있는지 체크 후 복구
                     if (this != null && _rawImage != null) _rawImage.color = _targetColor; 
                     if (this != null && _videoPlayer != null) _videoPlayer.Stop();
                     return;
                 }
                 
-                // 프레임 대기
                 await UniTask.Yield(PlayerLoopTiming.Update);
                 
-                //  await 직후 파괴 여부를 다시 체크
                 if (this == null || _videoPlayer == null || _rawImage == null) return;
             }
 
-            // 3. 준비 완료 후 적용 및 체크
+            // 재생 시작
             if (this != null && _videoPlayer != null && _rawImage != null)
             {
                 _rawImage.texture = _videoPlayer.texture;
@@ -114,8 +106,7 @@ public class UIVideoPlayer : MonoBehaviour
         }
         catch (System.Exception e)
         {
-            // 로그는 남기되, 객체 파괴로 인한 에러(MissingReferenceException)는 무시해도 됨
-            if (this != null) // 살아있는데 에러가 난 경우만 로그 출력
+            if (this != null) 
             {
                 Debug.LogError($"[UIVideoPlayer] Error playing video: {e.Message}");
                 if (_rawImage != null) _rawImage.color = _targetColor; 

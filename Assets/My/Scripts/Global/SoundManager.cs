@@ -5,7 +5,7 @@ using Cysharp.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.Networking;
 
-/// <summary>  오디오 클립을 로드하고 BGM 및 SFX를 재생하는 매니저. </summary>
+/// <summary> 오디오 클립을 로드하고 BGM 및 SFX를 재생함. </summary>
 public class SoundManager : MonoBehaviour
 {
     public static SoundManager Instance;
@@ -14,7 +14,6 @@ public class SoundManager : MonoBehaviour
     [SerializeField] private AudioSource bgmSource;
     [SerializeField] private AudioSource sfxSource;
 
-    // 키값으로 오디오 클립과 볼륨 정보를 저장할 딕셔너리
     private readonly Dictionary<string, (AudioClip clip, float volume)> _soundLibrary = new Dictionary<string, (AudioClip, float)>();
 
     private void Awake()
@@ -40,12 +39,11 @@ public class SoundManager : MonoBehaviour
         LoadAllSounds().Forget();
     }
 
-    /// <summary> JsonLoader가 준비될 때까지 기다렸다가 사운드를 로드하는 내부 메서드 </summary>
+    /// <summary> 설정 로드 완료를 대기한 후 사운드를 로드함. </summary>
     private async UniTaskVoid LoadAllSounds()
     {
         try
         {
-            // JsonLoader와 Settings가 로드될 때까지 대기
             await UniTask.WaitUntil(() => JsonLoader.Instance != null && JsonLoader.Instance.settings != null);
 
             var soundSettings = JsonLoader.Instance.settings.sounds;
@@ -60,7 +58,7 @@ public class SoundManager : MonoBehaviour
         }
     }
 
-    /// <summary> Settings에 정의된 모든 사운드를 로드. </summary>
+    /// <summary> Settings에 정의된 모든 사운드를 초기화함. </summary>
     private async UniTask Initialize(SoundSetting[] soundSettings)
     {
         if (soundSettings == null) return;
@@ -110,7 +108,7 @@ public class SoundManager : MonoBehaviour
         }
     }
     
-    /// <summary> BGM 일시 정지 </summary>
+    /// <summary> BGM을 일시 정지함. </summary>
     public void PauseBGM()
     {
         if (bgmSource != null && bgmSource.isPlaying)
@@ -119,7 +117,7 @@ public class SoundManager : MonoBehaviour
         }
     }
 
-    /// <summary> BGM 다시 재생 (일시 정지 해제) </summary>
+    /// <summary> BGM을 다시 재생함. </summary>
     public void ResumeBGM()
     {
         if (bgmSource != null)
@@ -128,7 +126,7 @@ public class SoundManager : MonoBehaviour
         }
     }
 
-    /// <summary> StreamingAssets 경로에서 오디오 클립 로드 </summary>
+    /// <summary> StreamingAssets에서 오디오 클립을 로드함. </summary>
     private async UniTask<AudioClip> LoadAudioClipFromStreamingAssets(string relativePath)
     {
         string path = Path.Combine(Application.streamingAssetsPath, relativePath);
