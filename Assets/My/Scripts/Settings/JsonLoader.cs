@@ -1,8 +1,8 @@
 using System;
 using System.IO;
-using TMPro;
 using UnityEngine;
 
+/// <summary> JSON 파일을 읽어와 데이터 객체(Settings 등)로 변환하는 로더 클래스. </summary>
 public class JsonLoader : MonoBehaviour
 {
     [NonSerialized] public Settings settings;
@@ -18,7 +18,6 @@ public class JsonLoader : MonoBehaviour
                 _instance = FindFirstObjectByType<JsonLoader>()
                             ?? new GameObject("JsonLoader").AddComponent<JsonLoader>();
             }
-
             return _instance;
         }
     }
@@ -36,153 +35,38 @@ public class JsonLoader : MonoBehaviour
             return;
         }
 
-        settings = LoadJsonData<Settings>("Settings.json");
+        // 전역 설정 로드
+        settings = LoadJsonData<Settings>(GameConstants.Path.JsonSetting);
     }
 
     private void Start()
     {
         if (settings == null)
         {
-            Debug.LogError($"[JsonLoader] Settings is null.]");
+            Debug.LogError($"[JsonLoader] Settings.json Load Failed.");
         }
     }
 
+    /// <summary> StreamingAssets 폴더에서 JSON 파일을 읽어와 타입 T로 파싱하여 반환합니다. </summary>
     public T LoadJsonData<T>(string fileName)
     {
         string filePath = Path.Combine(Application.streamingAssetsPath, fileName).Replace("\\", "/");
 
         if (!File.Exists(filePath))
         {
-            Debug.LogWarning("[JsonLoader] File is not exits: " + filePath);
+            Debug.LogWarning("[JsonLoader] File not found: " + filePath);
             return default;
         }
 
-        string json = File.ReadAllText(filePath);
-        //Debug.Log($"[JsonLoader] {fileName} load complete: \n" + json);
-
-        return JsonUtility.FromJson<T>(json);
+        try 
+        {
+            string json = File.ReadAllText(filePath);
+            return JsonUtility.FromJson<T>(json);
+        }
+        catch (Exception e)
+        {
+            Debug.LogError($"[JsonLoader] Failed to parse {fileName}: {e.Message}");
+            return default;
+        }
     }
 }
-
-#region Json Settings
-
-[Serializable]
-public enum UIImageType
-{
-    Simple = 0,
-    Sliced,
-    Tiled,
-    Filled
-}
-
-[Serializable]
-public class CloseSetting
-{
-    public Vector2 position;
-    public int numToClose;
-    public float resetClickTime;
-    public float imageAlpha;
-}
-
-[Serializable]
-public class ImageSetting
-{
-    public string name;
-    public Vector2 position;
-    public Vector2 size;
-    public Vector3 rotation;
-    public Vector3 scale =  Vector3.one;
-    public string sourceImage;
-    public Color color = Color.white;
-    public UIImageType type = UIImageType.Simple;
-    
-    [Header("Fade Settings")]
-    public bool useFade;           // 페이드 효과 사용 여부
-    public float fadeDuration = 1f;// 페이드 소요 시간
-    public bool isFadeOut;         // true: Fade Out(사라짐), false: Fade In(나타남)
-    public bool loop;              // true: 효과 반복 (깜빡임/PingPong)
-}
-
-[Serializable]
-public class TextSetting
-{
-    public string name;
-    public Vector2 position;
-    public Vector3 rotation;
-    public string text;
-    public string fontName;
-    public float fontSize;
-    public Color fontColor = Color.white;
-    public TextAlignmentOptions alignment = TextAlignmentOptions.Center;
-    
-    public bool useGradient; // 그라데이션 사용 여부
-    public bool useGlobalGradient;
-    public Color gradientTopLeft = Color.white;
-    public Color gradientTopRight = Color.white;
-    public Color gradientBottomLeft = Color.white;
-    public Color gradientBottomRight = Color.white;
-}
-
-[Serializable]
-public class GradientData
-{
-    public Color topLeft;
-    public Color topRight;
-    public Color bottomLeft;
-    public Color bottomRight;
-}
-
-[Serializable]
-public class FontMaps
-{
-    public string font1;
-    public string font2;
-    public string font3;
-    public string font4;
-    public string font5;
-}
-
-[Serializable]
-public class VideoSetting
-{
-    public string name;
-    public Vector2 position;
-    public Vector2 size;
-    public string fileName;
-    public float volume;
-}
-
-[Serializable]
-public class SoundSetting
-{
-    public string key;
-    public String clipPath;
-    public float volume = 1.0f;
-}
-
-[Serializable]
-public class ButtonSetting
-{
-    public string name;
-    public Vector2 position;
-    public Vector2 size;
-    public Vector3 rotation;
-    public Vector3 scale = Vector3.one;
-    public ImageSetting buttonBackgroundImage;
-    public TextSetting buttonText;
-    public string buttonSound;
-}
-
-[Serializable]
-public class Settings
-{   
-    public float inactivityTime; // 입력이 없을 시 타이틀로 되돌아가는 시간
-    public float fadeTime;
-    public CloseSetting closeSetting;
-    public FontMaps fontMap;
-    public ButtonSetting[] questionButtons;
-    public TextSetting gameQuestionText;
-    public SoundSetting[] sounds;
-}
-
-#endregion

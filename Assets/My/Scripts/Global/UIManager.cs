@@ -225,6 +225,29 @@ public class UIManager : MonoBehaviour
             if (tmp != null) await SetTextObj(tmp.gameObject, buttonSetting.buttonText, overrideText, token);
         }
     }
+    
+    /// <summary> 대상 오브젝트의 비디오 관련 컴포넌트를 안전하게 정리하고, Image 모드로 전환 </summary>
+    public Image SwitchToImageMode(GameObject targetObj)
+    {
+        if (targetObj == null) return null;
+
+        // 1. 비디오 관련 컴포넌트 정리 (즉시 삭제)
+        if (targetObj.TryGetComponent(out UIVideoPlayer uvp)) DestroyImmediate(uvp, true);
+        if (targetObj.TryGetComponent(out VideoPlayer vp)) DestroyImmediate(vp, true);
+        if (targetObj.TryGetComponent(out RawImage raw)) DestroyImmediate(raw, true);
+
+        // 2. Image 컴포넌트 확보
+        Image imgComp = targetObj.GetComponent<Image>();
+        if (imgComp == null) imgComp = targetObj.AddComponent<Image>();
+        
+        imgComp.enabled = true;
+
+        // 3. 버튼 컴포넌트가 있다면 TargetGraphic 연결 복구
+        Button btn = targetObj.GetComponent<Button>();
+        if (btn != null) btn.targetGraphic = imgComp;
+      
+        return imgComp;
+    }
 
     #region UICreator (내부 로직)
 

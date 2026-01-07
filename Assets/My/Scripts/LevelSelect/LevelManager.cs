@@ -58,7 +58,7 @@ public sealed class LevelManager : BaseManager<LevelSetting>
     [SerializeField] private GameObject page1InfoText;          
     [SerializeField] private GameObject page2InfoTextObj;       
 
-    protected override string JsonPath => "JSON/LevelSetting.json";
+    protected override string JsonPath => GameConstants.Path.JsonLevelSetting;
 
     private int _selectedLevel = -1;
 
@@ -87,7 +87,7 @@ public sealed class LevelManager : BaseManager<LevelSetting>
                 await fader.FadeIn(fadeImage, fadeTime, DestroyToken);
             }
             
-            SoundManager.Instance?.PlayBGM("LevelSelect_BGM");
+            SoundManager.Instance?.PlayBGM(GameConstants.Sound.LevelSelectBGM);
         }
         catch (OperationCanceledException)
         {
@@ -182,7 +182,7 @@ public sealed class LevelManager : BaseManager<LevelSetting>
     {
         try
         {
-            SoundManager.Instance?.PlaySFX("Button");
+            SoundManager.Instance?.PlaySFX(GameConstants.Sound.ButtonClick);
             _selectedLevel = level;
             LevelSelectContext.SelectedLevel = level;
 
@@ -223,7 +223,7 @@ public sealed class LevelManager : BaseManager<LevelSetting>
     {
         try
         {
-            SoundManager.Instance?.PlaySFX("Button");
+            SoundManager.Instance?.PlaySFX(GameConstants.Sound.ButtonClick);
 
             // 1. Fade Out
             if (fader != null && fadeImage != null)
@@ -312,7 +312,7 @@ public sealed class LevelManager : BaseManager<LevelSetting>
             return;
         }
         
-        SoundManager.Instance?.PlaySFX("Button");
+        SoundManager.Instance?.PlaySFX(GameConstants.Sound.ButtonClick);
         LevelSelectContext.SelectedGameType = type;
         HandleLoadGameSceneAsync().Forget();
     }
@@ -329,9 +329,9 @@ public sealed class LevelManager : BaseManager<LevelSetting>
             string targetSceneName = "";
             switch (LevelSelectContext.SelectedGameType)
             {
-                case GameType.GuessNumber: targetSceneName = "GuessNumber"; break;
-                case GameType.CalculateNumber: targetSceneName = "CalculateNumber"; break;
-                case GameType.NumberSystem: targetSceneName = "NumberSystem"; break;
+                case GameType.GuessNumber: targetSceneName = GameConstants.Scene.GuessNumber; break;
+                case GameType.CalculateNumber: targetSceneName = GameConstants.Scene.CalculateNumber; break;
+                case GameType.NumberSystem: targetSceneName = GameConstants.Scene.NumberSystem; break;
                 default: return;
             }
 

@@ -30,7 +30,6 @@ public abstract class BaseGameManager<TSetting, TQuestion> : BaseManager<TSettin
     [SerializeField] protected GameObject[] answerButtons;      // 정답 버튼 배열 (4개)
     [SerializeField] protected RectTransform leftAreaRect;      // 왼쪽 버튼 배치 영역
     [SerializeField] protected RectTransform rightAreaRect;     // 오른쪽 버튼 배치 영역
-    private float _buttonMargin = 20f;                           // 버튼 간 간격
 
     [Header("--- Base Result UI ---")]
     [SerializeField] protected GameObject pageCorrect;  // 정답 페이지
@@ -53,11 +52,6 @@ public abstract class BaseGameManager<TSetting, TQuestion> : BaseManager<TSettin
     private Vector2 _defaultButtonSize;
 
     // --- Abstract Methods ---
-    /// <summary> JSON 파일 이름 반환. </summary>
-    protected abstract string GetJsonFileName();
-    
-    // JSON 경로 프로퍼티 구현
-    protected override string JsonPath => $"JSON/{GetJsonFileName()}";
     
     /// <summary> 문제 데이터에서 레벨 반환. </summary>
     protected abstract int GetQuestionLevel(TQuestion question);
@@ -91,7 +85,8 @@ public abstract class BaseGameManager<TSetting, TQuestion> : BaseManager<TSettin
 
         if (buttonRetry) { buttonRetry.onClick.RemoveAllListeners(); buttonRetry.onClick.AddListener(OnRetryClicked); }
         if (buttonGameEnd) { buttonGameEnd.onClick.RemoveAllListeners(); buttonGameEnd.onClick.AddListener(OnGameEndClicked); }
-        if (backButton) { backButton.onClick.RemoveAllListeners(); backButton.onClick.AddListener(() => SceneManager.LoadScene("LevelSelect")); }
+        if (backButton) { backButton.onClick.RemoveAllListeners(); backButton.onClick.AddListener(
+            () => SceneManager.LoadScene(GameConstants.Scene.LevelSelect)); }
 
         // 4. 버튼 기본 상태 캡처 (스타일 적용 후)
         CaptureDefaultButtonState();
@@ -241,7 +236,6 @@ public abstract class BaseGameManager<TSetting, TQuestion> : BaseManager<TSettin
     private void ApplyCommonUISettings()
     {
         if (managerSetting == null || ui == null) return;
-        this._buttonMargin = managerSetting.buttonMargin;
         if (backButton && managerSetting.backButton != null) ui.SetButtonObj(backButton.gameObject, managerSetting.backButton).Forget();
         if (imageCorrect && managerSetting.correctImage != null) ui.SetImageObj(imageCorrect.gameObject, managerSetting.correctImage).Forget();
         if (imageWrong && managerSetting.wrongImage != null) ui.SetImageObj(imageWrong.gameObject, managerSetting.wrongImage).Forget();
@@ -334,7 +328,7 @@ public abstract class BaseGameManager<TSetting, TQuestion> : BaseManager<TSettin
         
         if (SoundManager.Instance != null)
         {
-            SoundManager.Instance.PlaySFX("Correct");    
+            SoundManager.Instance.PlaySFX(GameConstants.Sound.Correct);    
         }
         
         await UniTask.Delay(TimeSpan.FromSeconds(2));
@@ -361,7 +355,7 @@ public abstract class BaseGameManager<TSetting, TQuestion> : BaseManager<TSettin
         
         if (SoundManager.Instance != null)
         {
-            SoundManager.Instance.PlaySFX("Wrong");    
+            SoundManager.Instance.PlaySFX(GameConstants.Sound.Wrong);    
         }
     }
     
@@ -372,7 +366,7 @@ public abstract class BaseGameManager<TSetting, TQuestion> : BaseManager<TSettin
         
         if (SoundManager.Instance != null)
         {
-            SoundManager.Instance.PlaySFX("Button");    
+            SoundManager.Instance.PlaySFX(GameConstants.Sound.ButtonClick);    
         }
         
         if (pageWrong) pageWrong.SetActive(false);
@@ -389,14 +383,14 @@ public abstract class BaseGameManager<TSetting, TQuestion> : BaseManager<TSettin
         
         if (fader != null && fadeImage != null) await fader.FadeOut(fadeImage, fadeTime, DestroyToken);
         GameResultContext.CorrectCount = currentQuestionIndex;
-        SceneManager.LoadScene("GameEnd");
+        SceneManager.LoadScene(GameConstants.Scene.GameEnd);
     }
     
     /// <summary> 레벨별 버튼/텍스트 그라데이션 적용. </summary>
     private void ApplyButtonGradients(int level)
     {
         if (JsonLoader.Instance == null) return;
-        LevelSetting levelSetting = JsonLoader.Instance.LoadJsonData<LevelSetting>("JSON/LevelSetting.json");
+        LevelSetting levelSetting = JsonLoader.Instance.LoadJsonData<LevelSetting>(GameConstants.Path.JsonLevelSetting);
         if (levelSetting == null || levelSetting.levelGradients == null) return;
         
         int index = level - 1;
@@ -446,68 +440,6 @@ public abstract class BaseGameManager<TSetting, TQuestion> : BaseManager<TSettin
             gradient.SetGradient(data.topLeft, data.topRight, data.bottomLeft, data.bottomRight);
             gradient.enabled = true;
             gradient.ApplyGradient();
-        }
-    }
-
-    /// <summary> 지정된 영역 내에 버튼들을 랜덤하게 배치. </summary>
-    protected void PlaceButtonsInArea(List<GameObject> buttonsToPlace, RectTransform areaRect)
-    {   
-        // 유효성 검사
-        if (!areaRect || buttonsToPlace == null || buttonsToPlace.Count == 0) return;
-        Rect rect = areaRect.rect;
-        Vector2 halfAreaSize = rect.size * 0.5f;
-        
-        // 그리드 설정
-        const int columns = 1;  // 열
-        const int rows = 2;     // 행
-        float cellWidth = rect.width / columns;
-        float cellHeight = rect.height / rows;
-        
-        // 슬롯 좌표 생성
-        List<Vector2> slots = new List<Vector2>();
-        for (int row = 0; row < rows; row++)
-        {
-            for (int col = 0; col < columns; col++)
-            {   
-                // 각 셀의 중심 좌표를 계산하여 리스트에 추가
-                slots.Add(new Vector2(-halfAreaSize.x + cellWidth * (col + 0.5f), halfAreaSize.y - cellHeight * (row + 0.5f)));
-            }
-        }
-        
-        // 슬롯 랜덤 섞기
-        for (int i = slots.Count - 1; i > 0; i--)
-        {
-            int j = Random.Range(0, i + 1); 
-            (slots[i], slots[j]) = (slots[j], slots[i]);
-        }
-        
-        // 버튼 배치 및 무작위 위치 적용
-        int count = Mathf.Min(buttonsToPlace.Count, slots.Count);
-        for (int i = 0; i < count; i++) {
-            
-            // 버튼 크기 계산
-            GameObject obj = buttonsToPlace[i];
-            RectTransform rt = obj.GetComponent<RectTransform>();
-            Vector3 scale = rt.localScale;
-            float w = rt.sizeDelta.x * scale.x;
-            float h = rt.sizeDelta.y * scale.y;
-            
-            // Jitter 여유공간 계산
-            // 그리드 크기에서 버튼 크기를 빼고, buttonMargin까지 뺀 남은 공간의 절반
-            float jitterX = Mathf.Max(0f, (cellWidth - w) * 0.5f - _buttonMargin);
-            float jitterY = Mathf.Max(0f, (cellHeight - h) * 0.5f - _buttonMargin);
-            
-            Vector2 basePos = slots[i]; // 섞어둔 슬롯의 중심 좌표
-            
-            // 중심 좌표를 기준으로 랜덤하게 위치를 살짝 비틈 (-jitter ~ +jitter)
-            float offsetX = jitterX > 0 ? Random.Range(-jitterX, jitterX) : 0f;
-            float offsetY = jitterY > 0 ? Random.Range(-jitterY, jitterY) : 0f;
-            
-            // 부모 설정 및 최종 위치 적용
-            rt.SetParent(areaRect, false);
-            rt.anchorMin = rt.anchorMax = new Vector2(0.5f, 0.5f);
-            rt.pivot = new Vector2(0.5f, 0.5f);
-            rt.anchoredPosition = basePos + new Vector2(offsetX, offsetY);
         }
     }
 

@@ -31,8 +31,7 @@ public class GameEndManager : BaseManager<GameEndSetting>
     [SerializeField] private Image uiMyScoreImage;  // 점수(별) 결과 이미지
     [SerializeField] private Button uiHomeButton;   // 홈(타이틀) 복귀 버튼
     
-    // JSON 파일명 정의
-    protected override string JsonPath => "JSON/GameEnd.json";
+    protected override string JsonPath => GameConstants.Path.JsonGameEnd;
     
     /// <summary>
     /// 초기화 진입점.
@@ -42,7 +41,7 @@ public class GameEndManager : BaseManager<GameEndSetting>
     {   
         if (SoundManager.Instance != null)
         {
-            SoundManager.Instance.PlayBGM("GameEnd_BGM");
+            SoundManager.Instance.PlayBGM(GameConstants.Sound.GameEndBGM);
         }
         
         if (backgroundObj != null && managerSetting != null && managerSetting.backgroundImage != null && UIManager.Instance != null)
@@ -125,7 +124,7 @@ public class GameEndManager : BaseManager<GameEndSetting>
         {   
             if (SoundManager.Instance != null)
             {
-                SoundManager.Instance.PlaySFX("Button");    
+                SoundManager.Instance.PlaySFX(GameConstants.Sound.ButtonClick);    
             }
             
             // 1. Fade Out
