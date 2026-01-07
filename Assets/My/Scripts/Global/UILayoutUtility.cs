@@ -15,7 +15,7 @@ public static class UILayoutUtility
     /// <param name="columns">열 개수 (기본 1)</param>
     public static void PlaceObjectsRandomlyInGrid(List<GameObject> objectsToPlace, RectTransform areaRect, float margin = 20f, int rows = 2, int columns = 1)
     {
-        if (!areaRect || objectsToPlace == null || objectsToPlace.Count == 0) return;
+        if (!areaRect || objectsToPlace == null || objectsToPlace.Count == 0 || rows <= 0 || columns <= 0) return;
 
         Rect rect = areaRect.rect;
         Vector2 halfAreaSize = rect.size * 0.5f;
@@ -51,6 +51,7 @@ public static class UILayoutUtility
             if (obj == null) continue;
 
             RectTransform rt = obj.GetComponent<RectTransform>();
+            if (rt == null) continue;
             
             // 현재 스케일을 고려한 실제 크기 계산
             Vector3 scale = rt.localScale;
