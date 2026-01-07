@@ -30,7 +30,7 @@ public sealed class TitleManager : BaseManager<TitleSetting>
     [SerializeField] private GameObject titleText2;           // 타이틀 텍스트 2 (서브)
     
     // JSON 파일 경로
-    protected override string JsonPath => "JSON/TitleSetting.json";
+    protected override string JsonPath => GameConstants.Path.JsonTitleSetting;
    
     /// <summary>
     /// 초기화 진입점.
@@ -80,7 +80,7 @@ public sealed class TitleManager : BaseManager<TitleSetting>
     /// <summary> 시작 버튼 클릭 핸들러 (비동기 래퍼). </summary>
     private void OnStartButtonClicked()
     {   
-        SoundManager.Instance?.PlaySFX("Start");
+        SoundManager.Instance?.PlaySFX(GameConstants.Sound.Start);
         HandleStartButtonAsync().Forget();
     }
     
@@ -98,7 +98,7 @@ public sealed class TitleManager : BaseManager<TitleSetting>
             Debug.Log("[Title] Player Clicked Start");
             
             // 씬 비동기 로드
-            AsyncOperation op = SceneManager.LoadSceneAsync("LevelSelect", LoadSceneMode.Single);
+            AsyncOperation op = SceneManager.LoadSceneAsync(GameConstants.Scene.LevelSelect, LoadSceneMode.Single);
             if (op == null)
             {
                 Debug.LogError("[Title] HandleStartButtonAsync-> LoadSceneAsync returned null");

@@ -21,9 +21,7 @@ public class GuessNumberManager : BaseGameManager<GuessNumberSetting, GuessNumbe
     private List<string> _remainingCorrectAnswers; // 다중 선택(MultipleChoice) 문제용 남은 정답 목록
     
     
-    // JSON 파일명 정의
-    protected override string GetJsonFileName() => "GuessNumber.json";
-
+    protected override string JsonPath => GameConstants.Path.JsonGuessNumber;
     // 문제 레벨 반환
     protected override int GetQuestionLevel(GuessNumberQuestion question) => question.level;
 
@@ -51,7 +49,7 @@ public class GuessNumberManager : BaseGameManager<GuessNumberSetting, GuessNumbe
     {
         if (SoundManager.Instance != null)
         {
-            SoundManager.Instance.PlayBGM("GuessNumber_BGM");
+            SoundManager.Instance.PlayBGM(GameConstants.Sound.GuessNumberBGM);
         }
 
         int selectedLevel = LevelSelectContext.SelectedLevel > 0 ? LevelSelectContext.SelectedLevel : 1;
@@ -167,8 +165,8 @@ public class GuessNumberManager : BaseGameManager<GuessNumberSetting, GuessNumbe
         List<GameObject> leftButtons = new List<GameObject> { shuffledButtons[0], shuffledButtons[1] };
         List<GameObject> rightButtons = new List<GameObject> { shuffledButtons[2], shuffledButtons[3] };
 
-        PlaceButtonsInArea(leftButtons, leftAreaRect);
-        PlaceButtonsInArea(rightButtons, rightAreaRect);
+        UILayoutUtility.PlaceObjectsRandomlyInGrid(leftButtons, leftAreaRect, managerSetting.buttonMargin);
+        UILayoutUtility.PlaceObjectsRandomlyInGrid(rightButtons, rightAreaRect, managerSetting.buttonMargin);
 
         // 4. 버튼 데이터 매핑
         for (int i = 0; i < totalSlots; i++)
@@ -206,7 +204,7 @@ public class GuessNumberManager : BaseGameManager<GuessNumberSetting, GuessNumbe
 
         if (SoundManager.Instance != null)
         {
-            SoundManager.Instance.PlaySFX("Button");
+            SoundManager.Instance.PlaySFX(GameConstants.Sound.ButtonClick);
         }
 
         switch (currentQuestion.type)

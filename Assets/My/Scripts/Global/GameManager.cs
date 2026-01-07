@@ -64,7 +64,7 @@ public class GameManager : MonoBehaviour
     private void HandleInactivity()
     {
         // Title 씬에서는 작동하지 않음
-        if (SceneManager.GetActiveScene().name == "Title")
+        if (SceneManager.GetActiveScene().name == GameConstants.Scene.Title)
         {
             _currentInactivityTimer = 0f;
             return;
@@ -129,7 +129,7 @@ public class GameManager : MonoBehaviour
         }
 
         // 4. 씬 이동
-        SceneManager.LoadScene("Title");
+        SceneManager.LoadScene(GameConstants.Scene.Title);
 
         // 5. 상태 초기화
         await UniTask.Yield(); // 한 프레임 대기

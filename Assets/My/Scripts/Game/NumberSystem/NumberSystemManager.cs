@@ -19,7 +19,7 @@ public class NumberSystemManager : BaseGameManager<NumberSystemSetting, NumberSy
     private int _foundAnswerCount;              
     private HashSet<string> _foundAnswersSet;   
 
-    protected override string GetJsonFileName() => "NumberSystem.json";
+    protected override string JsonPath => GameConstants.Path.JsonNumberSystem;
     protected override int GetQuestionLevel(NumberSystemQuestion q) => q.level;
     
     protected override void OnSetupChildComponents()
@@ -38,7 +38,7 @@ public class NumberSystemManager : BaseGameManager<NumberSystemSetting, NumberSy
     {   
         if (SoundManager.Instance != null)
         {
-            SoundManager.Instance.PlayBGM("NumberSystem_BGM");
+            SoundManager.Instance.PlayBGM(GameConstants.Sound.NumberSystemBGM);
         }
         
         int selectedLevel = LevelSelectContext.SelectedLevel > 0 ? LevelSelectContext.SelectedLevel : 1;
@@ -90,7 +90,7 @@ public class NumberSystemManager : BaseGameManager<NumberSystemSetting, NumberSy
         }
     }
 
-    /// <summary> 정답 버튼 설정 및 배치. </summary>
+  /// <summary> 정답 버튼 설정 및 배치. </summary>
     protected override void SetupAnswerButtons(NumberSystemQuestion q)
     {
         List<string> options = new List<string>();
@@ -104,7 +104,7 @@ public class NumberSystemManager : BaseGameManager<NumberSystemSetting, NumberSy
         options = options.OrderBy(x => Random.value).ToList();
         List<GameObject> shuffledButtons = answerButtons.OrderBy(x => Random.value).ToList();
 
-        // 1. 버튼 설정 (이미지 모드 vs 기본 모드)
+        // 1. 버튼 설정
         for (int i = 0; i < 4; i++)
         {
             GameObject btnObj = shuffledButtons[i];
@@ -115,6 +115,7 @@ public class NumberSystemManager : BaseGameManager<NumberSystemSetting, NumberSy
 
             if (i < options.Count)
             {
+                // 버튼을 먼저 활성화해야 UIVideoPlayer가 정상 작동.
                 btnObj.SetActive(true);
 
                 string text = options[i];
@@ -128,41 +129,46 @@ public class NumberSystemManager : BaseGameManager<NumberSystemSetting, NumberSy
                     // [이미지 모드]
                     if (tmp) tmp.text = "";
 
-                    CleanupVideoComponents(btnObj);
-                    
-                    Image btnImage = btnObj.GetComponent<Image>();
-                    if (btnImage == null) btnImage = btnObj.AddComponent<Image>();
-                    btnImage.enabled = true;
-                    if (btn) btn.targetGraphic = btnImage;
-
-                    Sprite s = LoadSpriteFromStreamingAssets(pair.imagePath);
-                    if (s)
+                    // UIManager를 통해 안전하게 이미지 모드로 전환
+                    if (UIManager.Instance != null)
                     {
-                        btnImage.sprite = s;
-                        btnImage.color = Color.white;
-                        btnImage.type = Image.Type.Simple;
+                        Image btnImage = UIManager.Instance.SwitchToImageMode(btnObj);
                         
-                        var gradient = btnObj.GetComponent<ImageGlobalGradient>();
-                        if(gradient) gradient.enabled = false;
-                        
-                        RectTransform btnRect = btnObj.GetComponent<RectTransform>();
-                        if (pair.size != Vector2.zero && btnRect)
+                        if (btnImage != null)
                         {
-                            float maxWidth = 900f; 
-                            Vector2 finalSize = pair.size;
-                            if (finalSize.x > maxWidth)
+                            Sprite s = LoadSpriteFromStreamingAssets(pair.imagePath);
+                            if (s)
                             {
-                                float ratio = maxWidth / finalSize.x;
-                                finalSize.x *= ratio;
-                                finalSize.y *= ratio;
+                                btnImage.sprite = s;
+                                btnImage.color = Color.white;
+                                btnImage.type = Image.Type.Simple;
+                                
+                                // 그라데이션 제거
+                                var gradient = btnObj.GetComponent<ImageGlobalGradient>();
+                                if(gradient) gradient.enabled = false;
+                                
+                                // 크기 설정
+                                RectTransform btnRect = btnObj.GetComponent<RectTransform>();
+                                if (pair.size != Vector2.zero && btnRect)
+                                {
+                                    float maxWidth = 900f; 
+                                    Vector2 finalSize = pair.size;
+                                    if (finalSize.x > maxWidth)
+                                    {
+                                        float ratio = maxWidth / finalSize.x;
+                                        finalSize.x *= ratio;
+                                        finalSize.y *= ratio;
+                                    }
+                                    btnRect.sizeDelta = finalSize;
+                                }
                             }
-                            btnRect.sizeDelta = finalSize;
                         }
                     }
                 }
                 else
                 {
                     // [텍스트 모드] -> 기본 스타일 복구
+                    // 버튼이 이미 켜져 있으므로(SetActive(true)), 비디오 배경일 경우 정상 재생됨
                     RevertToDefaultButtonStyle(btnObj);
                     
                     if (tmp) tmp.text = text;
@@ -179,8 +185,8 @@ public class NumberSystemManager : BaseGameManager<NumberSystemSetting, NumberSy
         // 2. 버튼 배치
         List<GameObject> activeBtns = shuffledButtons.Take(options.Count).ToList();
         int half = Mathf.CeilToInt(activeBtns.Count / 2f);
-        PlaceButtonsInArea(activeBtns.Take(half).ToList(), leftAreaRect);
-        PlaceButtonsInArea(activeBtns.Skip(half).ToList(), rightAreaRect);
+        UILayoutUtility.PlaceObjectsRandomlyInGrid(activeBtns.Take(half).ToList(), leftAreaRect, managerSetting.buttonMargin);
+        UILayoutUtility.PlaceObjectsRandomlyInGrid(activeBtns.Skip(half).ToList(), rightAreaRect, managerSetting.buttonMargin);
     }
 
     private void OnAnswerClicked(string clickedText, GameObject btnObj)
@@ -191,7 +197,7 @@ public class NumberSystemManager : BaseGameManager<NumberSystemSetting, NumberSy
         
         if (SoundManager.Instance != null)
         {
-            SoundManager.Instance.PlaySFX("Button");    
+            SoundManager.Instance.PlaySFX(GameConstants.Sound.ButtonClick);    
         }
 
         switch (currentQuestion.type)
@@ -240,14 +246,6 @@ public class NumberSystemManager : BaseGameManager<NumberSystemSetting, NumberSy
     {
         if (q.answerImages == null) return null;
         return q.answerImages.FirstOrDefault(x => x.answerText == text);
-    }
-
-    /// <summary> 버튼의 비디오 관련 컴포넌트를 제거하여 이미지 모드로 전환할 준비. </summary>
-    private void CleanupVideoComponents(GameObject btnObj)
-    {
-        if (btnObj.TryGetComponent(out UIVideoPlayer videoPlayer)) DestroyImmediate(videoPlayer);
-        if (btnObj.TryGetComponent(out VideoPlayer vp)) DestroyImmediate(vp);
-        if (btnObj.TryGetComponent(out RawImage rawImage)) DestroyImmediate(rawImage);
     }
 
     /// <summary> 버튼 스타일을 현재 레벨의 기본 설정(Settings.json)으로 완전 복구. </summary>

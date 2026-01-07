@@ -18,7 +18,7 @@ public class CalculateNumberManager : BaseGameManager<CalculateNumberSetting, Ca
 
     private int _foundAnswerCount; 
     
-    protected override string GetJsonFileName() => "CalculateNumber.json";
+    protected override string JsonPath => GameConstants.Path.JsonCalculateNumber;
     protected override int GetQuestionLevel(CalculateNumberQuestion question) => question.level;
 
     protected override void OnSetupChildComponents()
@@ -43,7 +43,7 @@ public class CalculateNumberManager : BaseGameManager<CalculateNumberSetting, Ca
     {   
         if (SoundManager.Instance != null)
         {
-            SoundManager.Instance.PlayBGM("CalculateNumber_BGM");
+            SoundManager.Instance.PlayBGM(GameConstants.Sound.CalculateNumberBGM);
         }
         
         int selectedLevel = LevelSelectContext.SelectedLevel > 0 ? LevelSelectContext.SelectedLevel : 1;
@@ -115,7 +115,7 @@ public class CalculateNumberManager : BaseGameManager<CalculateNumberSetting, Ca
         }
     }
     
-    protected override void SetupAnswerButtons(CalculateNumberQuestion q)
+   protected override void SetupAnswerButtons(CalculateNumberQuestion q)
     {
         List<string> options = new List<string>();
         if (q.correctAnswers != null) options.AddRange(q.correctAnswers);
@@ -143,6 +143,9 @@ public class CalculateNumberManager : BaseGameManager<CalculateNumberSetting, Ca
 
             if (i < options.Count)
             {
+                // 버튼을 먼저 활성화해야 UIVideoPlayer가 비디오를 로드할 수 있음
+                btnObj.SetActive(true); 
+
                 string text = options[i];
                 TextMeshProUGUI tmp = btnObj.GetComponentInChildren<TextMeshProUGUI>();
                 if (tmp) tmp.text = text;
@@ -154,21 +157,23 @@ public class CalculateNumberManager : BaseGameManager<CalculateNumberSetting, Ca
                 }
                 else
                 {
-                    // 기본값 복구 (위치가 0,0으로 리셋될 수 있음)
+                    // 기본값 복구
                     RevertToDefaultButtonStyle(btnObj);
                 }
 
                 btn.onClick.AddListener(() => OnAnswerClicked(text, btnObj, overridePressed));
-                btnObj.SetActive(true);
             }
-            else btnObj.SetActive(false);
+            else 
+            {
+                btnObj.SetActive(false);
+            }
         }
 
-        // 위치 배치를 마지막에 수행하여 스타일 적용 시 리셋된 위치를 덮어씀
+        // 위치 배치를 마지막에 수행
         List<GameObject> activeBtns = shuffledBtns.Take(options.Count).ToList();
         int half = Mathf.CeilToInt(activeBtns.Count / 2f);
-        PlaceButtonsInArea(activeBtns.Take(half).ToList(), leftAreaRect);
-        PlaceButtonsInArea(activeBtns.Skip(half).ToList(), rightAreaRect);
+        UILayoutUtility.PlaceObjectsRandomlyInGrid(activeBtns.Take(half).ToList(), leftAreaRect, managerSetting.buttonMargin);
+        UILayoutUtility.PlaceObjectsRandomlyInGrid(activeBtns.Skip(half).ToList(), rightAreaRect, managerSetting.buttonMargin);
     }
     
     private void OnAnswerClicked(string text, GameObject btnObj, Sprite pressedSprite)
@@ -179,7 +184,7 @@ public class CalculateNumberManager : BaseGameManager<CalculateNumberSetting, Ca
         
         if (SoundManager.Instance != null)
         {
-            SoundManager.Instance.PlaySFX("Button");    
+            SoundManager.Instance.PlaySFX(GameConstants.Sound.ButtonClick);
         }
 
         switch (currentQuestion.type)
@@ -212,54 +217,53 @@ public class CalculateNumberManager : BaseGameManager<CalculateNumberSetting, Ca
     {
         if (btnObj == null) return;
 
-        // 1. 비디오 관련 컴포넌트 정리 & Image 컴포넌트 확보
-        if (btnObj.TryGetComponent(out UIVideoPlayer videoPlayer)) DestroyImmediate(videoPlayer);
-        if (btnObj.TryGetComponent(out VideoPlayer vp)) DestroyImmediate(vp);
-        if (btnObj.TryGetComponent(out RawImage rawImage)) DestroyImmediate(rawImage);
+        // UIManager에게 이미지 모드 전환 요청
+        if (UIManager.Instance != null)
+        {
+            Image btnImage = UIManager.Instance.SwitchToImageMode(btnObj);
+            
+            if (btnImage != null)
+            {
+                // 이미지 및 색상 적용
+                Sprite normal = LoadSpriteFromStreamingAssets(set.normalImageName);
+                if (normal)
+                {
+                    btnImage.sprite = normal;
+                    btnImage.color = set.buttonColor;
+                    btnImage.type = Image.Type.Simple;
 
-        Image btnImage = btnObj.GetComponent<Image>();
-        if (btnImage == null) btnImage = btnObj.AddComponent<Image>();
-        btnImage.enabled = true;
-
-        Button btn = btnObj.GetComponent<Button>();
-        if (btn) btn.targetGraphic = btnImage;
-
-        // 2. 이미지 및 색상 적용
-        Sprite normal = LoadSpriteFromStreamingAssets(set.normalImageName);
-        if(normal) 
-        { 
-            btnImage.sprite = normal; 
-            btnImage.color = set.buttonColor; 
-            btnImage.type = Image.Type.Simple;
+                    Button btn = btnObj.GetComponent<Button>();
+                    // 눌림 상태 스프라이트 설정
+                    if (btn && !string.IsNullOrEmpty(set.pressedImageName))
+                    {
+                        Sprite pressed = LoadSpriteFromStreamingAssets(set.pressedImageName);
+                        if (pressed)
+                        {
+                            btn.transition = Selectable.Transition.SpriteSwap;
+                            SpriteState newState = new SpriteState
+                            {
+                                pressedSprite = pressed,
+                                highlightedSprite = normal,
+                                selectedSprite = normal,
+                                disabledSprite = pressed
+                            };
+                            btn.spriteState = newState;
+                        }
+                    }
+                }
+            }
         }
         
-        // 3. 크기(Size) 적용
+        // 크기(Size) 적용
         if (set.overrideSize != Vector2.zero)
         {
             RectTransform rt = btnObj.GetComponent<RectTransform>();
             if (rt) rt.sizeDelta = set.overrideSize;
         }
 
-        // 4. 그라데이션 끄기 및 눌림 상태 설정
+        // 그라데이션 끄기
         ImageGlobalGradient gradient = btnObj.GetComponent<ImageGlobalGradient>();
         if (gradient) gradient.enabled = false;
-        
-        if (btn && !string.IsNullOrEmpty(set.pressedImageName))
-        {
-            Sprite pressed = LoadSpriteFromStreamingAssets(set.pressedImageName);
-            if (pressed)
-            {
-                btn.transition = Selectable.Transition.SpriteSwap;
-                SpriteState newState = new SpriteState 
-                { 
-                    pressedSprite = pressed, 
-                    highlightedSprite = normal, 
-                    selectedSprite = normal, 
-                    disabledSprite = pressed 
-                };
-                btn.spriteState = newState;
-            }
-        }
     }
 
     private void RevertToDefaultButtonStyle(GameObject btnObj)
