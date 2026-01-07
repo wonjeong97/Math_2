@@ -6,7 +6,7 @@ using Cysharp.Threading.Tasks;
 
 public static class GameResultContext
 {
-    /// <summary> 맞춘 문제 개수 (0 ~ 4) </summary>
+    /// <summary> 맞춘 문제 개수를 저장함 (0 ~ 4). </summary>
     public static int CorrectCount { get; set; } = 0;
 }
 
@@ -19,24 +19,17 @@ public class GameEndSetting
     public ButtonSetting homeButton;
 }
 
-/// <summary>
-/// 게임 종료(결과) 화면을 관리하는 매니저.
-/// 점수별 이미지 표시 및 타이틀 복귀 기능을 담당.
-/// </summary>
+/// <summary> 게임 종료 화면을 관리함 (점수 표시 및 홈 복귀). </summary>
 public class GameEndManager : BaseManager<GameEndSetting>
 {
     [Header("UI Objects")]
     [SerializeField] private GameObject backgroundObj;
-    [SerializeField] private Image uiGameEndImage;  // 배경/타이틀 이미지
-    [SerializeField] private Image uiMyScoreImage;  // 점수(별) 결과 이미지
-    [SerializeField] private Button uiHomeButton;   // 홈(타이틀) 복귀 버튼
+    [SerializeField] private Image uiGameEndImage;  
+    [SerializeField] private Image uiMyScoreImage;  
+    [SerializeField] private Button uiHomeButton;   
     
     protected override string JsonPath => GameConstants.Path.JsonGameEnd;
     
-    /// <summary>
-    /// 초기화 진입점.
-    /// UI 설정, 버튼 이벤트 연결, 화면 페이드 인 실행.
-    /// </summary>
     protected override async UniTask Initialize()
     {   
         if (SoundManager.Instance != null)
@@ -49,38 +42,30 @@ public class GameEndManager : BaseManager<GameEndSetting>
             UIManager.Instance.SetImageObj(backgroundObj, managerSetting.backgroundImage, this.GetCancellationTokenOnDestroy()).Forget();
         }
         
-        // 1. UI 설정 적용
         ApplyUISettings();
-        
-        // 2. 버튼 이벤트 설정
         SetupButtonEvents();
 
-        // 3. 씬 시작 시 Fade In (검정 -> 투명)
         if (fader != null && fadeImage != null)
         {
             await fader.FadeIn(fadeImage, fadeTime, DestroyToken);
         }
     }
     
-    /// <summary> JSON 설정 데이터를 기반으로 UI(이미지, 버튼) 초기화. </summary>
+    /// <summary> JSON 설정을 기반으로 UI를 초기화함. </summary>
     private void ApplyUISettings()
     {
-        // BaseManager의 ui (UIManager)와 managerSetting 사용
         if (ui == null || managerSetting == null) return;
 
-        // 1. 기본 배경/타이틀 이미지 설정
         if (uiGameEndImage != null && managerSetting.gameEndImage != null)
         {
             ui.SetImageObj(uiGameEndImage.gameObject, managerSetting.gameEndImage, this.GetCancellationTokenOnDestroy()).Forget();
         }
 
-        // 2. 홈 버튼 설정
         if (uiHomeButton != null && managerSetting.homeButton != null)
         {
             ui.SetButtonObj(uiHomeButton.gameObject, managerSetting.homeButton, this.GetCancellationTokenOnDestroy()).Forget();
         }
 
-        // 3. 점수(Score) 이미지 설정 (맞춘 개수에 따라 다르게 표시)
         if (uiMyScoreImage != null && managerSetting.scoreResultImages != null)
         {
             int score = Mathf.Clamp(GameResultContext.CorrectCount, 0, 4);
@@ -95,12 +80,12 @@ public class GameEndManager : BaseManager<GameEndSetting>
             }
             else
             {
-                Debug.LogWarning($"[GameEndManager] Score {score}에 해당하는 이미지 세팅이 없습니다.");
+                Debug.LogWarning($"[GameEndManager] Score {score}에 해당하는 이미지 세팅이 없음.");
             }
         }
     }
     
-    /// <summary> 버튼 클릭 이벤트 리스너 등록. </summary>
+    /// <summary> 버튼 이벤트를 등록함. </summary>
     private void SetupButtonEvents()
     {
         if (uiHomeButton != null)
@@ -108,16 +93,12 @@ public class GameEndManager : BaseManager<GameEndSetting>
             uiHomeButton.onClick.RemoveAllListeners();
             uiHomeButton.onClick.AddListener(() =>
             {
-                // 비동기 핸들러 호출
                 HandleHomeButtonAsync().Forget();
             });
         }
     }
 
-    /// <summary>
-    /// 홈 버튼 클릭 처리.
-    /// 페이드 아웃 후 타이틀 씬으로 이동.
-    /// </summary>
+    /// <summary> 홈 버튼 클릭을 처리함. </summary>
     private async UniTaskVoid HandleHomeButtonAsync()
     {
         try
@@ -127,21 +108,14 @@ public class GameEndManager : BaseManager<GameEndSetting>
                 SoundManager.Instance.PlaySFX(GameConstants.Sound.ButtonClick);    
             }
             
-            // 1. Fade Out
             if (fader != null && fadeImage != null)
             {
                 await fader.FadeOut(fadeImage, fadeTime, DestroyToken);
             }
             
-            Debug.Log("[GameEnd] Player Clicked Home");
-
-            // 2. 타이틀 씬으로 이동
             SceneManager.LoadScene(GameConstants.Scene.Title);
         }
-        catch (OperationCanceledException)
-        {
-            // 씬 전환 등으로 인한 작업 취소 (정상)
-        }
+        catch (OperationCanceledException) { }
         catch (Exception e)
         {
             Debug.LogError($"[GameEndManager] HandleHomeButtonAsync Error: {e}");

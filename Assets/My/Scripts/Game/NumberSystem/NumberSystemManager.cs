@@ -6,7 +6,7 @@ using UnityEngine.UI;
 using TMPro;
 using Random = UnityEngine.Random;
 
-/// <summary> '수의 체계(NumberSystem)' 게임 관리 매니저. </summary>
+/// <summary> '수의 체계(NumberSystem)' 게임을 관리함. </summary>
 public class NumberSystemManager : BaseGameManager<NumberSystemSetting, NumberSystemQuestion>
 {
     [Header("--- NumberSystem Specific ---")]
@@ -89,7 +89,7 @@ public class NumberSystemManager : BaseGameManager<NumberSystemSetting, NumberSy
         }
     }
 
-  /// <summary> 정답 버튼 설정 및 배치. </summary>
+    /// <summary> 정답 버튼을 설정하고 배치함. </summary>
     protected override void SetupAnswerButtons(NumberSystemQuestion q)
     {
         List<string> options = new List<string>();
@@ -114,7 +114,7 @@ public class NumberSystemManager : BaseGameManager<NumberSystemSetting, NumberSy
 
             if (i < options.Count)
             {
-                // 버튼을 먼저 활성화해야 UIVideoPlayer가 정상 작동.
+                // 비디오 플레이어 작동을 위해 버튼 활성화를 먼저 수행
                 btnObj.SetActive(true);
 
                 string text = options[i];
@@ -142,11 +142,9 @@ public class NumberSystemManager : BaseGameManager<NumberSystemSetting, NumberSy
                                 btnImage.color = Color.white;
                                 btnImage.type = Image.Type.Simple;
                                 
-                                // 그라데이션 제거
                                 var gradient = btnObj.GetComponent<ImageGlobalGradient>();
                                 if(gradient) gradient.enabled = false;
                                 
-                                // 크기 설정
                                 RectTransform btnRect = btnObj.GetComponent<RectTransform>();
                                 if (pair.size != Vector2.zero && btnRect)
                                 {
@@ -167,7 +165,6 @@ public class NumberSystemManager : BaseGameManager<NumberSystemSetting, NumberSy
                 else
                 {
                     // [텍스트 모드] -> 기본 스타일 복구
-                    // 버튼이 이미 켜져 있으므로(SetActive(true)), 비디오 배경일 경우 정상 재생됨
                     RevertToDefaultButtonStyle(btnObj);
                     
                     if (tmp) tmp.text = text;
@@ -247,7 +244,7 @@ public class NumberSystemManager : BaseGameManager<NumberSystemSetting, NumberSy
         return q.answerImages.FirstOrDefault(x => x.answerText == text);
     }
 
-    /// <summary> 버튼 스타일을 현재 레벨의 기본 설정(Settings.json)으로 완전 복구. </summary>
+    /// <summary> 버튼 스타일을 현재 레벨의 기본 설정으로 복구함. </summary>
     private void RevertToDefaultButtonStyle(GameObject btnObj)
     {
         if (JsonLoader.Instance == null || JsonLoader.Instance.settings == null) return;
@@ -260,7 +257,6 @@ public class NumberSystemManager : BaseGameManager<NumberSystemSetting, NumberSy
             
             ButtonSetting defaultSetting = globalSettings.questionButtons[levelIndex];
             
-            // 텍스트 설정을 제외하고 배경/크기 등만 복구
             ButtonSetting bgOnlySetting = new ButtonSetting 
             {
                 name = defaultSetting.name,
