@@ -6,6 +6,7 @@ public interface IGameCommonSetting
 {
     ButtonSetting backButton { get; }
     float buttonMargin { get; }
+    float[] extraHeights { get; }
     ImageSetting correctImage { get; }
     ImageSetting wrongImage { get; }
     ButtonSetting retryButton { get; }
@@ -52,6 +53,7 @@ public class GuessNumberSetting : IGameCommonSetting // 인터페이스 구현
     public LevelProgressSetting[] levelProgresses; 
     public ButtonSetting backButton;
     public float buttonMargin = 20f;
+    public float[] extraHeights;
     public ImageSetting correctImage;
     public ImageSetting wrongImage;
     public ButtonSetting retryButton;
@@ -63,6 +65,7 @@ public class GuessNumberSetting : IGameCommonSetting // 인터페이스 구현
     LevelProgressSetting[] IGameCommonSetting.levelProgresses => levelProgresses;
     ButtonSetting IGameCommonSetting.backButton => backButton;
     float IGameCommonSetting.buttonMargin => buttonMargin;
+    float[] IGameCommonSetting.extraHeights => extraHeights;
     ImageSetting IGameCommonSetting.correctImage => correctImage;
     ImageSetting IGameCommonSetting.wrongImage => wrongImage;
     ButtonSetting IGameCommonSetting.retryButton => retryButton;
@@ -103,6 +106,7 @@ public class CalculateNumberSetting : IGameCommonSetting // 인터페이스 구�
     public LevelProgressSetting[] levelProgresses;
     public ButtonSetting backButton;
     public float buttonMargin = 20f;
+    public float[] extraHeights;
     public ImageSetting correctImage;
     public ImageSetting wrongImage;
     public ButtonSetting retryButton;
@@ -114,6 +118,7 @@ public class CalculateNumberSetting : IGameCommonSetting // 인터페이스 구�
     LevelProgressSetting[] IGameCommonSetting.levelProgresses => levelProgresses;
     ButtonSetting IGameCommonSetting.backButton => backButton;
     float IGameCommonSetting.buttonMargin => buttonMargin;
+    float[] IGameCommonSetting.extraHeights => extraHeights;
     ImageSetting IGameCommonSetting.correctImage => correctImage;
     ImageSetting IGameCommonSetting.wrongImage => wrongImage;
     ButtonSetting IGameCommonSetting.retryButton => retryButton;
@@ -151,7 +156,8 @@ public class NumberSystemSetting : IGameCommonSetting // 인터페이스 구현
     public ImageSetting[] gameTypeImages;    
     public LevelProgressSetting[] levelProgresses; 
     public ButtonSetting backButton;
-    public float buttonMargin = 20f; 
+    public float buttonMargin = 20f;
+    public float[] extraHeights;
     public ImageSetting correctImage;
     public ImageSetting wrongImage;
     public ButtonSetting retryButton;
@@ -163,6 +169,7 @@ public class NumberSystemSetting : IGameCommonSetting // 인터페이스 구현
     LevelProgressSetting[] IGameCommonSetting.levelProgresses => levelProgresses;
     ButtonSetting IGameCommonSetting.backButton => backButton;
     float IGameCommonSetting.buttonMargin => buttonMargin;
+    float[] IGameCommonSetting.extraHeights => extraHeights;
     ImageSetting IGameCommonSetting.correctImage => correctImage;
     ImageSetting IGameCommonSetting.wrongImage => wrongImage;
     ButtonSetting IGameCommonSetting.retryButton => retryButton;

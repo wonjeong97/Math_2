@@ -394,6 +394,7 @@
     }
   ],
   "buttonMargin": 30.0,
+  "extraHeights": [100, 100, 100, 100, 200],
   "correctImage": {
     "position": {"x": 480, "y": 500},
     "size": {"x": 900, "y": 900},
