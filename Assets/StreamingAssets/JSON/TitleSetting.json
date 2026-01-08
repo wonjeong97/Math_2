@@ -1,13 +1,13 @@
 ﻿{
   "titleBackgroundImage": {
-    "position": {"x": 960, "y": 540},
-    "size": {"x": 1920, "y": 1080},
+    "position": {"x": 960, "y": 600},
+    "size": {"x": 1920, "y": 1200},
     "sourceImage": "Video/배경.mp4"
   },
   "titleStartButton": {
-    "position": {"x": 475, "y": 760},
+    "position": {"x": 560, "y": 760},
     "size": {"x": 1024, "y": 1024},
-    "scale": {"x": 0.5, "y": 0.5, "z": 0.5},
+    "scale": {"x": 0.6, "y": 0.6, "z": 0.6},
     "buttonBackgroundImage": {"sourceImage": "Video/Title/시작하기.webm"}
   },
   "titleText1": {
