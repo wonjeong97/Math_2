@@ -393,7 +393,8 @@
       ]
     }
   ],
-  "buttonMargin": 30.0,
+  "buttonMargin": 10.0,
+  "extraHeights": [50, 50, 50, 50, 200], "//": "값은 0 ~ 400이되, 너무 높이면 버튼끼리 겹치고 문제 텍스트 크기가 작아짐 ",
   "correctImage": {
     "position": {"x": 480, "y": 500},
     "size": {"x": 900, "y": 900},

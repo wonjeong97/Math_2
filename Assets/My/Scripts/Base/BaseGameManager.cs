@@ -30,6 +30,8 @@ public abstract class BaseGameManager<TSetting, TQuestion> : BaseManager<TSettin
     [SerializeField] protected GameObject[] answerButtons;      
     [SerializeField] protected RectTransform leftAreaRect;      
     [SerializeField] protected RectTransform rightAreaRect;     
+    [SerializeField] protected RectTransform leftExtraAreaRect;
+    [SerializeField] protected RectTransform rightExtraAreaRect;
 
     [Header("--- Base Result UI ---")]
     [SerializeField] protected GameObject pageCorrect;  
@@ -75,6 +77,9 @@ public abstract class BaseGameManager<TSetting, TQuestion> : BaseManager<TSettin
         if (buttonGameEnd) { buttonGameEnd.onClick.RemoveAllListeners(); buttonGameEnd.onClick.AddListener(OnGameEndClicked); }
         if (backButton) { backButton.onClick.RemoveAllListeners(); backButton.onClick.AddListener(() => SceneManager.LoadScene(GameConstants.Scene.LevelSelect)); }
 
+        // UI 레이아웃 안정화를 위해 0.1초 대기
+        await UniTask.Delay(TimeSpan.FromSeconds(0.1f));
+
         CaptureDefaultButtonState();
 
         if (managerSetting == null)
@@ -94,16 +99,10 @@ public abstract class BaseGameManager<TSetting, TQuestion> : BaseManager<TSettin
         }
     }
     
-    /// <summary> 자식 클래스에서 컴포넌트 할당 등을 수행할 때 사용함. </summary>
     protected virtual void OnSetupChildComponents() { }
-    
-    /// <summary> 자식 클래스에서 추가적인 비동기 초기화가 필요할 때 사용함. </summary>
     protected virtual async UniTask OnGameInitializeAsync() { await UniTask.CompletedTask; }
-    
-    /// <summary> 게임 로직을 시작함. (문제 필터링 등) </summary>
     protected virtual void StartGameLogic() { }
     
-    /// <summary> 지정된 인덱스의 문제로 UI를 설정함. </summary>
     protected void SetQuestionBase(int index)
     {
         if (currentLevelQuestions == null || index >= currentLevelQuestions.Count) return;
@@ -118,7 +117,6 @@ public abstract class BaseGameManager<TSetting, TQuestion> : BaseManager<TSettin
         SetupAnswerButtons(currentQuestion);
     }
 
-    /// <summary> 버튼의 스타일(이미지, 색상, 크기, 상태)을 기본값으로 복구함. </summary>
     protected void RestoreButtonDefault(Button btn, Image btnImage, RectTransform btnRect = null)
     {
         if (btnImage && _defaultButtonSprite) 
@@ -142,7 +140,6 @@ public abstract class BaseGameManager<TSetting, TQuestion> : BaseManager<TSettin
         }
     }
 
-    /// <summary> 진행도 이미지를 업데이트함. </summary>
     protected void UpdateProgressImage(int level, int index)
     {
         if (!progressImage || managerSetting?.levelProgresses == null) return;
@@ -158,7 +155,6 @@ public abstract class BaseGameManager<TSetting, TQuestion> : BaseManager<TSettin
         }
     }
     
-    /// <summary> 이미지 페이드 효과를 비동기 처리함. </summary>
     protected async UniTaskVoid HandleImageFadeAsync(Image target, ImageSetting setting, CancellationToken token)
     {
         float duration = setting.fadeDuration > 0 ? setting.fadeDuration : 1f;
@@ -172,7 +168,6 @@ public abstract class BaseGameManager<TSetting, TQuestion> : BaseManager<TSettin
         } while (setting.loop && target != null);
     }
     
-    /// <summary> 알파값을 선형 보간함 (Lerp). </summary>
     private async UniTask FadeAlpha(Image target, float from, float to, float duration, CancellationToken token)
     {
         float time = 0f;
@@ -197,7 +192,6 @@ public abstract class BaseGameManager<TSetting, TQuestion> : BaseManager<TSettin
         }
     }
     
-    /// <summary> 초기화 시 버튼의 기본 상태(스프라이트, 색상, 크기)를 저장함. </summary>
     private void CaptureDefaultButtonState()
     {
         if (answerButtons is { Length: > 0 })
@@ -235,6 +229,10 @@ public abstract class BaseGameManager<TSetting, TQuestion> : BaseManager<TSettin
             }
         }
         
+        // 좌우 Extra 영역에 대해 높이 설정 적용
+        ApplyExtraHeight(leftExtraAreaRect, levelIndex);
+        ApplyExtraHeight(rightExtraAreaRect, levelIndex);
+
         if (JsonLoader.Instance != null && JsonLoader.Instance.settings != null)
         {
             TextSetting qTextSetting = JsonLoader.Instance.settings.gameQuestionText;
@@ -244,8 +242,27 @@ public abstract class BaseGameManager<TSetting, TQuestion> : BaseManager<TSettin
             }
         }
     }
+
+    /// <summary> 지정된 RectTransform에 레벨별 Extra 높이를 적용함. </summary>
+    private void ApplyExtraHeight(RectTransform targetRect, int levelIndex)
+    {
+        if (targetRect == null) return;
+
+        LayoutElement layout = targetRect.GetComponent<LayoutElement>();
+        if (layout == null) layout = targetRect.gameObject.AddComponent<LayoutElement>();
+
+        float targetHeight = 100f; // 기본값
+
+        // 현재 레벨에 맞는 높이 값이 있는지 확인하고 적용
+        if (managerSetting.extraHeights != null && levelIndex >= 0 && levelIndex < managerSetting.extraHeights.Length)
+        {
+            targetHeight = managerSetting.extraHeights[levelIndex];
+        }
+
+        layout.minHeight = targetHeight;
+        layout.flexibleHeight = 0f; 
+    }
     
-    /// <summary> 전역 설정(Settings.json)을 통해 버튼 스타일을 적용함. </summary>
     private void ApplyButtonStyles()
     {
         if (JsonLoader.Instance == null || UIManager.Instance == null || answerButtons == null) return;
@@ -277,14 +294,12 @@ public abstract class BaseGameManager<TSetting, TQuestion> : BaseManager<TSettin
         }
     }
     
-    /// <summary> StreamingAssets에서 스프라이트를 로드함. </summary>
     protected Sprite LoadSpriteFromStreamingAssets(string fileName)
     {
         if (UIManager.Instance == null) return null;
         return UIManager.Instance.LoadSprite(fileName);
     }
     
-    /// <summary> 정답 처리를 수행함 (비동기 호출 래퍼). </summary>
     protected virtual void HandleCorrectAnswer() { HandleCorrectAnswerAsync().Forget(); }
 
     private async UniTaskVoid HandleCorrectAnswerAsync()
@@ -311,7 +326,6 @@ public abstract class BaseGameManager<TSetting, TQuestion> : BaseManager<TSettin
         }
     }
     
-    /// <summary> 오답 처리를 수행함. </summary>
     protected virtual void HandleWrongAnswer()
     {
         Debug.Log($"[{SceneManager.GetActiveScene().name}] Wrong ({currentQuestionIndex + 1}/{totalQuestions})");
@@ -324,7 +338,6 @@ public abstract class BaseGameManager<TSetting, TQuestion> : BaseManager<TSettin
         }
     }
     
-    /// <summary> 다시하기 버튼 클릭을 처리함. </summary>
     protected virtual void OnRetryClicked()
     {   
         Debug.Log($"[{SceneManager.GetActiveScene().name}] Retry ({currentQuestionIndex + 1}/{totalQuestions})");
@@ -338,7 +351,6 @@ public abstract class BaseGameManager<TSetting, TQuestion> : BaseManager<TSettin
         SetQuestionBase(currentQuestionIndex);
     }
     
-    /// <summary> 게임 종료 버튼 클릭을 처리함 (비동기 래퍼). </summary>
     protected virtual void OnGameEndClicked() { HandleGameEndAsync().Forget(); }
     
     private async UniTaskVoid HandleGameEndAsync()
@@ -350,7 +362,6 @@ public abstract class BaseGameManager<TSetting, TQuestion> : BaseManager<TSettin
         SceneManager.LoadScene(GameConstants.Scene.GameEnd);
     }
     
-    /// <summary> 레벨별 버튼/텍스트 그라데이션을 적용함. </summary>
     private void ApplyButtonGradients(int level)
     {
         if (JsonLoader.Instance == null) return;
@@ -377,7 +388,6 @@ public abstract class BaseGameManager<TSetting, TQuestion> : BaseManager<TSettin
         }
     }
     
-    /// <summary> 텍스트 그라데이션을 적용함. </summary>
     private void ApplyGradientToTarget(TextMeshProUGUI tmp, GradientData data)
     {
         if (!tmp || data == null) return;

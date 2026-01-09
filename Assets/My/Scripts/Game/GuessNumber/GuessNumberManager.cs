@@ -75,15 +75,19 @@ public class GuessNumberManager : BaseGameManager<GuessNumberSetting, GuessNumbe
         Transform textParent = isTextLeft ? leftQuestionZone : rightQuestionZone;
         Transform imageParent = isTextLeft ? rightQuestionZone : leftQuestionZone;
 
+        // 1. 텍스트 설정
         if (questionTextObj && textParent)
         {
             questionTextObj.transform.SetParent(textParent, false);
             bool hasText = !string.IsNullOrEmpty(q.questionText);
             questionTextObj.text = hasText ? q.questionText : "";
-            questionTextObj.gameObject.SetActive(hasText);
-            if (textParent.gameObject != null) textParent.gameObject.SetActive(hasText);
+            
+            // 텍스트 내용이 없어도 Zone은 항상 켜둠
+            questionTextObj.gameObject.SetActive(hasText); 
+            if (textParent.gameObject != null) textParent.gameObject.SetActive(true); 
         }
 
+        // 2. 이미지 설정
         if (questionImageObj && imageParent)
         {
             questionImageObj.transform.SetParent(imageParent, false);
@@ -94,13 +98,14 @@ public class GuessNumberManager : BaseGameManager<GuessNumberSetting, GuessNumbe
                 UIManager.Instance.SetImageObj(questionImageObj.gameObject, q.questionImage, this.GetCancellationTokenOnDestroy())
                     .Forget(ex => Debug.LogError($"[GuessNumberManager] 문제 이미지 설정 실패: {ex.Message}"));
                 questionImageObj.gameObject.SetActive(true);
-                if (imageParent.gameObject != null) imageParent.gameObject.SetActive(true);
             }
             else
             {
                 questionImageObj.gameObject.SetActive(false);
-                if (imageParent.gameObject != null) imageParent.gameObject.SetActive(false);
             }
+            
+            // 이미지가 없어도 Zone은 항상 켜둠
+            if (imageParent.gameObject != null) imageParent.gameObject.SetActive(true);
         }
     }
 
