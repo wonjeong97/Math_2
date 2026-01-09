@@ -49,6 +49,34 @@
       "wrongAnswers": ["9", "5", "3"]
     },
     {
+      "level": 1,
+      "type": 0,
+      "questionText": "하나, 둘, 셋...\n다음 숫자는?",
+      "correctAnswers": ["넷"],
+      "wrongAnswers": ["둘", "다섯", "일곱"]
+    },
+    {
+      "level": 1,
+      "type": 0,
+      "questionText": "10보다 작은 수는\n무엇일까요?",
+      "correctAnswers": ["9"],
+      "wrongAnswers": ["10", "11", "20"]
+    },
+    {
+      "level": 1,
+      "type": 0,
+      "questionText": "8 바로 앞에 오는 수는\n무엇일까요?",
+      "correctAnswers": ["7"],
+      "wrongAnswers": ["9", "6", "5"]
+    },
+    {
+      "level": 1,
+      "type": 0,
+      "questionText": "다음 중 0이 들어간 수는\n무엇일까요?",
+      "correctAnswers": ["10"],
+      "wrongAnswers": ["5", "8", "9"]
+    },
+    {
       "level": 2,
       "type": 1,
       "questionText": "짝수를 모두 골라보세요.",
@@ -89,6 +117,34 @@
       "questionText": "5보다 작은 수를\n모두 골라보세요.",
       "correctAnswers": ["1", "3", "4"],
       "wrongAnswers": ["5", "6", "8", "9"]
+    },
+    {
+      "level": 2,
+      "type": 0,
+      "questionText": "두 자리 수 중에서\n가장 작은 수는?",
+      "correctAnswers": ["10"],
+      "wrongAnswers": ["11", "9", "99"]
+    },
+    {
+      "level": 2,
+      "type": 0,
+      "questionText": "50보다 크고 52보다 작은 수는\n무엇일까요?",
+      "correctAnswers": ["51"],
+      "wrongAnswers": ["50", "52", "53"]
+    },
+    {
+      "level": 2,
+      "type": 0,
+      "questionText": "시계에서 12시 다음은\n몇 시일까요?",
+      "correctAnswers": ["1시"],
+      "wrongAnswers": ["13시", "11시", "0시"]
+    },
+    {
+      "level": 2,
+      "type": 2,
+      "questionText": "5가 들어간 숫자를 작은 수부터\n순서대로 터치하세요.",
+      "correctAnswers": ["5", "15", "25"],
+      "wrongAnswers": ["10", "20", "30"]
     },
     {
       "level": 3,
@@ -133,6 +189,34 @@
       "wrongAnswers": ["0.2", "1.2", "0.1"]
     },
     {
+      "level": 3,
+      "type": 0,
+      "questionText": "분모가 4인 진분수를\n찾아보세요.",
+      "correctAnswers": ["3/4"],
+      "wrongAnswers": ["5/4", "4/3", "1/2"]
+    },
+    {
+      "level": 3,
+      "type": 2,
+      "questionText": "큰 수부터 차례대로\n터치하세요.",
+      "correctAnswers": ["1000", "100", "10"],
+      "wrongAnswers": ["1", "0", "-10"]
+    },
+    {
+      "level": 3,
+      "type": 0,
+      "questionText": "0.1이 7개 있으면\n얼마일까요?",
+      "correctAnswers": ["0.7"],
+      "wrongAnswers": ["0.07", "7", "70"]
+    },
+    {
+      "level": 3,
+      "type": 0,
+      "questionText": "만의 자리 숫자가 5인 수는\n무엇일까요?",
+      "correctAnswers": ["51230"],
+      "wrongAnswers": ["15230", "12530", "12350"]
+    },
+    {
       "level": 4,
       "type": 0,
       "questionText": "소수점을 한자리 올림하면\n4가 되는 수는 무엇일까요?",
@@ -175,6 +259,34 @@
       "wrongAnswers": ["4", "9", "15"]
     },
     {
+      "level": 4,
+      "type": 0,
+      "questionText": "약수의 개수가 가장 많은 수는\n무엇일까요?",
+      "correctAnswers": ["12"],
+      "wrongAnswers": ["7", "11", "13"]
+    },
+    {
+      "level": 4,
+      "type": 0,
+      "questionText": "2와 3의 공배수는\n무엇일까요?",
+      "correctAnswers": ["6"],
+      "wrongAnswers": ["4", "9", "10"]
+    },
+    {
+      "level": 4,
+      "type": 2,
+      "questionText": "약수를 작은 순서대로\n터치하세요 (8의 약수)",
+      "correctAnswers": ["1", "2", "4", "8"],
+      "wrongAnswers": ["3", "6", "16"]
+    },
+    {
+      "level": 4,
+      "type": 0,
+      "questionText": "반올림하여 십의 자리까지\n나타내면 50이 되는 수는?",
+      "correctAnswers": ["48"],
+      "wrongAnswers": ["44", "55", "59"]
+    },
+    {
       "level": 5,
       "type": 2,
       "questionText": "작은 수 대로 터치하세요.",
@@ -215,6 +327,34 @@
       "questionText": "절댓값이 큰 순서대로\n터치하세요.",
       "correctAnswers": ["-10", "5", "-3", "0"],
       "wrongAnswers": []
+    },
+    {
+      "level": 5,
+      "type": 0,
+      "questionText": "다음 중 정수가 아닌 유리수는\n무엇일까요?",
+      "correctAnswers": ["-1.5"],
+      "wrongAnswers": ["0", "-3", "5"]
+    },
+    {
+      "level": 5,
+      "type": 0,
+      "questionText": "x보다 작지 않다와 같은 말은\n무엇일까요?",
+      "correctAnswers": ["x 이상"],
+      "wrongAnswers": ["x 초과", "x 이하", "x 미만"]
+    },
+    {
+      "level": 5,
+      "type": 0,
+      "questionText": "소인수분해가 바르게 된 것을\n고르세요 (12)",
+      "correctAnswers": ["2² x 3"],
+      "wrongAnswers": ["2 x 6", "3 x 4", "2 x 2 x 3"]
+    },
+    {
+      "level": 5,
+      "type": 0,
+      "questionText": "0과 가장 가까운 수는\n무엇일까요?",
+      "correctAnswers": ["-0.5"],
+      "wrongAnswers": ["1", "-2", "3"]
     }
   ],
   "levelImages": [

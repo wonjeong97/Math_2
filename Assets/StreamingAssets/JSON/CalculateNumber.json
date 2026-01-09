@@ -104,6 +104,41 @@
       "wrongAnswers": ["2", "4", "5"]
     },
     {
+      "level": 1,
+      "type": 0,
+      "questionText": "1 + 1은 무엇일까요?",
+      "correctAnswers": ["2"],
+      "wrongAnswers": ["1", "3", "0"]
+    },
+    {
+      "level": 1,
+      "type": 0,
+      "questionText": "3 - 1은 무엇일까요?",
+      "correctAnswers": ["2"],
+      "wrongAnswers": ["1", "3", "4"]
+    },
+    {
+      "level": 1,
+      "type": 0,
+      "questionText": "2 + 2는 무엇일까요?",
+      "correctAnswers": ["4"],
+      "wrongAnswers": ["3", "5", "2"]
+    },
+    {
+      "level": 1,
+      "type": 0,
+      "questionText": "5 - 2는 무엇일까요?",
+      "correctAnswers": ["3"],
+      "wrongAnswers": ["2", "4", "5"]
+    },
+    {
+      "level": 1,
+      "type": 0,
+      "questionText": "4 - 4는 무엇일까요?",
+      "correctAnswers": ["0"],
+      "wrongAnswers": ["1", "2", "4"]
+    },
+    {
       "level": 2,
       "type": 0,
       "questionText": "5 + 6은 무엇일까요?",
@@ -144,6 +179,34 @@
       "questionText": "9 - 4는 무엇일까요?",
       "correctAnswers": ["5"],
       "wrongAnswers": ["4", "6", "3"]
+    },
+    {
+      "level": 2,
+      "type": 0,
+      "questionText": "8 + 8은 무엇일까요?",
+      "correctAnswers": ["16"],
+      "wrongAnswers": ["15", "17", "18"]
+    },
+    {
+      "level": 2,
+      "type": 0,
+      "questionText": "10 - 7은 무엇일까요?",
+      "correctAnswers": ["3"],
+      "wrongAnswers": ["2", "4", "5"]
+    },
+    {
+      "level": 2,
+      "type": 0,
+      "questionText": "구구단 5 x 3은?",
+      "correctAnswers": ["15"],
+      "wrongAnswers": ["10", "20", "12"]
+    },
+    {
+      "level": 2,
+      "type": 0,
+      "questionText": "20 + 30은 무엇일까요?",
+      "correctAnswers": ["50"],
+      "wrongAnswers": ["40", "60", "80"]
     },
     {
       "level": 3,
@@ -188,6 +251,34 @@
       "wrongAnswers": ["6", "8", "9"]
     },
     {
+      "level": 3,
+      "type": 0,
+      "questionText": "40 ÷ 8은 무엇일까요?",
+      "correctAnswers": ["5"],
+      "wrongAnswers": ["4", "6", "8"]
+    },
+    {
+      "level": 3,
+      "type": 0,
+      "questionText": "12 x 3은 무엇일까요?",
+      "correctAnswers": ["36"],
+      "wrongAnswers": ["32", "34", "38"]
+    },
+    {
+      "level": 3,
+      "type": 0,
+      "questionText": "100 - 50은 무엇일까요?",
+      "correctAnswers": ["50"],
+      "wrongAnswers": ["40", "60", "45"]
+    },
+    {
+      "level": 3,
+      "type": 0,
+      "questionText": "1/4 + 1/4은 무엇일까요?",
+      "correctAnswers": ["2/4"],
+      "wrongAnswers": ["1/4", "3/4", "1"]
+    },
+    {
       "level": 4,
       "type": 0,
       "questionText": "3 + 3.5는 무엇일까요?",
@@ -230,6 +321,34 @@
       "wrongAnswers": ["2.5", "0.9", "4.5"]
     },
     {
+      "level": 4,
+      "type": 0,
+      "questionText": "0.5 + 0.5는 무엇일까요?",
+      "correctAnswers": ["1"],
+      "wrongAnswers": ["0.9", "1.1", "0.1"]
+    },
+    {
+      "level": 4,
+      "type": 0,
+      "questionText": "10 ÷ 2 x 5는 무엇일까요?",
+      "correctAnswers": ["25"],
+      "wrongAnswers": ["1", "10", "5"]
+    },
+    {
+      "level": 4,
+      "type": 0,
+      "questionText": "3² (3의 제곱)은?",
+      "correctAnswers": ["9"],
+      "wrongAnswers": ["6", "3", "27"]
+    },
+    {
+      "level": 4,
+      "type": 0,
+      "questionText": "1.5 x 2는 무엇일까요?",
+      "correctAnswers": ["3"],
+      "wrongAnswers": ["2", "2.5", "3.5"]
+    },
+    {
       "level": 5,
       "type": 0,
       "questionText": "4/3 x 2/3은 무엇일까요?",
@@ -270,6 +389,34 @@
       "questionText": "-10 ÷ 2는 무엇일까요?",
       "correctAnswers": ["-5"],
       "wrongAnswers": ["5", "-2", "-8"]
+    },
+    {
+      "level": 5,
+      "type": 0,
+      "questionText": "(-2) + (-3) 은?",
+      "correctAnswers": ["-5"],
+      "wrongAnswers": ["-1", "1", "5"]
+    },
+    {
+      "level": 5,
+      "type": 0,
+      "questionText": "(-5) x (-2) 는?",
+      "correctAnswers": ["10"],
+      "wrongAnswers": ["-10", "7", "-7"]
+    },
+    {
+      "level": 5,
+      "type": 0,
+      "questionText": "2³ (2의 3승)은?",
+      "correctAnswers": ["8"],
+      "wrongAnswers": ["6", "9", "12"]
+    },
+    {
+      "level": 5,
+      "type": 0,
+      "questionText": "√16 (루트 16) 은?",
+      "correctAnswers": ["4"],
+      "wrongAnswers": ["2", "8", "16"]
     }
   ],
   "levelImages": [

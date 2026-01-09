@@ -6,7 +6,6 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
-using Random = UnityEngine.Random;
 
 /// <summary>
 /// 미니게임 매니저의 공통 부모 클래스.

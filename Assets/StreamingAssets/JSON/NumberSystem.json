@@ -82,6 +82,34 @@
       "wrongAnswers": ["9", "5", "3"]
     },
     {
+      "level": 1,
+      "type": 0,
+      "questionText": "하나, 둘, 셋 다음은\n무엇일까요?",
+      "correctAnswers": ["넷"],
+      "wrongAnswers": ["둘", "다섯", "여섯"]
+    },
+    {
+      "level": 1,
+      "type": 0,
+      "questionText": "없다는 뜻을 가진 숫자는\n무엇일까요?",
+      "correctAnswers": ["0"],
+      "wrongAnswers": ["1", "10", "100"]
+    },
+    {
+      "level": 1,
+      "type": 0,
+      "questionText": "한 손의 손가락은 모두\n몇 개일까요?",
+      "correctAnswers": ["5"],
+      "wrongAnswers": ["2", "3", "4"]
+    },
+    {
+      "level": 1,
+      "type": 0,
+      "questionText": "1 더하기 1은\n무엇일까요?",
+      "correctAnswers": ["2"],
+      "wrongAnswers": ["1", "3", "4"]
+    },
+    {
       "level": 2,
       "type": 0,
       "questionText": "9 ? 7 = 16 일 때,\n?에 들어갈 기호를 고르세요.",
@@ -122,6 +150,34 @@
       "questionText": "20은 다른 말로 무엇일까요?",
       "correctAnswers": ["스물"],
       "wrongAnswers": ["열", "서른", "마흔"]
+    },
+    {
+      "level": 2,
+      "type": 0,
+      "questionText": "50은 다른 말로 무엇일까요?",
+      "correctAnswers": ["쉰"],
+      "wrongAnswers": ["마흔", "예순", "일흔"]
+    },
+    {
+      "level": 2,
+      "type": 0,
+      "questionText": "100은 다른 말로 무엇일까요?",
+      "correctAnswers": ["백"],
+      "wrongAnswers": ["천", "만", "십"]
+    },
+    {
+      "level": 2,
+      "type": 0,
+      "questionText": "10 ? 2 = 20 일 때,\n?에 들어갈 기호를 고르세요.",
+      "correctAnswers": ["x"],
+      "wrongAnswers": ["+", "-", "÷"]
+    },
+    {
+      "level": 2,
+      "type": 0,
+      "questionText": "60은 다른 말로 무엇일까요?",
+      "correctAnswers": ["예순"],
+      "wrongAnswers": ["쉰", "일흔", "여든"]
     },
     {
       "level": 3,
@@ -166,6 +222,34 @@
       "wrongAnswers": ["1", "2", "100"]
     },
     {
+      "level": 3,
+      "type": 0,
+      "questionText": "1/2 과 1/2을 더하면\n무엇일까요?",
+      "correctAnswers": ["1"],
+      "wrongAnswers": ["2", "0.5", "1/4"]
+    },
+    {
+      "level": 3,
+      "type": 0,
+      "questionText": "어떤 수에 0을 곱하면\n무엇이 될까요?",
+      "correctAnswers": ["0"],
+      "wrongAnswers": ["1", "10", "자신"]
+    },
+    {
+      "level": 3,
+      "type": 0,
+      "questionText": "7 나누기 7은\n무엇일까요?",
+      "correctAnswers": ["1"],
+      "wrongAnswers": ["0", "7", "49"]
+    },
+    {
+      "level": 3,
+      "type": 0,
+      "questionText": "다음 중 짝수인 것은\n무엇일까요?",
+      "correctAnswers": ["100"],
+      "wrongAnswers": ["1", "5", "99"]
+    },
+    {
       "level": 4,
       "type": 0,
       "questionText": "3/10을 소수로 나타내면 무엇일까요?",
@@ -208,6 +292,34 @@
       "wrongAnswers": ["1/4", "1/2", "2/5"]
     },
     {
+      "level": 4,
+      "type": 0,
+      "questionText": "50%와 같은 값은\n무엇일까요?",
+      "correctAnswers": ["1/2"],
+      "wrongAnswers": ["1/5", "2/5", "1/4"]
+    },
+    {
+      "level": 4,
+      "type": 0,
+      "questionText": "2와 4의 최대공약수는\n무엇일까요?",
+      "correctAnswers": ["2"],
+      "wrongAnswers": ["1", "4", "8"]
+    },
+    {
+      "level": 4,
+      "type": 0,
+      "questionText": "2와 3의 최소공배수는\n무엇일까요?",
+      "correctAnswers": ["6"],
+      "wrongAnswers": ["1", "2", "3"]
+    },
+    {
+      "level": 4,
+      "type": 0,
+      "questionText": "0.1이 10개 모이면\n무엇일까요?",
+      "correctAnswers": ["1"],
+      "wrongAnswers": ["0.1", "10", "100"]
+    },
+    {
       "level": 5,
       "type": 1,
       "questionText": "정수를 모두 고르세요.",
@@ -248,6 +360,34 @@
       "questionText": "실수 중에서 유리수가 아닌 수를\n무엇이라고 부를까요?",
       "correctAnswers": ["무리수"],
       "wrongAnswers": ["정수", "자연수", "유한소수"]
+    },
+    {
+      "level": 5,
+      "type": 0,
+      "questionText": "-3의 절댓값은\n무엇일까요?",
+      "correctAnswers": ["3"],
+      "wrongAnswers": ["-3", "0", "1/3"]
+    },
+    {
+      "level": 5,
+      "type": 0,
+      "questionText": "2의 3제곱(2³)은\n얼마일까요?",
+      "correctAnswers": ["8"],
+      "wrongAnswers": ["6", "5", "9"]
+    },
+    {
+      "level": 5,
+      "type": 0,
+      "questionText": "루트 16(√16)의 값은\n무엇일까요?",
+      "correctAnswers": ["4"],
+      "wrongAnswers": ["8", "16", "2"]
+    },
+    {
+      "level": 5,
+      "type": 0,
+      "questionText": "x + 2 = 5 일 때,\nx의 값은?",
+      "correctAnswers": ["3"],
+      "wrongAnswers": ["2", "5", "7"]
     }
   ],
   "levelImages": [
