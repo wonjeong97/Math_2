@@ -318,16 +318,7 @@ public abstract class BaseGameManager<TSetting, TQuestion> : BaseManager<TSettin
         }
         
         await UniTask.Delay(TimeSpan.FromSeconds(1));
-        currentQuestionIndex++;
-        if (currentQuestionIndex >= totalQuestions) 
-        {
-            OnGameEndClicked();
-        }
-        else
-        {
-            if (pageCorrect) pageCorrect.SetActive(false);
-            SetQuestionBase(currentQuestionIndex);
-        }
+        ProceedToNextQuestion();
     }
     
     protected virtual void HandleWrongAnswer()
@@ -356,8 +347,8 @@ public abstract class BaseGameManager<TSetting, TQuestion> : BaseManager<TSettin
     private void ProceedToNextQuestion()
     {
         // 페이지 끄기
-        if (pageCorrect) pageCorrect.SetActive(false);
-        if (pageWrong) pageWrong.SetActive(false);
+        if (pageCorrect && pageCorrect.activeInHierarchy) pageCorrect.SetActive(false);
+        if (pageWrong && pageWrong.activeInHierarchy) pageWrong.SetActive(false);
 
         currentQuestionIndex++;
         
