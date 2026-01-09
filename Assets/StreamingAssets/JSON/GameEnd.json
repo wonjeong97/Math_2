@@ -1,45 +1,46 @@
 ﻿{
   "backgroundImage": {
-    "position": {"x": 960, "y": 540},
-    "size": {"x": 1920, "y": 1080},
+    "position": {"x": 960, "y": 600},
+    "size": {"x": 1920, "y": 1200},
     "sourceImage": "Video/배경.mp4",
     "color": {"r": 1, "g": 1, "b": 1, "a": 1}
   },
   "gameEndImage": {
-    "position": {"x": 450, "y": 500},
+    "position": {"x": 450, "y": 600},
     "size": {"x": 667, "y": 667},
     "sourceImage": "Image/GameEnd/게임 종료.png"
   },
   "scoreResultImages": [
     {
-      "position": {"x": 1450, "y": 500},
+      "position": {"x": 1450, "y": 600},
       "size": {"x": 667, "y": 667},
       "sourceImage": "Image/GameEnd/점수0.png"
     },
     {
-      "position": {"x": 1450, "y": 500},
+      "position": {"x": 1450, "y": 600},
       "size": {"x": 667, "y": 667},
       "sourceImage": "Image/GameEnd/점수25.png"
     },
     {
-      "position": {"x": 1450, "y": 500},
+      "position": {"x": 1450, "y": 600},
       "size": {"x": 667, "y": 667},
       "sourceImage": "Image/GameEnd/점수50.png"
     },
     {
-      "position": {"x": 1450, "y": 500},
+      "position": {"x": 1450, "y": 600},
       "size": {"x": 667, "y": 667},
       "sourceImage": "Image/GameEnd/점수75.png"
     },
     {
-      "position": {"x": 1450, "y": 500},
+      "position": {"x": 1450, "y": 600},
       "size": {"x": 667, "y": 667},
       "sourceImage": "Image/GameEnd/점수100.png"
     }
   ],
   "homeButton": {
-    "position": {"x": 1800, "y": 980},
+    "position": {"x": 1800, "y": 1080},
     "size": {"x": 142, "y": 129},
+    "scale": {"x": 1.5, "y": 1.5, "z": 1.5},
     "buttonBackgroundImage": {"sourceImage": "Image/GameEnd/홈 버튼.png"}
   }
 }
