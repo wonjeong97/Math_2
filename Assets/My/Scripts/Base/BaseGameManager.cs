@@ -289,7 +289,7 @@ public abstract class BaseGameManager<TSetting, TQuestion> : BaseManager<TSettin
                     {
                         tmp.enableAutoSizing = true;
                         tmp.fontSizeMax = targetSetting.buttonText.fontSize;
-                        tmp.fontSizeMin = targetSetting.buttonText.fontSize * 0.4f;
+                        tmp.fontSizeMin = targetSetting.buttonText.fontSize * 0.2f;
                         tmp.enableWordWrapping = EnableButtonWordWrapping;
                     }
                 }
