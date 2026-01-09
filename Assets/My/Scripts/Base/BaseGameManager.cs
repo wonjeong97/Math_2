@@ -47,7 +47,8 @@ public abstract class BaseGameManager<TSetting, TQuestion> : BaseManager<TSettin
     protected int totalQuestions = 4;                   // 총 문제 수
     protected TQuestion currentQuestion;                // 현재 문제 데이터
     protected bool isProcessing;                        // 중복 입력 방지 플래그
-
+    protected int currentScore;                         // 정답 맞춘 횟수 카운트
+    
     private Sprite _defaultButtonSprite;
     private Color _defaultButtonColor;
     private Vector2 _defaultButtonSize;
@@ -91,6 +92,8 @@ public abstract class BaseGameManager<TSetting, TQuestion> : BaseManager<TSettin
         await OnGameInitializeAsync();
 
         ApplyButtonGradients(LevelSelectContext.SelectedLevel);
+        
+        currentScore = 0;
         StartGameLogic();
         
         if (fader != null && fadeImage != null)
@@ -306,6 +309,7 @@ public abstract class BaseGameManager<TSetting, TQuestion> : BaseManager<TSettin
     {   
         Debug.Log($"[{SceneManager.GetActiveScene().name}] Correct ({currentQuestionIndex + 1}/{totalQuestions})");
         isProcessing = true;
+        currentScore++;
         if (pageCorrect) pageCorrect.SetActive(true);
         
         if (SoundManager.Instance != null)
@@ -313,28 +317,48 @@ public abstract class BaseGameManager<TSetting, TQuestion> : BaseManager<TSettin
             SoundManager.Instance.PlaySFX(GameConstants.Sound.Correct);    
         }
         
-        await UniTask.Delay(TimeSpan.FromSeconds(2));
+        await UniTask.Delay(TimeSpan.FromSeconds(1));
+        ProceedToNextQuestion();
+    }
+    
+    protected virtual void HandleWrongAnswer()
+    {
+        HandleWrongAnswerAsync().Forget();
+    }
+    
+    private async UniTaskVoid HandleWrongAnswerAsync()
+    {
+        Debug.Log($"[{SceneManager.GetActiveScene().name}] Wrong ({currentQuestionIndex + 1}/{totalQuestions})");
+        isProcessing = true;    
+        // 오답 시에는 점수 증가 x
+        
+        if (pageWrong) pageWrong.SetActive(true);
+        
+        if (SoundManager.Instance != null)
+        {
+            SoundManager.Instance.PlaySFX(GameConstants.Sound.Wrong);    
+        }
+        
+        await UniTask.Delay(TimeSpan.FromSeconds(1));
+        ProceedToNextQuestion();
+    }
+    
+    /// <summary> 다음 문제로 넘어가거나 게임을 종료함 </summary>
+    private void ProceedToNextQuestion()
+    {
+        // 페이지 끄기
+        if (pageCorrect && pageCorrect.activeInHierarchy) pageCorrect.SetActive(false);
+        if (pageWrong && pageWrong.activeInHierarchy) pageWrong.SetActive(false);
+
         currentQuestionIndex++;
+        
         if (currentQuestionIndex >= totalQuestions) 
         {
             OnGameEndClicked();
         }
         else
         {
-            if (pageCorrect) pageCorrect.SetActive(false);
             SetQuestionBase(currentQuestionIndex);
-        }
-    }
-    
-    protected virtual void HandleWrongAnswer()
-    {
-        Debug.Log($"[{SceneManager.GetActiveScene().name}] Wrong ({currentQuestionIndex + 1}/{totalQuestions})");
-        isProcessing = true;    
-        if (pageWrong) pageWrong.SetActive(true);
-        
-        if (SoundManager.Instance != null)
-        {
-            SoundManager.Instance.PlaySFX(GameConstants.Sound.Wrong);    
         }
     }
     
@@ -358,7 +382,7 @@ public abstract class BaseGameManager<TSetting, TQuestion> : BaseManager<TSettin
         Debug.Log($"[{SceneManager.GetActiveScene().name}] Game End");
         
         if (fader != null && fadeImage != null) await fader.FadeOut(fadeImage, fadeTime, DestroyToken);
-        GameResultContext.CorrectCount = currentQuestionIndex;
+        GameResultContext.CorrectCount = currentScore;
         SceneManager.LoadScene(GameConstants.Scene.GameEnd);
     }
     
