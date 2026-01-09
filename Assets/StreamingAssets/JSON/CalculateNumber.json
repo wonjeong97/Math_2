@@ -1,7 +1,7 @@
 ﻿{
   "backgroundImage": {
-    "position": {"x": 960, "y": 540},
-    "size": {"x": 1920, "y": 1080},
+    "position": {"x": 960, "y": 600},
+    "size": {"x": 1920, "y": 1200},
     "sourceImage": "Video/배경.mp4",
     "color": {"r": 1, "g": 1, "b": 1, "a": 1}
   },
@@ -448,25 +448,26 @@
       ]
     }
   ],
-  "buttonMargin": 30.0,
+  "buttonMargin": 10.0,
+  "extraHeights": [10, 10, 10, 10, 250], "//": "값은 0 ~ 400이되, 너무 높이면 버튼끼리 겹치고 문제 텍스트 크기가 작아짐 ",
   "correctImage": {
-    "position": {"x": 480, "y": 500},
+    "position": {"x": 480, "y": 600},
     "size": {"x": 900, "y": 900},
     "sourceImage": "Video/Result/정답.webm"
   },
   "wrongImage": {
-    "position": {"x": 1440, "y": 500},
+    "position": {"x": 1440, "y": 600},
     "size": {"x": 900, "y": 900},
     "sourceImage": "Video/Result/오답.webm"
   },
   "retryButton": {
     "size": {"x": 356, "y": 123},
-    "position": {"x": 480, "y": 980},
+    "position": {"x": 480, "y": 1080},
     "buttonBackgroundImage": {"sourceImage": "Image/Button/다시 도전.png"}
   },
   "gameEndButton": {
     "size": {"x": 356, "y": 123},
-    "position": {"x": 1440, "y": 980},
+    "position": {"x": 1440, "y": 1080},
     "buttonBackgroundImage": {"sourceImage": "Image/Button/게임 종료.png"}
   }
 }
