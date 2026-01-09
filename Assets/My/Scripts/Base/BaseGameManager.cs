@@ -259,7 +259,7 @@ public abstract class BaseGameManager<TSetting, TQuestion> : BaseManager<TSettin
         // 현재 레벨에 맞는 높이 값이 있는지 확인하고 적용
         if (managerSetting.extraHeights != null && levelIndex >= 0 && levelIndex < managerSetting.extraHeights.Length)
         {
-            targetHeight = managerSetting.extraHeights[levelIndex];
+            targetHeight = Mathf.Clamp(managerSetting.extraHeights[levelIndex], 0f, 400f);
         }
 
         layout.minHeight = targetHeight;
