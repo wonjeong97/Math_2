@@ -75,7 +75,15 @@ public abstract class BaseGameManager<TSetting, TQuestion> : BaseManager<TSettin
 
         if (buttonRetry) { buttonRetry.onClick.RemoveAllListeners(); buttonRetry.onClick.AddListener(OnRetryClicked); }
         if (buttonGameEnd) { buttonGameEnd.onClick.RemoveAllListeners(); buttonGameEnd.onClick.AddListener(OnGameEndClicked); }
-        if (backButton) { backButton.onClick.RemoveAllListeners(); backButton.onClick.AddListener(() => SceneManager.LoadScene(GameConstants.Scene.LevelSelect)); }
+        if (backButton) 
+        { 
+            backButton.onClick.RemoveAllListeners(); 
+            backButton.onClick.AddListener(() => 
+            {
+                if (GameManager.Instance) GameManager.Instance.ResetInactivityTimer();
+                SceneManager.LoadScene(GameConstants.Scene.LevelSelect); 
+            }); 
+        }
 
         // UI 레이아웃 안정화를 위해 0.1초 대기
         await UniTask.Delay(TimeSpan.FromSeconds(0.1f));
@@ -363,6 +371,7 @@ public abstract class BaseGameManager<TSetting, TQuestion> : BaseManager<TSettin
     
     protected virtual void OnRetryClicked()
     {   
+        if (GameManager.Instance) GameManager.Instance.ResetInactivityTimer();
         Debug.Log($"[{SceneManager.GetActiveScene().name}] Retry ({currentQuestionIndex + 1}/{totalQuestions})");
         
         if (SoundManager.Instance != null)

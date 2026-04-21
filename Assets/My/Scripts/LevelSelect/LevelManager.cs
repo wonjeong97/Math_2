@@ -174,7 +174,8 @@ public sealed class LevelManager : BaseManager<LevelSetting>
     private async UniTaskVoid OnClickLevel(int level)
     {
         try
-        {
+        {   
+            if (GameManager.Instance) GameManager.Instance.ResetInactivityTimer();
             SoundManager.Instance?.PlaySFX(GameConstants.Sound.ButtonClick);
             _selectedLevel = level;
             LevelSelectContext.SelectedLevel = level;
@@ -211,7 +212,8 @@ public sealed class LevelManager : BaseManager<LevelSetting>
     private async UniTaskVoid OnClickBack()
     {
         try
-        {
+        {   
+            if (GameManager.Instance) GameManager.Instance.ResetInactivityTimer();
             SoundManager.Instance?.PlaySFX(GameConstants.Sound.ButtonClick);
 
             if (fader != null && fadeImage != null)
@@ -291,7 +293,7 @@ public sealed class LevelManager : BaseManager<LevelSetting>
             Debug.LogError("[LevelManager] OnClickGameType-> Level is not selected.");
             return;
         }
-        
+        if (GameManager.Instance) GameManager.Instance.ResetInactivityTimer();
         SoundManager.Instance?.PlaySFX(GameConstants.Sound.ButtonClick);
         LevelSelectContext.SelectedGameType = type;
         HandleLoadGameSceneAsync().Forget();

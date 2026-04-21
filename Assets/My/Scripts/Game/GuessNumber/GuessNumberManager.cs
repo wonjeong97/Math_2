@@ -184,7 +184,8 @@ public class GuessNumberManager : BaseGameManager<GuessNumberSetting, GuessNumbe
 
     /// <summary> 정답 버튼 클릭을 처리함. </summary>
     private void OnAnswerClicked(string clickedText, GameObject btnObj)
-    {
+    {   
+        if (GameManager.Instance) GameManager.Instance.ResetInactivityTimer();
         if (isProcessing) return;
         bool isCorrectAction = false;
         bool isLevelClear = false;

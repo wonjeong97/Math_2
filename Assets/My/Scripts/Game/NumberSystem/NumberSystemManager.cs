@@ -186,7 +186,8 @@ public class NumberSystemManager : BaseGameManager<NumberSystemSetting, NumberSy
     }
 
     private void OnAnswerClicked(string clickedText, GameObject btnObj)
-    {
+    {   
+        if (GameManager.Instance) GameManager.Instance.ResetInactivityTimer();
         if (isProcessing) return;
         bool isCorrect = false;
         bool isLevelClear = false;

@@ -1355,10 +1355,25 @@ PrefabInstance:
       propertyPath: m_Name
       value: LogSaver
       objectReference: {fileID: 0}
+    - target: {fileID: 4652621866384824872, guid: 0e0f27635752615428482bea6e7299d6,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4865714525237607318, guid: 0e0f27635752615428482bea6e7299d6,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 4865714525237607318, guid: 0e0f27635752615428482bea6e7299d6,
         type: 3}
       propertyPath: senderEmail
       value: wonjeong@huliac.com
+      objectReference: {fileID: 0}
+    - target: {fileID: 4865714525237607318, guid: 0e0f27635752615428482bea6e7299d6,
+        type: 3}
+      propertyPath: smtpProvider
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4865714525237607318, guid: 0e0f27635752615428482bea6e7299d6,
         type: 3}

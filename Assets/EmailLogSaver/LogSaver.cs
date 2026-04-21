@@ -1,255 +1,230 @@
 /*==============================================================================================================================
-* Gmail 설정 방법 (필수)
-* Gmail을 보내는 메일로 사용하려면 다음 설정이 필요합니다.
-* * 1. 구글 계정 관리 > 보안 탭으로 이동.
-* * 2. 2단계 인증이 켜져 있어야 합니다.
-* * 3. 2단계 인증 설정 하단에 [앱 비밀번호] 항목을 찾아 클릭합니다. (검색창에 '앱 비밀번호' 검색 가능)
-* * 4. 앱 이름에 'UnityLog' 등으로 입력하고 생성하기를 누릅니다.
-* * 생성된 16자리 비밀번호를 복사해서 위 코드의 senderPassword 변수에 붙여넣으세요. (기존 구글 로그인 비번은 작동하지 않습니다)
+* [메일 서버 설정 방법]
+* * 1. Gmail 설정 (SMTP: smtp.gmail.com / Port: 587)
+* - 구글 계정 관리 > 보안 > 2단계 인증 활성화.
+* - [앱 비밀번호]를 생성하여 16자리 코드를 senderPassword에 입력.
+* * 2. Microsoft 설정 (SMTP: smtp.office365.com / Port: 587)
+* - MS 계정 보안 페이지 > 추가 보안 옵션 > 2단계 인증 활성화.
+* - [새 앱 비밀번호 만들기]를 통해 생성된 코드를 senderPassword에 입력.
+* - 일반 비밀번호 사용 시 로그인이 차단될 수 있으므로 반드시 앱 비밀번호 사용을 권장합니다.
 *==============================================================================================================================*/
 
-using UnityEngine;
+using System;
 using System.IO;
-using System.Text;
 using System.Net;
 using System.Net.Mail;
-using System.Net.Security;
-using System.Security.Cryptography.X509Certificates;
+using System.Text;
 using System.Threading.Tasks;
+using UnityEngine;
 
-public enum LogTriggerLevel
+namespace Wonjeong.Utils
 {
-    Everything,      // 모든 로그
-    WarningOrAbove,  // 경고, 에러, 예외
-    ErrorOrAbove     // 에러, 예외 (기본값)
-}
-
-/// <summary>
-/// 런타임 중 발생하는 로그를 수집하여 파일로 저장하고, 
-/// 특정 조건(에러 등) 충족 시 지정된 이메일로 로그 파일을 전송하는 클래스입니다.
-/// </summary>
-public class LogSaver : MonoBehaviour
-{
-    // 싱글톤 패턴 적용
-    public static LogSaver Instance { get; private set; }
-
-    [Header("Save Settings (PC)")]
-    [Tooltip("체크하면 아래 Custom Path를 사용합니다. 해제하면 실행 파일(또는 프로젝트) 폴더에 저장합니다.")]
-    [SerializeField] private bool useCustomPath = false;
-
-    [Tooltip("로그를 저장할 절대 경로입니다. (예: C:/Logs)")]
-    [SerializeField] private string customPath = "C:/Logs";
-
-    [Header("General Settings")]
-    [Tooltip("체크하면 조건 충족 시 메일을 보냅니다. (해제 시 파일 저장만 수행)")]
-    [SerializeField] private bool enableEmail = true;
-
-    [Tooltip("어떤 로그가 발생했을 때 메일을 보낼지 설정합니다.")]
-    [SerializeField] private LogTriggerLevel triggerLevel = LogTriggerLevel.ErrorOrAbove;
-
-    [Header("Email Settings")]
-    [SerializeField] private string senderEmail = "your_email@gmail.com";
-    [SerializeField] private string senderPassword = "your_app_password";
-    [SerializeField] private string recipientEmail = "target_email@example.com";
-    [SerializeField] private string smtpServer = "smtp.gmail.com";
-    [SerializeField] private int smtpPort = 587;
-
-    private readonly StringBuilder _logBuffer = new StringBuilder();
-    private string _currentLogPath;
-    private string _logFolder;
-    
-    // 메인 스레드에서만 접근 가능한 Application.productName을 캐싱할 변수
-    private string _productName;
-
-    // 메일 발송 조건 충족 여부
-    private bool _shouldSendEmail; 
-
-    private void Awake()
+    public enum LogTriggerLevel
     {
-        // 싱글톤 & DontDestroyOnLoad 설정
-        if (Instance == null)
-        {
-            Instance = this;
-            DontDestroyOnLoad(gameObject);
-        }
-        else
-        {
-            Destroy(gameObject);
-            return;
-        }
-        
-        // 메인 스레드에서 앱 이름 미리 캐싱
-        _productName = Application.productName;
-
-        // PC 전용 경로 설정 로직
-        if (useCustomPath && !string.IsNullOrEmpty(customPath))
-        {
-            _logFolder = customPath;
-        }
-        else
-        {
-            string basePath = Path.GetDirectoryName(Application.dataPath);
-            _logFolder = Path.Combine(basePath, "Logs");
-        }
-
-        // 폴더가 없으면 생성
-        try
-        {
-            if (!Directory.Exists(_logFolder)) Directory.CreateDirectory(_logFolder);
-        }
-        catch (System.Exception e)
-        {
-            Debug.LogError($"[LogSaver] 로그 폴더 생성 실패({_logFolder}): {e.Message}");
-            return;
-        }
-        
-        string fileName = $"Log_{System.DateTime.Now:yyyy-MM-dd_HH-mm-ss}.txt";
-        _currentLogPath = Path.Combine(_logFolder, fileName);
-
-        Debug.Log($"[LogSaver] 로그 저장 경로: {_currentLogPath}");
-
-        Application.logMessageReceived += HandleLog;
+        Everything,      // 모든 로그
+        WarningOrAbove,  // 경고, 에러, 예외
+        ErrorOrAbove     // 에러, 예외 (기본값)
     }
 
-    private void Start()
+    /// <summary>
+    /// 런타임 로그를 수집하여 파일로 저장하고, 설정된 메일 서버(Google/MS)를 통해 전송하는 클래스입니다.
+    /// </summary>
+    public class LogSaver : MonoBehaviour
     {
-        // 에디터가 아닐 때만 이전에 실패한 로그 재전송 시도
-        if (enableEmail)
+        public enum SmtpProvider
+        {
+            Google,
+            Microsoft
+        }
+
+        public static LogSaver Instance { get; private set; }
+
+        [Header("Save Settings (PC)")]
+        [SerializeField] private bool useCustomPath = false;
+        [SerializeField] private string customPath = "C:/Logs";
+
+        [Header("General Settings")]
+        [SerializeField] private bool enableEmail = true;
+        [SerializeField] private LogTriggerLevel triggerLevel = LogTriggerLevel.ErrorOrAbove;
+
+        [Header("Email Settings")]
+        [Tooltip("메일 서비스 제공자를 선택하세요.")]
+        [SerializeField] private SmtpProvider smtpProvider = SmtpProvider.Microsoft;
+
+        [SerializeField] private string senderEmail = "your_email@example.com";
+        [Tooltip("계정의 일반 비번이 아닌 '앱 비밀번호'를 입력해야 합니다.")]
+        [SerializeField] private string senderPassword = "your_app_password";
+        [SerializeField] private string recipientEmail = "target_email@example.com";
+        
+        [Tooltip("대부분의 메일 서비스 TLS 포트는 587입니다.")]
+        [SerializeField] private int smtpPort = 587;
+
+        private readonly StringBuilder _logBuffer = new StringBuilder();
+        private string _currentLogPath;
+        private string _logFolder;
+        private string _productName;
+        private bool _shouldSendEmail;
+
+        // 선택된 제공자에 따라 SMTP 서버 주소를 동적으로 반환
+        private string SmtpServer => smtpProvider == SmtpProvider.Google ? "smtp.gmail.com" : "smtp.office365.com";
+
+        private void Awake()
+        {
+            if (Instance == null)
+            {
+                Instance = this;
+                DontDestroyOnLoad(gameObject);
+            }
+            else
+            {
+                Destroy(gameObject);
+                return;
+            }
+
+            _productName = Application.productName;
+            SetupLogPath();
+            Application.logMessageReceived += HandleLog;
+        }
+
+        private void SetupLogPath()
+        {
+            if (useCustomPath && !string.IsNullOrEmpty(customPath))
+            {
+                _logFolder = customPath;
+            }
+            else
+            {
+                string basePath = Path.GetDirectoryName(Application.dataPath);
+                _logFolder = Path.Combine(basePath, "Logs");
+            }
+
+            try
+            {
+                if (!Directory.Exists(_logFolder)) Directory.CreateDirectory(_logFolder);
+                string fileName = $"Log_{DateTime.Now:yyyy-MM-dd_HH-mm-ss}.txt";
+                _currentLogPath = Path.Combine(_logFolder, fileName);
+            }
+            catch (Exception e)
+            {
+                Debug.LogError($"[LogSaver] 로그 폴더 생성 실패: {e.Message}");
+                _currentLogPath = null;
+            }
+        }
+
+        private void Start()
         {
 #if !UNITY_EDITOR
-            TrySendPendingLogsAsync().ConfigureAwait(false);
-#endif
-        }
-    }
-
-    private void OnDestroy()
-    {
-        Application.logMessageReceived -= HandleLog;
-    }
-
-    private void HandleLog(string logString, string stackTrace, LogType type)
-    {
-        bool isTrigger = false;
-        switch (triggerLevel)
-        {
-            case LogTriggerLevel.Everything:
-                isTrigger = true; 
-                break;
-            case LogTriggerLevel.WarningOrAbove:
-                if (type != LogType.Log) isTrigger = true;
-                break;
-            case LogTriggerLevel.ErrorOrAbove:
-                if (type == LogType.Error || type == LogType.Exception || type == LogType.Assert)
-                    isTrigger = true;
-                break;
-        }
-
-        if (isTrigger) _shouldSendEmail = true;
-
-        _logBuffer.AppendLine($"[{System.DateTime.Now:HH:mm:ss}] [{type}] {logString}");
-        
-        if (type == LogType.Error || type == LogType.Exception || type == LogType.Assert)
-        {
-            _logBuffer.AppendLine($"Stack Trace: {stackTrace}");
-        }
-    }
-
-    private void OnApplicationQuit()
-    {
-        if (_shouldSendEmail)
-        {
-            SaveLogToFile();
-
-            // 에디터가 아닐 때만 메일 발송 시도
             if (enableEmail)
             {
-#if !UNITY_EDITOR
-                TrySendSingleLog(_currentLogPath);
+                TrySendPendingLogsAsync().ConfigureAwait(false);
+            }
 #endif
+        }
+
+        private void OnDestroy()
+        {
+            Application.logMessageReceived -= HandleLog;
+        }
+
+        private void HandleLog(string logString, string stackTrace, LogType type)
+        {
+            bool isTrigger = false;
+            switch (triggerLevel)
+            {
+                case LogTriggerLevel.Everything: isTrigger = true; break;
+                case LogTriggerLevel.WarningOrAbove: if (type != LogType.Log) isTrigger = true; break;
+                case LogTriggerLevel.ErrorOrAbove:
+                    if (type == LogType.Error || type == LogType.Exception || type == LogType.Assert)
+                        isTrigger = true;
+                    break;
+            }
+
+            if (isTrigger) _shouldSendEmail = true;
+
+            _logBuffer.AppendLine($"[{DateTime.Now:HH:mm:ss}] [{type}] {logString}");
+            if (type == LogType.Error || type == LogType.Exception || type == LogType.Assert)
+            {
+                _logBuffer.AppendLine($"Stack Trace: {stackTrace}");
             }
         }
-    }
 
-    private void SaveLogToFile()
-    {
-        if (_logBuffer.Length > 0)
+        private void OnApplicationQuit()
         {
-            try 
+            if (_shouldSendEmail)
             {
-                File.WriteAllText(_currentLogPath, _logBuffer.ToString());
-                Debug.Log($"[LogSaver] 로그 파일 저장 완료: {_currentLogPath}");
-            }
-            catch (System.Exception e)
-            {
-                Debug.LogError($"[LogSaver] 파일 저장 실패: {e.Message}");
-            }
-        }
-    }
-
-    private async Task TrySendPendingLogsAsync()
-    {
-        if (!Directory.Exists(_logFolder)) return;
-
-        string[] files = Directory.GetFiles(_logFolder, "*.txt");
-        if (files.Length == 0) return;
-
-        Debug.Log($"[LogSaver] 미전송 로그 {files.Length}개 발견. 재전송 시도...");
-
-        foreach (string filePath in files)
-        {
-            if (filePath == _currentLogPath) continue;
-
-            bool success = await Task.Run(() => TrySendSingleLog(filePath));
-            if (!success) break; 
-        }
-    }
-
-    private bool TrySendSingleLog(string filePath)
-    {
-        if (!File.Exists(filePath)) return false;
-
-        try
-        {
-            using (MailMessage mail = new MailMessage())
-            {
-                mail.From = new MailAddress(senderEmail);
-                mail.To.Add(recipientEmail);
-                mail.Subject = $"[{_productName}] Unity Log Report"; 
-                mail.Body = $"발송 조건: {triggerLevel}\n로그 파일을 첨부합니다.\n파일명: {Path.GetFileName(filePath)}";
-
-                using (Attachment attachment = new Attachment(filePath))
+                SaveLogToFile();
+                if (enableEmail)
                 {
-                    mail.Attachments.Add(attachment);
-
-                    using (SmtpClient smtpClient = new SmtpClient(smtpServer))
-                    {
-                        smtpClient.Port = smtpPort;
-                        smtpClient.Credentials = new NetworkCredential(senderEmail, senderPassword) as ICredentialsByHost;
-                        smtpClient.EnableSsl = true;
-                        smtpClient.Timeout = 5000;
-
-                        ServicePointManager.ServerCertificateValidationCallback =
-                            (s, certificate, chain, sslPolicyErrors) => true;
-
-                        smtpClient.Send(mail);
-                    }
-                } 
+                    // 에디터/빌드 환경에 따른 발송 로직은 필요에 따라 전처리기로 조절 가능
+                    TrySendSingleLog(_currentLogPath);
+                }
             }
-
-            Debug.Log($"[LogSaver] 전송 성공. 파일 삭제 시도: {filePath}");
-            
-            if (File.Exists(filePath))
-            {
-                File.Delete(filePath);
-                Debug.Log("[LogSaver] 파일 삭제 완료.");
-            }
-            
-            return true;
+            _logBuffer.Clear(); // 메모리 관리: 로그 버퍼 비우기
         }
-        catch (System.Exception e)
+
+        private void SaveLogToFile()
         {
-            Debug.LogError($"[LogSaver] 처리 중 오류 발생: {e.Message}");
-            return false;
+            if (_logBuffer.Length > 0 && !string.IsNullOrEmpty(_currentLogPath))
+            {
+                try
+                {
+                    File.WriteAllText(_currentLogPath, _logBuffer.ToString());
+                }
+                catch (Exception e)
+                {
+                    Debug.LogError($"[LogSaver] 파일 저장 실패: {e.Message}");
+                }
+            }
+        }
+
+        private async Task TrySendPendingLogsAsync()
+        {
+            if (!Directory.Exists(_logFolder)) return;
+
+            string[] files = Directory.GetFiles(_logFolder, "*.txt");
+            foreach (string filePath in files)
+            {
+                if (filePath == _currentLogPath) continue;
+                bool success = await Task.Run(() => TrySendSingleLog(filePath));
+                if (!success) break;
+            }
+        }
+
+        private bool TrySendSingleLog(string filePath)
+        {
+            if (!File.Exists(filePath)) return false;
+
+            try
+            {
+                using (MailMessage mail = new MailMessage())
+                {
+                    mail.From = new MailAddress(senderEmail);
+                    mail.To.Add(recipientEmail);
+                    mail.Subject = $"[{_productName}] Unity Log Report ({smtpProvider})";
+                    mail.Body = $"발송 조건: {triggerLevel}\n제공자: {smtpProvider}\n로그 파일을 첨부합니다.";
+
+                    using (Attachment attachment = new Attachment(filePath))
+                    {
+                        mail.Attachments.Add(attachment);
+                        using (SmtpClient smtpClient = new SmtpClient(SmtpServer))
+                        {
+                            smtpClient.Port = smtpPort;
+                            smtpClient.Credentials = new NetworkCredential(senderEmail, senderPassword) as ICredentialsByHost;
+                            smtpClient.EnableSsl = true;
+                            smtpClient.Timeout = 10000; // MS 서버의 느린 응답에 대비해 10초로 설정
+                            smtpClient.Send(mail);
+                        }
+                    }
+                }
+
+                if (File.Exists(filePath)) File.Delete(filePath);
+                return true;
+            }
+            catch (Exception e)
+            {
+                Debug.LogError($"[LogSaver] {smtpProvider} 전송 오류: {e.Message}");
+                return false;
+            }
         }
     }
 }

@@ -176,7 +176,8 @@ public class CalculateNumberManager : BaseGameManager<CalculateNumberSetting, Ca
     
     /// <summary> 정답 버튼 클릭을 처리함. </summary>
     private void OnAnswerClicked(string text, GameObject btnObj, Sprite pressedSprite)
-    {
+    {   
+        if (GameManager.Instance) GameManager.Instance.ResetInactivityTimer();
         if (isProcessing) return;
         bool isCorrect = false;
         bool isLevelClear = false;

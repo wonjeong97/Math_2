@@ -102,7 +102,8 @@ public class GameEndManager : BaseManager<GameEndSetting>
     private async UniTaskVoid HandleHomeButtonAsync()
     {
         try
-        {   
+        {       
+            if (GameManager.Instance) GameManager.Instance.ResetInactivityTimer();
             if (SoundManager.Instance != null)
             {
                 SoundManager.Instance.PlaySFX(GameConstants.Sound.ButtonClick);    
